@@ -51,6 +51,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     flexDirection: 'row',
+    alignItems: 'center',
   },
   iconContainer: {
     width: 50,
@@ -58,7 +59,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginRight: 20,
     alignItems: 'center',
-    backgroundColor: 'red',
     justifyContent: 'center',
   },
   textContainer: {

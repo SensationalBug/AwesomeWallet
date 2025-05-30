@@ -1,36 +1,41 @@
-import {View, StyleSheet} from 'react-native';
 import React, {useContext} from 'react';
-import {ThemesContext, ThemeType} from '../context/ThemesContext';
+import {View, StyleSheet} from 'react-native';
 import Section from '../components/custom/Section';
-import SettingsButton from '../components/custom/SettingsButton';
+import {useNavigation} from '@react-navigation/native';
 import ModalWindow from '../components/custom/ModalWindow';
+import SettingsButton from '../components/custom/SettingsButton';
+import {ThemesContext, ThemeType} from '../context/ThemesContext';
+import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
 
-const NotificacionesComponent = () => (
-  <View>
-    <SettingsButton
-        iconName="user"
-        title="Perfil"
-        subTitle="Configuraciones del perfil"
-      />
-  </View>
-);
+import { Text } from 'react-native-paper';
+
+// Define your stack param list type here or import it from your navigation types file
+type SettingsStackParamList = {
+  ThemesOption: undefined;
+  // Add other screens here if needed
+};
 
 const Settings = () => {
   const theme = useContext(ThemesContext) as ThemeType;
   const [modalVisible, setModalVisible] = React.useState(false);
-const [modalContent, setModalContent] = React.useState<(() => React.JSX.Element) | undefined>(undefined);
+  const [modalContent, setModalContent] = React.useState<React.ReactNode>(null);
 
-const openModal = (Component: (() => React.JSX.Element) | undefined) => {
-  setModalContent(Component); // Guardamos el componente
-  setModalVisible(true);
-};
+  const navigation =
+    useNavigation<NativeStackNavigationProp<SettingsStackParamList>>();
+
+  const openModal = (Component: React.ReactNode | undefined) => {
+    setModalContent(Component);
+    setModalVisible(true);
+  };
+
   return (
     <View style={[styles.container, {backgroundColor: theme.theme.background}]}>
-      <Section text="Cuenta" />
+      <Section title="Cuenta" />
       <SettingsButton
         iconName="user"
         title="Perfil"
         subTitle="Configuraciones del perfil"
+        onPress={() => openModal(<Text>Perfil</Text>)}
       />
       <SettingsButton
         iconName="bell"
@@ -42,12 +47,12 @@ const openModal = (Component: (() => React.JSX.Element) | undefined) => {
         title="Seguridad"
         subTitle="Administrar las configuraciones de seguridad"
       />
-      <Section text="Preferencias" />
+      <Section title="Preferencias" />
       <SettingsButton
         iconName="sun"
         title="Tema y colores"
         subTitle="Cambiar tema y colores"
-        onPress={() => openModal(NotificacionesComponent)}
+        onPress={() => navigation.navigate('ThemesOption')}
       />
       <SettingsButton
         iconName="dollar-sign"
@@ -60,7 +65,7 @@ const openModal = (Component: (() => React.JSX.Element) | undefined) => {
         subTitle="Administrar las configuraciones de huella"
       />
 
-      <Section text="Soporte y Ayuda" />
+      <Section title="Soporte y Ayuda" />
       <SettingsButton
         iconName="question"
         title="Centro de ayuda"

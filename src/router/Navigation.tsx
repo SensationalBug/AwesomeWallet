@@ -1,10 +1,11 @@
+import {useContext} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
+import {ThemesContext, ThemeType} from '../context/ThemesContext';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import Main from '../Main';
 import AddTransaction from '../views/AddTransaction';
-import {useContext} from 'react';
-import {ThemesContext, ThemeType} from '../context/ThemesContext';
+import ThemesOption from '../components/settingsOptions/ThemesOption';
 
 const Navigation = () => {
   const theme = useContext(ThemesContext) as ThemeType;
@@ -17,6 +18,23 @@ const Navigation = () => {
           headerShown: false,
         }}>
         <Stack.Screen name="Main" component={Main} />
+        <Stack.Screen
+          name="ThemesOption"
+          component={ThemesOption}
+          options={{
+            title: 'Cambiar tema',
+            headerShown: true,
+            headerTitleAlign: 'center',
+            headerStyle: {
+              backgroundColor: '#fff',
+            },
+            headerShadowVisible: false,
+            headerTintColor: '#000',
+            headerTitleStyle: {
+              fontSize: 24,
+            },
+          }}
+        />
         <Stack.Screen
           name="AddTransaction"
           component={AddTransaction}
@@ -31,7 +49,6 @@ const Navigation = () => {
             headerTintColor: '#000',
             headerTitleStyle: {
               fontSize: 24,
-              fontWeight: 'bold',
             },
           }}
         />

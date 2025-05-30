@@ -4,10 +4,10 @@ import {Text} from 'react-native-paper';
 import {ThemesContext, ThemeType} from '../../context/ThemesContext';
 
 interface SectionProps {
-  text: string;
+  title: string;
 }
 
-const Section = ({text}: SectionProps) => {
+const Section = ({title}: SectionProps) => {
   const theme = useContext(ThemesContext) as ThemeType;
 
   return (
@@ -15,7 +15,7 @@ const Section = ({text}: SectionProps) => {
       <Text
         variant="titleLarge"
         style={[styles.text, {color: theme.theme.text}]}>
-        {text}
+        {title}
       </Text>
     </View>
   );

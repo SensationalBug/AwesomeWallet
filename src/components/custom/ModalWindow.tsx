@@ -12,7 +12,7 @@ import {ThemesContext, ThemeType} from '../../context/ThemesContext';
 type ModalWindowProps = {
   modalVisible: boolean;
   setModalVisible: (visible: boolean) => void;
-  component?: React.ElementType; // Component to render inside the modal
+  component?: React.ReactNode; // Component to render inside the modal
   width?: DimensionValue; // Width can be a number or a percentage string
   height?: DimensionValue; // Height can be a number or a percentage string
 };
@@ -21,12 +21,16 @@ const ModalWindow: React.FC<ModalWindowProps> = ({
   modalVisible,
   setModalVisible,
   component,
-  width = '10%', // Default width if not provided	',
+  width = '100%', // Default width if not provided	',
   height = '100%', // Default height if not provided
 }) => {
   const theme = useContext(ThemesContext) as ThemeType;
   return (
-    <Modal animationType="fade" transparent={true} visible={modalVisible}>
+    <Modal
+      animationType="fade"
+      transparent={true}
+      visible={modalVisible}
+      onRequestClose={() => setModalVisible(!modalVisible)}>
       <View style={[styles.modalContainer]}>
         <View
           style={[
@@ -36,7 +40,7 @@ const ModalWindow: React.FC<ModalWindowProps> = ({
           <Pressable onPress={() => setModalVisible(!modalVisible)}>
             <Text>Cerrar</Text>
           </Pressable>
-          {component && React.createElement(component)}
+          {component}
         </View>
       </View>
     </Modal>
