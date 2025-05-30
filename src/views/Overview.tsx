@@ -1,17 +1,27 @@
 import {View, StyleSheet, TouchableOpacity} from 'react-native';
-import React from 'react';
+import React, {useContext} from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {Surface, Text} from 'react-native-paper';
 import MyChart from '../components/Charts';
 import Recent from '../components/Recent';
 
-const Overview = () => {
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {ThemesContext, ThemeType} from '../context/ThemesContext';
+
+type OverviewProps = {
+  navigation: NativeStackNavigationProp<any>;
+};
+
+const Overview = ({navigation}: OverviewProps) => {
+  const theme = useContext(ThemesContext) as ThemeType;
+
   return (
-    <View style={styles.container}>
+    <View style={{backgroundColor: theme.theme.background}}>
       {/* Header with title and add button */}
       <View style={styles.header}>
         <Text style={styles.title}>Overview</Text>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('AddTransaction')}>
+          {/* <TouchableOpacity onPress={() => console.log(theme)}> */}
           <Icon name="add" size={35} color="#000" />
         </TouchableOpacity>
       </View>
@@ -81,12 +91,6 @@ const Overview = () => {
 export default Overview;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 10,
-    backgroundColor: '#fff',
-    // backgroundColor: '#101323',
-  },
   header: {
     padding: 10,
     alignItems: 'center',
