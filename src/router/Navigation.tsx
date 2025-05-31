@@ -6,9 +6,10 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Main from '../Main';
 import AddTransaction from '../views/AddTransaction';
 import ThemesOption from '../components/settingsOptions/ThemesOption';
+import {themes} from '../styles/Theme';
 
 const Navigation = () => {
-  const theme = useContext(ThemesContext) as ThemeType;
+  const currentThemeName = useContext(ThemesContext) as ThemeType;
   const Stack = createNativeStackNavigator();
   return (
     <NavigationContainer>
@@ -26,12 +27,14 @@ const Navigation = () => {
             headerShown: true,
             headerTitleAlign: 'center',
             headerStyle: {
-              backgroundColor: '#fff',
+              backgroundColor:
+                themes[currentThemeName.currentThemeName].background,
             },
             headerShadowVisible: false,
-            headerTintColor: '#000',
+            headerTintColor: themes[currentThemeName.currentThemeName].text,
             headerTitleStyle: {
               fontSize: 24,
+              color: themes[currentThemeName.currentThemeName].text,
             },
           }}
         />
@@ -43,12 +46,14 @@ const Navigation = () => {
             headerShown: true,
             headerTitleAlign: 'center',
             headerStyle: {
-              backgroundColor: '#fff',
+              backgroundColor:
+                themes[currentThemeName.currentThemeName].background,
             },
             headerShadowVisible: false,
-            headerTintColor: '#000',
+            headerTintColor: themes[currentThemeName.currentThemeName].text,
             headerTitleStyle: {
               fontSize: 24,
+              color: themes[currentThemeName.currentThemeName].text,
             },
           }}
         />

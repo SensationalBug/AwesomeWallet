@@ -1,30 +1,19 @@
-import {StyleSheet, View} from 'react-native';
-import React, {useContext} from 'react';
-import {Text} from 'react-native-paper';
-import {ThemesContext, ThemeType} from '../../context/ThemesContext';
+import React from 'react';
+import {View} from 'react-native';
+import StyledText from './StyledText';
 
 interface SectionProps {
   title: string;
+  color?: string; // Optional prop for text color
+  paddingVertical?: number; // Optional prop for horizontal padding
 }
 
-const Section = ({title}: SectionProps) => {
-  const theme = useContext(ThemesContext) as ThemeType;
-
+const Section = ({title, paddingVertical = 0}: SectionProps) => {
   return (
-    <View>
-      <Text
-        variant="titleLarge"
-        style={[styles.text, {color: theme.theme.text}]}>
-        {title}
-      </Text>
+    <View style={{paddingVertical}}>
+      <StyledText variant="titleLarge" text={title} />
     </View>
   );
 };
 
 export default Section;
-
-const styles = StyleSheet.create({
-  text: {
-    fontWeight: 'bold',
-  },
-});

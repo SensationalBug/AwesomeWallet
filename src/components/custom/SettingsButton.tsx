@@ -1,13 +1,15 @@
 import {
-  TouchableOpacity,
-  StyleSheet,
   View,
+  StyleSheet,
+  TouchableOpacity,
   useWindowDimensions,
 } from 'react-native';
+import StyledText from './StyledText';
 import React, {useContext} from 'react';
-import {ThemesContext, ThemeType} from '../../context/ThemesContext';
-import {Text} from 'react-native-paper';
+import {themes} from '../../styles/Theme';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import {ThemesContext, ThemeType} from '../../context/ThemesContext';
+
 interface SettingsButtonProps {
   title: string;
   iconName: string;
@@ -20,7 +22,7 @@ const SettingsButton = ({
   iconName,
   onPress,
 }: SettingsButtonProps) => {
-  const theme = useContext(ThemesContext) as ThemeType;
+  const currentThemeName = useContext(ThemesContext) as ThemeType;
   const {width} = useWindowDimensions();
 
   return (
@@ -28,17 +30,16 @@ const SettingsButton = ({
       <View
         style={[
           styles.iconContainer,
-          {backgroundColor: theme.theme.iconBackground},
+          {
+            backgroundColor:
+              themes[currentThemeName.currentThemeName].iconBackground,
+          },
         ]}>
-        <Icon name={iconName} size={25} color="#000" />
+        <Icon name={iconName} size={25} color={themes[currentThemeName.currentThemeName].text} />
       </View>
       <View style={[styles.textContainer, {width: width - 100}]}>
-        <Text variant="titleLarge" style={[{color: theme.theme.text}]}>
-          {title}
-        </Text>
-        <Text variant="labelLarge" style={[{color: theme.theme.textLabel}]}>
-          {subTitle}
-        </Text>
+        <StyledText variant="titleLarge" text={title} />
+        <StyledText variant="labelLarge" text={subTitle} label/>
       </View>
     </TouchableOpacity>
   );

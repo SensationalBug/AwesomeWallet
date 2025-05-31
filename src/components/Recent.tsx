@@ -1,21 +1,36 @@
+import {themes} from '../styles/Theme';
+import React, {useContext} from 'react';
+import StyledText from './custom/StyledText';
 import {View, StyleSheet} from 'react-native';
-import React from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {Text} from 'react-native-paper';
+import {ThemesContext, ThemeType} from '../context/ThemesContext';
 
 const Recent = () => {
+  const currentThemeName = useContext(ThemesContext) as ThemeType;
+
   return (
     <View style={styles.recentTransactionsItems}>
-      <View style={styles.recentTransactionIcon}>
-        <Icon name="add" size={35} color="#000" />
+      <View
+        style={[
+          styles.recentTransactionIcon,
+          {
+            backgroundColor:
+              themes[currentThemeName.currentThemeName].iconBackground,
+          },
+        ]}>
+        <Icon
+          name="add"
+          size={35}
+          color={themes[currentThemeName.currentThemeName].text}
+        />
       </View>
       <View style={styles.recentTransactionView}>
         <View>
-          <Text variant="titleMedium">Supermercado</Text>
-          <Text variant="titleSmall">Comida</Text>
+          <StyledText variant="titleMedium" text="Supermercado" />
+          <StyledText variant="titleSmall" text="Comida" label/>
         </View>
         <View>
-          <Text variant="titleSmall">-RD$50.00</Text>
+          <StyledText variant="titleSmall" text="-RD$50.00" />
         </View>
       </View>
     </View>
@@ -30,13 +45,11 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     flexDirection: 'row',
     alignItems: 'center',
-    // backgroundColor: '#f0f0f0',
     justifyContent: 'flex-start',
   },
   recentTransactionIcon: {
     padding: 5,
     borderRadius: 10,
-    backgroundColor: '#f0f0f0',
   },
   recentTransactionView: {
     width: '90%',

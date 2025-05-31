@@ -8,6 +8,7 @@ import {
   DimensionValue,
 } from 'react-native';
 import {ThemesContext, ThemeType} from '../../context/ThemesContext';
+import {themes} from '../../styles/Theme';
 
 type ModalWindowProps = {
   modalVisible: boolean;
@@ -24,7 +25,7 @@ const ModalWindow: React.FC<ModalWindowProps> = ({
   width = '100%', // Default width if not provided	',
   height = '100%', // Default height if not provided
 }) => {
-  const theme = useContext(ThemesContext) as ThemeType;
+  const currentThemeName = useContext(ThemesContext) as ThemeType;
   return (
     <Modal
       animationType="fade"
@@ -35,7 +36,12 @@ const ModalWindow: React.FC<ModalWindowProps> = ({
         <View
           style={[
             styles.modalView,
-            {backgroundColor: theme.theme.iconBackground, width, height},
+            {
+              backgroundColor:
+                themes[currentThemeName.currentThemeName].background,
+              width,
+              height,
+            },
           ]}>
           <Pressable onPress={() => setModalVisible(!modalVisible)}>
             <Text>Cerrar</Text>

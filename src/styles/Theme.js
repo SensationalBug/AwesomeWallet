@@ -1,26 +1,30 @@
 export const themes = {
   light: {
+    name: 'Claro',
     text: '#000',
     textLabel: '#60748A',
     background: '#fff',
     iconBackground: '#F0F2F5',
   },
   dark: {
-    text: '#000',
+    name: 'Oscuro',
+    text: '#fff',
     textLabel: '#60748A',
-    background: '#fff',
-    iconBackground: '#F0F2F5',
+    background: '#101323',
+    iconBackground: '#21284A',
   },
   blue: {
-    text: '#000',
+    name: 'Azul',
+    text: '#fff',
     textLabel: '#60748A',
-    background: '#fff',
+    background: 'blue',
     iconBackground: '#F0F2F5',
   },
   green: {
+    name: 'Verde',
     text: '#000',
     textLabel: '#60748A',
-    background: '#fff',
+    background: 'green',
     iconBackground: '#F0F2F5',
   },
 };

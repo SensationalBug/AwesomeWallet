@@ -8,16 +8,16 @@ export const ThemesContext = createContext({});
 export interface ThemeType {
   theme: typeof themes.light;
   currentThemeName: 'light' | 'dark' | 'blue' | 'green';
-  setCurrentThemeName: (themeName: 'light' | 'dark' | 'blue' | 'green') => void;
+  storageTheme: (
+    themeName: 'light' | 'dark' | 'blue' | 'green',
+  ) => Promise<void>;
 }
 
 export const ThemesProvider: React.FC<React.PropsWithChildren<{}>> = ({
   children,
 }) => {
-  const [currentThemeName, setCurrentThemeName] = useState<
-    'light' | 'dark' | 'blue' | 'green'
-  >('dark'); // Default to dark theme
-  const [theme, setTheme] = useState(themes.dark);
+  const [currentThemeName, setCurrentThemeName] =
+    useState<keyof typeof themes>('light'); // Default to light theme
 
   const styles = StyleSheet.create({
     container: {
@@ -25,6 +25,15 @@ export const ThemesProvider: React.FC<React.PropsWithChildren<{}>> = ({
       backgroundColor: themes.dark.background,
     },
   });
+
+  const storageTheme = async (themeName: keyof typeof themes) => {
+    try {
+      await AsyncStorage.setItem('theme', themeName);
+      setCurrentThemeName(themeName);
+    } catch (error) {
+      console.error('Error saving theme to AsyncStorage:', error);
+    }
+  };
 
   useEffect(() => {
     const loadTheme = async () => {
@@ -36,24 +45,19 @@ export const ThemesProvider: React.FC<React.PropsWithChildren<{}>> = ({
       }
       if (storedTheme === 'dark') {
         setCurrentThemeName('dark');
-        setTheme(themes.dark);
       } else if (storedTheme === 'blue') {
         setCurrentThemeName('blue');
-        setTheme(themes.blue);
       } else if (storedTheme === 'green') {
         setCurrentThemeName('green');
-        setTheme(themes.green);
       } else {
         setCurrentThemeName('light');
-        setTheme(themes.light);
       }
     };
     loadTheme();
   }, []);
 
   return (
-    <ThemesContext.Provider
-      value={{theme, currentThemeName, setCurrentThemeName}}>
+    <ThemesContext.Provider value={{storageTheme, currentThemeName}}>
       <View style={styles.container}>{children}</View>
     </ThemesContext.Provider>
   );

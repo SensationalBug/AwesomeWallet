@@ -7,7 +7,8 @@ import SettingsButton from '../components/custom/SettingsButton';
 import {ThemesContext, ThemeType} from '../context/ThemesContext';
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
 
-import { Text } from 'react-native-paper';
+import {Text} from 'react-native-paper';
+import {themes} from '../styles/Theme';
 
 // Define your stack param list type here or import it from your navigation types file
 type SettingsStackParamList = {
@@ -16,7 +17,7 @@ type SettingsStackParamList = {
 };
 
 const Settings = () => {
-  const theme = useContext(ThemesContext) as ThemeType;
+  const currentThemeName = useContext(ThemesContext) as ThemeType;
   const [modalVisible, setModalVisible] = React.useState(false);
   const [modalContent, setModalContent] = React.useState<React.ReactNode>(null);
 
@@ -29,7 +30,11 @@ const Settings = () => {
   };
 
   return (
-    <View style={[styles.container, {backgroundColor: theme.theme.background}]}>
+    <View
+      style={[
+        styles.container,
+        {backgroundColor: themes[currentThemeName.currentThemeName].background},
+      ]}>
       <Section title="Cuenta" />
       <SettingsButton
         iconName="user"
@@ -43,9 +48,9 @@ const Settings = () => {
         subTitle="Encender las notificaciones"
       />
       <SettingsButton
-        iconName="shield-alt"
-        title="Seguridad"
-        subTitle="Administrar las configuraciones de seguridad"
+        iconName="fingerprint"
+        title="Huella"
+        subTitle="Administrar las configuraciones de huella"
       />
       <Section title="Preferencias" />
       <SettingsButton
@@ -60,11 +65,10 @@ const Settings = () => {
         subTitle="Administrar las configuraciones de tipo de moneda"
       />
       <SettingsButton
-        iconName="fingerprint"
-        title="Huella"
-        subTitle="Administrar las configuraciones de huella"
+        iconName="shield-alt"
+        title="Categorias"
+        subTitle="Administrar las categorias de transacciones"
       />
-
       <Section title="Soporte y Ayuda" />
       <SettingsButton
         iconName="question"

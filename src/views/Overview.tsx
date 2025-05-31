@@ -1,89 +1,90 @@
-import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import React, {useContext} from 'react';
-import Icon from 'react-native-vector-icons/Ionicons';
-import {Surface, Text} from 'react-native-paper';
-import MyChart from '../components/Charts';
 import Recent from '../components/Recent';
+import {Surface} from 'react-native-paper';
+import MyChart from '../components/Charts';
+import {View, StyleSheet, TouchableOpacity, ScrollView} from 'react-native';
 
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {ThemesContext, ThemeType} from '../context/ThemesContext';
+import {themes} from '../styles/Theme';
+import StyledText from '../components/custom/StyledText';
 
-type OverviewProps = {
-  navigation: NativeStackNavigationProp<any>;
-};
-
-const Overview = ({navigation}: OverviewProps) => {
-  const theme = useContext(ThemesContext) as ThemeType;
+const Overview = () => {
+  const currentThemeName = useContext(ThemesContext) as ThemeType;
 
   return (
-    <View style={{backgroundColor: theme.theme.background}}>
-      {/* Header with title and add button */}
-      <View style={styles.header}>
-        <Text style={styles.title}>Overview</Text>
-        <TouchableOpacity onPress={() => navigation.navigate('AddTransaction')}>
-          {/* <TouchableOpacity onPress={() => console.log(theme)}> */}
-          <Icon name="add" size={35} color="#000" />
-        </TouchableOpacity>
-      </View>
-
+    <View
+      style={[
+        styles.container,
+        {
+          backgroundColor: themes[currentThemeName.currentThemeName].background,
+        },
+      ]}>
       {/* Surface components for displaying balance */}
       <View style={styles.surfaceContainer}>
-        <Surface elevation={2} style={styles.surface}>
-          <Text variant="titleMedium">Balance:</Text>
-          <Text style={styles.titleLargeText} variant="titleLarge">
-            RD$10,000
-          </Text>
+        <Surface
+          elevation={2}
+          style={[
+            styles.surface,
+            {
+              backgroundColor:
+                themes[currentThemeName.currentThemeName].iconBackground,
+            },
+          ]}>
+          <StyledText variant="titleMedium" text="Balance:" />
+          <StyledText variant="titleLarge" text="RD$10,000" bold={'bold'} />
         </Surface>
-        <Surface elevation={2} style={styles.surface}>
-          <Text variant="titleMedium">Balance:</Text>
-          <Text style={styles.titleLargeText} variant="titleLarge">
-            RD$10,000
-          </Text>
+        <Surface
+          elevation={2}
+          style={[
+            styles.surface,
+            {
+              backgroundColor:
+                themes[currentThemeName.currentThemeName].iconBackground,
+            },
+          ]}>
+          <StyledText variant="titleMedium" text="Balance:" />
+          <StyledText variant="titleLarge" text="RD$10,000" bold={'bold'} />
         </Surface>
       </View>
 
       {/* This month section */}
       <View style={styles.thisMonth}>
-        <Text variant="titleSmall">Este mes</Text>
-        <Text style={styles.titleLargeText} variant="titleLarge">
-          RD$100.000.00
-        </Text>
-        <Text variant="titleSmall">
-          Este mes <Text style={styles.titleMediumPercentage}>+10%</Text>
-        </Text>
+        <View>
+          <StyledText variant="titleSmall" text="Este mes" />
+          <StyledText variant="titleLarge" text="RD$100.000.00" bold={'bold'} />
+          <StyledText variant="titleSmall" text="Este mes +10%" />
+        </View>
+        <TouchableOpacity
+          style={[
+            styles.addTransactionButton,
+            {
+              backgroundColor:
+                themes[currentThemeName.currentThemeName].iconBackground,
+            },
+          ]}>
+          <StyledText
+            bold="bold"
+            variant="titleMedium"
+            text="Añadir Transacción"
+          />
+        </TouchableOpacity>
       </View>
 
       {/* Chart section */}
-      <View style={styles.myChartSection}>
-        <MyChart />
-      </View>
+      <MyChart />
 
       {/* Recent transactions section */}
       <View style={styles.recentTransactions}>
-        <Text style={styles.titleLargeText} variant="headlineMedium">
-          Transacciones recientes
-        </Text>
+        <StyledText variant="headlineMedium" text="Transacciones recientes" />
       </View>
 
       {/* Recent transactions items */}
-      <Recent />
-      <Recent />
-      <Recent />
-      <Recent />
-      {/* <View style={styles.recentTransactionsItems}>
-        <View style={styles.recentTransactionIcon}>
-          <Icon name="add" size={35} color="#000" />
-        </View>
-        <View style={styles.recentTransactionView}>
-          <View>
-            <Text variant="titleMedium">Supermercado</Text>
-            <Text variant="titleSmall">Comida</Text>
-          </View>
-          <View>
-            <Text variant="titleSmall">-RD$50.00</Text>
-          </View>
-        </View>
-      </View> */}
+      <ScrollView>
+        <Recent />
+        <Recent />
+        <Recent />
+        <Recent />
+      </ScrollView>
     </View>
   );
 };
@@ -91,26 +92,18 @@ const Overview = ({navigation}: OverviewProps) => {
 export default Overview;
 
 const styles = StyleSheet.create({
-  header: {
+  container: {
+    flex: 1,
     padding: 10,
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    backgroundColor: 'blue',
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
   },
   surfaceContainer: {
     height: '15%',
     alignItems: 'center',
     flexDirection: 'row',
-    backgroundColor: 'red',
-    justifyContent: 'space-evenly',
+    justifyContent: 'space-between',
   },
   surface: {
-    width: '45%',
+    width: '48%',
     height: '90%',
     padding: 10,
     borderRadius: 10,
@@ -118,41 +111,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   thisMonth: {
-    padding: 20,
-    backgroundColor: 'yellow',
-    justifyContent: 'space-evenly',
-  },
-  titleLargeText: {
-    fontWeight: 'bold',
-  },
-  titleMediumPercentage: {
-    color: 'green',
-    fontWeight: 'bold',
-  },
-  myChartSection: {
+    paddingVertical: 10,
+    flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  addTransactionButton: {
+    padding: 15,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   recentTransactions: {
     paddingHorizontal: 10,
-  },
-  recentTransactionsItems: {
-    padding: 10,
-    borderRadius: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
-    // backgroundColor: '#f0f0f0',
-    justifyContent: 'flex-start',
-  },
-  recentTransactionIcon: {
-    padding: 5,
-    borderRadius: 10,
-    backgroundColor: '#f0f0f0',
-  },
-  recentTransactionView: {
-    width: '90%',
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    justifyContent: 'space-between',
   },
 });

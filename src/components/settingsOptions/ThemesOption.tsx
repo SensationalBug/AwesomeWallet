@@ -1,22 +1,37 @@
 import React, {useContext} from 'react';
 import Section from '../custom/Section';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {Text} from 'react-native-paper';
-import {ThemesContext} from '../../context/ThemesContext';
+import {themes} from '../../styles/Theme';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {ThemesContext, ThemeType} from '../../context/ThemesContext';
 
 const ThemesOption = () => {
-  const setCurrentThemeName = useContext(ThemesContext);
+  const {currentThemeName, storageTheme} = useContext(
+    ThemesContext,
+  ) as ThemeType;
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Section title="Seleccionna tu tema preferido" />
+    <View
+      style={[
+        styles.container,
+        {backgroundColor: themes[currentThemeName].background},
+      ]}>
+      <View style={[styles.header]}>
+        <Section paddingVertical={5} title="Seleccionna tu tema preferido" />
       </View>
-      <View>
-        <TouchableOpacity onPress={() => console.log(setCurrentThemeName)}>
-          <Text>setCurrentThemeName</Text>
+      {Object.entries(themes).map(([key, value]: any) => (
+        <TouchableOpacity
+          style={[
+            styles.themeButton,
+            {
+              backgroundColor: value.background,
+            },
+          ]}
+          key={key}
+          onPress={() => storageTheme(key as keyof typeof themes)}>
+          <Text style={[styles.text, {color: value.text}]}>{value.name}</Text>
         </TouchableOpacity>
-      </View>
+      ))}
     </View>
   );
 };
@@ -33,11 +48,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 20,
   },
-  headerIcon: {
-    marginRight: 10,
+  themeButton: {
+    padding: 10,
+    borderRadius: 5,
+    marginVertical: 5,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    alignItems: 'center',
   },
-  headerText: {
-    fontSize: 24,
+  text: {
+    fontSize: 16,
     fontWeight: 'bold',
   },
 });
