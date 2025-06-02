@@ -4,11 +4,17 @@ import {Surface} from 'react-native-paper';
 import MyChart from '../components/Charts';
 import {View, StyleSheet, TouchableOpacity, ScrollView} from 'react-native';
 
-import {ThemesContext, ThemeType} from '../context/ThemesContext';
 import {themes} from '../styles/Theme';
 import StyledText from '../components/custom/StyledText';
+import {ThemesContext, ThemeType} from '../context/ThemesContext';
 
-const Overview = () => {
+import type { StackNavigationProp } from '@react-navigation/stack';
+
+type OverviewProps = {
+  navigation: StackNavigationProp<any, any>;
+};
+
+const Overview = ({navigation}: OverviewProps) => {
   const currentThemeName = useContext(ThemesContext) as ThemeType;
 
   return (
@@ -55,6 +61,7 @@ const Overview = () => {
           <StyledText variant="titleSmall" text="Este mes +10%" />
         </View>
         <TouchableOpacity
+          onPress={() => navigation.navigate('AddTransaction')}
           style={[
             styles.addTransactionButton,
             {

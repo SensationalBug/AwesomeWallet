@@ -3,7 +3,7 @@ import {View, StyleSheet} from 'react-native';
 import Section from '../components/custom/Section';
 import {useNavigation} from '@react-navigation/native';
 import ModalWindow from '../components/custom/ModalWindow';
-import SettingsButton from '../components/custom/SettingsButton';
+import StyledButton from '../components/custom/StyledButton';
 import {ThemesContext, ThemeType} from '../context/ThemesContext';
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
 
@@ -13,6 +13,7 @@ import {themes} from '../styles/Theme';
 // Define your stack param list type here or import it from your navigation types file
 type SettingsStackParamList = {
   ThemesOption: undefined;
+  CategoriesOption: undefined;
   // Add other screens here if needed
 };
 
@@ -36,46 +37,47 @@ const Settings = () => {
         {backgroundColor: themes[currentThemeName.currentThemeName].background},
       ]}>
       <Section title="Cuenta" />
-      <SettingsButton
+      <StyledButton
         iconName="user"
         title="Perfil"
         subTitle="Configuraciones del perfil"
         onPress={() => openModal(<Text>Perfil</Text>)}
       />
-      <SettingsButton
+      <StyledButton
         iconName="bell"
         title="Notificaciones"
         subTitle="Encender las notificaciones"
       />
-      <SettingsButton
+      <StyledButton
         iconName="fingerprint"
         title="Huella"
         subTitle="Administrar las configuraciones de huella"
       />
       <Section title="Preferencias" />
-      <SettingsButton
+      <StyledButton
         iconName="sun"
         title="Tema y colores"
         subTitle="Cambiar tema y colores"
         onPress={() => navigation.navigate('ThemesOption')}
       />
-      <SettingsButton
+      <StyledButton
         iconName="dollar-sign"
         title="Tipo de moneda"
-        subTitle="Administrar las configuraciones de tipo de moneda"
+        subTitle="Administrar los tipos de moneda"
       />
-      <SettingsButton
-        iconName="shield-alt"
+      <StyledButton
+        iconName="list-ul"
         title="Categorias"
         subTitle="Administrar las categorias de transacciones"
+        onPress={() => navigation.navigate('CategoriesOption')}
       />
       <Section title="Soporte y Ayuda" />
-      <SettingsButton
+      <StyledButton
         iconName="question"
         title="Centro de ayuda"
         subTitle="Preguntas frecuentes y soporte técnico"
       />
-      <SettingsButton
+      <StyledButton
         iconName="info"
         title="Acerca de"
         subTitle="Política de privacidad y términos de uso"

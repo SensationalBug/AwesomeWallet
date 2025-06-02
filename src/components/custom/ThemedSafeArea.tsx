@@ -1,11 +1,6 @@
 import React from 'react';
-import {
-  SafeAreaView,
-  StatusBar,
-  ViewStyle,
-  Platform,
-  StyleSheet,
-} from 'react-native';
+// import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {SafeAreaView, StatusBar, ViewStyle, StyleSheet} from 'react-native';
 
 type Props = {
   children: React.ReactNode;
@@ -15,19 +10,24 @@ type Props = {
 };
 
 const ThemedSafeArea = ({children, style = {}}: Props) => {
+  // const insets = useSafeAreaInsets();
   return (
-    <SafeAreaView style={styles.flex1}>
-      <StatusBar
-        translucent={Platform.OS === 'android'}
-        backgroundColor="transparent"
-      />
-      <SafeAreaView style={[styles.flex1, style]}>{children}</SafeAreaView>
+    <SafeAreaView style={[styles.container]}>
+      <StatusBar />
+      <SafeAreaView
+        style={[
+          style,
+          styles.container,
+          // {paddingBottom: insets.bottom, paddingTop: insets.top},
+        ]}>
+        {children}
+      </SafeAreaView>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  flex1: {
+  container: {
     flex: 1,
   },
 });

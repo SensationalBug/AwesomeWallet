@@ -25,9 +25,30 @@ const tabBarIcon = (
 const Main = () => {
   const currentThemeName = useContext(ThemesContext) as ThemeType;
 
+  const tabScreenOptions = (
+    title: string,
+    iconName: string,
+    iconNameOutline: string,
+  ) => ({
+    title: title,
+    headerShown: true,
+    tabBarIcon: (props: {focused: boolean; color: string}) =>
+      tabBarIcon(iconName, iconNameOutline, props),
+    headerTitleAlign: 'center' as const,
+    headerStyle: {
+      backgroundColor: themes[currentThemeName.currentThemeName].background,
+    },
+    headerShadowVisible: false,
+    headerTintColor: themes[currentThemeName.currentThemeName].text,
+    headerTitleStyle: {
+      fontSize: 24,
+      fontWeight: 'bold' as 'bold',
+    },
+  });
+
   return (
     <Tab.Navigator
-      initialRouteName="Settings"
+      initialRouteName="Overview"
       screenOptions={{
         tabBarActiveTintColor: themes[currentThemeName.currentThemeName].text,
         tabBarInactiveTintColor:
@@ -39,52 +60,21 @@ const Main = () => {
       <Tab.Screen
         name="Overview"
         component={Overview}
-        options={{
-          title: 'Inicio',
-          headerShown: true,
-          tabBarIcon: props => tabBarIcon('home', 'home-outline', props),
-          headerTitleAlign: 'center',
-          headerStyle: {
-            backgroundColor:
-              themes[currentThemeName.currentThemeName].background,
-          },
-          headerShadowVisible: false,
-          headerTintColor: themes[currentThemeName.currentThemeName].text,
-          headerTitleStyle: {
-            fontSize: 24,
-            fontWeight: 'bold',
-          },
-        }}
+        options={tabScreenOptions('Inicio', 'home', 'home-outline')}
       />
       <Tab.Screen
         name="Transaction"
         component={Transaction}
-        options={{
-          title: 'Transacciones',
-          headerShown: false,
-          tabBarIcon: props => tabBarIcon('grid', 'grid-outline', props),
-        }}
+        options={tabScreenOptions('Transacciones', 'grid', 'grid-outline')}
       />
       <Tab.Screen
-        name="Settings"
+        name="Ajustes"
         component={Settings}
-        options={{
-          title: 'Ajustes',
-          headerShown: true,
-          tabBarIcon: props =>
-            tabBarIcon('list-circle', 'list-circle-outline', props),
-          headerTitleAlign: 'center',
-          headerStyle: {
-            backgroundColor:
-              themes[currentThemeName.currentThemeName].background,
-          },
-          headerShadowVisible: false,
-          headerTintColor: themes[currentThemeName.currentThemeName].text,
-          headerTitleStyle: {
-            fontSize: 24,
-            fontWeight: 'bold',
-          },
-        }}
+        options={tabScreenOptions(
+          'Transacciones',
+          'list-circle',
+          'list-circle-outline',
+        )}
       />
     </Tab.Navigator>
   );

@@ -1,12 +1,12 @@
 import React, {useContext} from 'react';
 import {Text} from 'react-native-paper';
 
+import {themes} from '../../styles/Theme';
 import type {TextProps} from 'react-native-paper';
 import {ThemesContext, ThemeType} from '../../context/ThemesContext';
-import {themes} from '../../styles/Theme';
 
 type StyledTextProps = {
-  text: string;
+  text?: string;
   variant?: TextProps<any>['variant'];
   bold?: any; // 'normal' | 'bold' | '100' | '200' | '300' | '400' | '500' | '600' | '700' | '800' | '900'
   label?: boolean; // Optional prop to indicate if the text is a label

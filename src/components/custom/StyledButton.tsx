@@ -12,21 +12,25 @@ import {ThemesContext, ThemeType} from '../../context/ThemesContext';
 
 interface SettingsButtonProps {
   title: string;
-  iconName: string;
-  subTitle: string;
+  iconName?: string;
+  subTitle?: string;
   onPress?: () => void;
+  onLongPress?: () => void;
 }
-const SettingsButton = ({
+const StyledButton = ({
   title,
   subTitle,
   iconName,
   onPress,
+  onLongPress,
 }: SettingsButtonProps) => {
   const currentThemeName = useContext(ThemesContext) as ThemeType;
   const {width} = useWindowDimensions();
-
   return (
-    <TouchableOpacity style={styles.container} onPress={onPress}>
+    <TouchableOpacity
+      style={styles.container}
+      onPress={onPress}
+      onLongPress={onLongPress}>
       <View
         style={[
           styles.iconContainer,
@@ -35,17 +39,27 @@ const SettingsButton = ({
               themes[currentThemeName.currentThemeName].iconBackground,
           },
         ]}>
-        <Icon name={iconName} size={25} color={themes[currentThemeName.currentThemeName].text} />
+        <Icon
+          name={iconName || 'help'}
+          size={25}
+          color={themes[currentThemeName.currentThemeName].text}
+        />
       </View>
       <View style={[styles.textContainer, {width: width - 100}]}>
-        <StyledText variant="titleLarge" text={title} />
-        <StyledText variant="labelLarge" text={subTitle} label/>
+        {subTitle ? (
+          <>
+            <StyledText variant="titleLarge" text={title} />
+            <StyledText variant="labelLarge" text={subTitle} label />
+          </>
+        ) : (
+          <StyledText variant="titleLarge" text={title} />
+        )}
       </View>
     </TouchableOpacity>
   );
 };
 
-export default SettingsButton;
+export default StyledButton;
 
 const styles = StyleSheet.create({
   container: {

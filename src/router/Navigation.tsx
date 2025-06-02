@@ -7,14 +7,31 @@ import Main from '../Main';
 import AddTransaction from '../views/AddTransaction';
 import ThemesOption from '../components/settingsOptions/ThemesOption';
 import {themes} from '../styles/Theme';
+import CategoriesOption from '../components/settingsOptions/CategoriesOption';
 
 const Navigation = () => {
   const currentThemeName = useContext(ThemesContext) as ThemeType;
   const Stack = createNativeStackNavigator();
+
+  const stackScreenOptions = (theme: ThemeType, title: string) => ({
+    title,
+    headerShown: true,
+    headerTitleAlign: 'center' as const,
+    headerStyle: {
+      backgroundColor: themes[theme.currentThemeName].background,
+    },
+    headerShadowVisible: false,
+    headerTintColor: themes[theme.currentThemeName].text,
+    headerTitleStyle: {
+      fontSize: 24,
+      color: themes[theme.currentThemeName].text,
+    },
+  });
+
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="Main"
+        initialRouteName="CategoriesOption"
         screenOptions={{
           headerShown: false,
         }}>
@@ -22,40 +39,20 @@ const Navigation = () => {
         <Stack.Screen
           name="ThemesOption"
           component={ThemesOption}
-          options={{
-            title: 'Cambiar tema',
-            headerShown: true,
-            headerTitleAlign: 'center',
-            headerStyle: {
-              backgroundColor:
-                themes[currentThemeName.currentThemeName].background,
-            },
-            headerShadowVisible: false,
-            headerTintColor: themes[currentThemeName.currentThemeName].text,
-            headerTitleStyle: {
-              fontSize: 24,
-              color: themes[currentThemeName.currentThemeName].text,
-            },
-          }}
+          options={stackScreenOptions(
+            currentThemeName,
+            'Selecciona tu tema preferido',
+          )}
         />
         <Stack.Screen
           name="AddTransaction"
           component={AddTransaction}
-          options={{
-            title: 'Agregar transacción',
-            headerShown: true,
-            headerTitleAlign: 'center',
-            headerStyle: {
-              backgroundColor:
-                themes[currentThemeName.currentThemeName].background,
-            },
-            headerShadowVisible: false,
-            headerTintColor: themes[currentThemeName.currentThemeName].text,
-            headerTitleStyle: {
-              fontSize: 24,
-              color: themes[currentThemeName.currentThemeName].text,
-            },
-          }}
+          options={stackScreenOptions(currentThemeName, 'Añadir transacción')}
+        />
+        <Stack.Screen
+          name="CategoriesOption"
+          component={CategoriesOption}
+          options={stackScreenOptions(currentThemeName, 'Categorias')}
         />
       </Stack.Navigator>
     </NavigationContainer>
