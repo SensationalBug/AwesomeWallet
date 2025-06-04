@@ -8,6 +8,7 @@ import AddTransaction from '../views/AddTransaction';
 import ThemesOption from '../components/settingsOptions/ThemesOption';
 import {themes} from '../styles/Theme';
 import CategoriesOption from '../components/settingsOptions/CategoriesOption';
+import AddCategory from '../views/AddCategory';
 
 const Navigation = () => {
   const currentThemeName = useContext(ThemesContext) as ThemeType;
@@ -53,6 +54,11 @@ const Navigation = () => {
           name="CategoriesOption"
           component={CategoriesOption}
           options={stackScreenOptions(currentThemeName, 'Categorias')}
+        />
+        <Stack.Screen
+          name="AddCategory"
+          component={AddCategory}
+          options={stackScreenOptions(currentThemeName, 'Añadir Categoria')}
         />
       </Stack.Navigator>
     </NavigationContainer>

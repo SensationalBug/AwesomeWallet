@@ -1,5 +1,4 @@
 import React, {useContext} from 'react';
-import AddCategory from '../AddCategory';
 import {themes} from '../../styles/Theme';
 import StyledText from '../custom/StyledText';
 import StyledButton from '../custom/StyledButton';
@@ -9,13 +8,19 @@ import {FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {
   CategoriesContext,
   CategoriesContextType,
-} from '../../context/categoriesContext';
+} from '../../context/CategoriesContext';
 
-const CategoriesOption = () => {
-  const currentThemeName = useContext(ThemesContext) as ThemeType;
-  const {categories} = useContext(CategoriesContext) as CategoriesContextType;
+import type {StackNavigationProp} from '@react-navigation/stack';
 
+type CategoriesOptionProps = {
+  navigation: StackNavigationProp<any, any>;
+};
+
+const CategoriesOption = ({navigation}: CategoriesOptionProps) => {
   const insets = useSafeAreaInsets();
+  const currentThemeName = useContext(ThemesContext) as ThemeType;
+  const {categories, newCategory} = useContext(CategoriesContext) as CategoriesContextType;
+
 
   return (
     <View
@@ -35,13 +40,13 @@ const CategoriesOption = () => {
             <StyledButton
               title={name}
               iconName={icon}
-              onPress={() => console.log(categories)}
+              onPress={() => console.log(newCategory)}
             />
           );
         }}
       />
-      <AddCategory />
       <TouchableOpacity
+        onPress={() => navigation.navigate('AddCategory')}
         style={[
           styles.buttonContainer,
           {

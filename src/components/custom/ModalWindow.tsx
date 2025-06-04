@@ -16,6 +16,7 @@ type ModalWindowProps = {
   component?: React.ReactNode; // Component to render inside the modal
   width?: DimensionValue; // Width can be a number or a percentage string
   height?: DimensionValue; // Height can be a number or a percentage string
+  borderColor?: string;
 };
 
 const ModalWindow: React.FC<ModalWindowProps> = ({
@@ -24,6 +25,7 @@ const ModalWindow: React.FC<ModalWindowProps> = ({
   component,
   width = '100%', // Default width if not provided	',
   height = '100%', // Default height if not provided
+  borderColor = '',
 }) => {
   const currentThemeName = useContext(ThemesContext) as ThemeType;
   return (
@@ -41,6 +43,7 @@ const ModalWindow: React.FC<ModalWindowProps> = ({
                 themes[currentThemeName.currentThemeName].background,
               width,
               height,
+              borderColor: borderColor,
             },
           ]}>
           <Pressable onPress={() => setModalVisible(!modalVisible)}>
@@ -63,6 +66,7 @@ const styles = StyleSheet.create({
   },
   modalView: {
     padding: 15,
+    borderWidth: 1,
     borderRadius: 5,
     alignItems: 'center',
     justifyContent: 'center',

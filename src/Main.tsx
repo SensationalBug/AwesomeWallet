@@ -71,9 +71,9 @@ const Main = () => {
         name="Ajustes"
         component={Settings}
         options={tabScreenOptions(
-          'Transacciones',
-          'list-circle',
-          'list-circle-outline',
+          'Ajustes',
+          'cog',
+          'cog-outline',
         )}
       />
     </Tab.Navigator>

@@ -4,8 +4,7 @@ import Navigation from './src/router/Navigation';
 import {ThemesProvider} from './src/context/ThemesContext';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import ThemedSafeArea from './src/components/custom/ThemedSafeArea';
-import {CategoriesProvider} from './src/context/categoriesContext';
-
+import {CategoriesProvider} from './src/context/CategoriesContext';
 
 function App(): React.JSX.Element {
   useEffect(() => {
