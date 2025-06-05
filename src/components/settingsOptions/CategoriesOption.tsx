@@ -43,7 +43,7 @@ const CategoriesOption = ({navigation}: CategoriesOptionProps) => {
             <StyledButton
               title={name}
               iconName={icon}
-              onPress={() => deleteCategory(_id)}
+              onLongPress={() => deleteCategory(_id)}
             />
           );
         }}

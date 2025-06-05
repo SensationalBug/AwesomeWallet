@@ -2,7 +2,13 @@ import React, {useContext, useState} from 'react';
 import {Dropdown} from 'react-native-element-dropdown';
 import {ThemesContext, ThemeType} from '../context/ThemesContext';
 import {Provider as PaperProvider, TextInput} from 'react-native-paper';
-import {StyleSheet, TouchableOpacity, View, Keyboard} from 'react-native';
+import {
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  Keyboard,
+  TouchableWithoutFeedback,
+} from 'react-native';
 import {
   CategoriesContext,
   CategoriesContextType,
@@ -31,75 +37,80 @@ const AddCategory = () => {
 
   return (
     <PaperProvider>
-      <View
-        style={[
-          styles.container,
-          {
-            paddingBottom: insets.bottom,
-            backgroundColor: theme.background,
-          },
-        ]}>
-        <View>
-          <TextInput
-            label="Nombre de la nueva categoria"
-            mode="outlined"
-            textColor={theme.text}
-            value={newCategory.name}
-            outlineColor={theme.text}
-            activeOutlineColor={theme.text}
-            style={[styles.textInput, {backgroundColor: theme.background}]}
-            onChangeText={(value: string) =>
-              updateState(setNewCategory, 'name', value)
-            }
-          />
-          <Dropdown
-            style={[
-              styles.dropdown,
-              {borderColor: theme.text, backgroundColor: theme.background},
-            ]}
-            itemTextStyle={{color: theme.text}}
-            placeholderStyle={{color: theme.text}}
-            selectedTextStyle={{color: theme.text}}
-            containerStyle={{backgroundColor: theme.background}}
-            itemContainerStyle={{backgroundColor: theme.background}}
-            data={OPTIONS}
-            labelField="label"
-            valueField="value"
-            placeholder="Selecciona un icono"
-            value={newCategory.icon}
-            onChange={item => {
-              Keyboard.dismiss();
-              updateState(setNewCategory, 'icon', item.value);
-            }}
-          />
-        </View>
-        <TouchableOpacity
-          disabled={!newCategory.name.trim() || !newCategory.icon.trim()}
-          onPress={() => {
-            const {name, icon} = newCategory;
-            if (!name.trim() || !icon.trim()) {
-              return;
-            }
-            addCategory(name.trim(), icon.trim());
-            setNewCategory({name: '', icon: ''});
-          }}
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <View
           style={[
-            styles.buttonContainer,
-            // eslint-disable-next-line react-native/no-inline-styles
+            styles.container,
             {
-              backgroundColor:
-                themes[currentThemeName.currentThemeName].iconBackground,
-              opacity:
-                !newCategory.name.trim() || !newCategory.icon.trim() ? 0.5 : 1,
+              paddingBottom: insets.bottom,
+              backgroundColor: theme.background,
             },
           ]}>
-          <StyledText
-            bold="bold"
-            variant="titleLarge"
-            text="Agregar categoría"
-          />
-        </TouchableOpacity>
-      </View>
+          <View>
+            <TextInput
+              label="Nombre de la nueva categoria"
+              mode="outlined"
+              textColor={theme.text}
+              value={newCategory.name}
+              outlineColor={theme.text}
+              activeOutlineColor={theme.text}
+              onPointerLeave={Keyboard.dismiss}
+              style={[styles.textInput, {backgroundColor: theme.background}]}
+              onChangeText={(value: string) =>
+                updateState(setNewCategory, 'name', value)
+              }
+            />
+            <Dropdown
+              style={[
+                styles.dropdown,
+                {borderColor: theme.text, backgroundColor: theme.background},
+              ]}
+              itemTextStyle={{color: theme.text}}
+              placeholderStyle={{color: theme.text}}
+              selectedTextStyle={{color: theme.text}}
+              containerStyle={{backgroundColor: theme.background}}
+              itemContainerStyle={{backgroundColor: theme.background}}
+              data={OPTIONS}
+              labelField="label"
+              valueField="value"
+              placeholder="Selecciona un icono"
+              value={newCategory.icon}
+              onChange={item => {
+                Keyboard.dismiss();
+                updateState(setNewCategory, 'icon', item.value);
+              }}
+            />
+          </View>
+          <TouchableOpacity
+            disabled={!newCategory.name.trim() || !newCategory.icon.trim()}
+            onPress={() => {
+              const {name, icon} = newCategory;
+              if (!name.trim() || !icon.trim()) {
+                return;
+              }
+              addCategory(name.trim(), icon.trim());
+              setNewCategory({name: '', icon: ''});
+            }}
+            style={[
+              styles.buttonContainer,
+              // eslint-disable-next-line react-native/no-inline-styles
+              {
+                backgroundColor:
+                  themes[currentThemeName.currentThemeName].iconBackground,
+                opacity:
+                  !newCategory.name.trim() || !newCategory.icon.trim()
+                    ? 0.4
+                    : 1,
+              },
+            ]}>
+            <StyledText
+              bold="bold"
+              variant="titleLarge"
+              text="Agregar categoría"
+            />
+          </TouchableOpacity>
+        </View>
+      </TouchableWithoutFeedback>
     </PaperProvider>
   );
 };

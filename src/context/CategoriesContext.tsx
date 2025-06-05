@@ -1,8 +1,9 @@
-import React, {createContext, useState, useEffect} from 'react';
 import {realm} from '../db';
-import {Category} from '../db/schemas';
+import { BSON } from 'realm';
 import {Alert} from 'react-native';
+import {Category} from '../db/schemas';
 import {showToast} from '../utils/toastAlert';
+import React, {createContext, useState, useEffect} from 'react';
 
 export interface CategoriesContextType {
   categories: Category[];
@@ -34,7 +35,7 @@ export const CategoriesProvider: React.FC<React.PropsWithChildren<{}>> = ({
     try {
       realm.write(() => {
         realm.create('Category', {
-          _id: new Realm.BSON.ObjectId(),
+          _id: new BSON.ObjectId(),
           name: name,
           icon: icon,
           is_default: false,
@@ -47,7 +48,7 @@ export const CategoriesProvider: React.FC<React.PropsWithChildren<{}>> = ({
     }
   };
 
-  const deleteCategory = (id: Realm.BSON.ObjectId) => {
+  const deleteCategory = (id: BSON.ObjectId) => {
     try {
       realm.write(() => {
         const categoria = realm.objectForPrimaryKey('Category', id);
