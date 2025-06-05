@@ -1,40 +1,25 @@
 import React, {createContext, useState, useEffect} from 'react';
 import {realm} from '../db';
 import {Category} from '../db/schemas';
+import {Alert} from 'react-native';
+import {showToast} from '../utils/toastAlert';
 
 export interface CategoriesContextType {
   categories: Category[];
-  newCategory: {
-    name: string;
-    icon: string;
-  };
-  setNewCategory: React.Dispatch<
-    React.SetStateAction<{
-      name: string;
-      icon: string;
-    }>
-  >;
-  addCategory: any;
+  addCategory: (name: string, icon: string) => void;
+  deleteCategory: (id: Realm.BSON.ObjectId) => void;
 }
 
 export const CategoriesContext = createContext<CategoriesContextType>({
   categories: [],
-  newCategory: {
-    name: '',
-    icon: '',
-  },
-  setNewCategory: () => {},
   addCategory: () => {},
+  deleteCategory: () => {},
 });
 
 export const CategoriesProvider: React.FC<React.PropsWithChildren<{}>> = ({
   children,
 }) => {
   const [categories, setCategories] = useState<Category[]>([]);
-  const [newCategory, setNewCategory] = useState({
-    name: '',
-    icon: '',
-  });
 
   const getCategories = (): void => {
     try {
@@ -45,19 +30,57 @@ export const CategoriesProvider: React.FC<React.PropsWithChildren<{}>> = ({
     }
   };
 
-  const addCategory = () => {
+  const addCategory = (name: string, icon: string) => {
     try {
       realm.write(() => {
         realm.create('Category', {
           _id: new Realm.BSON.ObjectId(),
-          name: newCategory.name,
-          icon: newCategory.icon,
+          name: name,
+          icon: icon,
           is_default: false,
         });
       });
+      showToast('success', 'Categoría agregada');
       getCategories();
     } catch (error) {
-      console.error('Error al obtener categorías:', error);
+      console.error('Error al obtener categorias:', error);
+    }
+  };
+
+  const deleteCategory = (id: Realm.BSON.ObjectId) => {
+    try {
+      realm.write(() => {
+        const categoria = realm.objectForPrimaryKey('Category', id);
+        if (!categoria) {
+          return;
+        }
+
+        if (categoria.is_default) {
+          showToast('error', 'No se puede eliminar una categoría por defecto');
+          return;
+        }
+
+        Alert.alert(
+          'Cuidado',
+          'Estas seguro que deseas eliminar esta categoría',
+          [
+            {
+              text: 'Si',
+              onPress: () => {
+                realm.write(() => {
+                  realm.delete(categoria);
+                  showToast('success', 'Categoría eliminada');
+                });
+                getCategories();
+              },
+            },
+            {text: 'No'},
+          ],
+        );
+      });
+      getCategories();
+    } catch (error) {
+      console.error('Error al borrar la categoría', error);
     }
   };
 
@@ -67,7 +90,11 @@ export const CategoriesProvider: React.FC<React.PropsWithChildren<{}>> = ({
 
   return (
     <CategoriesContext.Provider
-      value={{categories, newCategory, setNewCategory, addCategory}}>
+      value={{
+        categories,
+        addCategory,
+        deleteCategory,
+      }}>
       {children}
     </CategoriesContext.Provider>
   );

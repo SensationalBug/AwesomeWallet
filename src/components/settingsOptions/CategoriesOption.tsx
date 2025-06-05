@@ -19,8 +19,11 @@ type CategoriesOptionProps = {
 const CategoriesOption = ({navigation}: CategoriesOptionProps) => {
   const insets = useSafeAreaInsets();
   const currentThemeName = useContext(ThemesContext) as ThemeType;
-  const {categories, newCategory} = useContext(CategoriesContext) as CategoriesContextType;
+  const {categories, deleteCategory} = useContext(
+    CategoriesContext,
+  ) as CategoriesContextType;
 
+  const theme = themes[currentThemeName.currentThemeName];
 
   return (
     <View
@@ -28,19 +31,19 @@ const CategoriesOption = ({navigation}: CategoriesOptionProps) => {
         styles.container,
         {
           paddingBottom: insets.bottom,
-          backgroundColor: themes[currentThemeName.currentThemeName].background,
+          backgroundColor: theme.background,
         },
       ]}>
       <FlatList
         data={categories}
         keyExtractor={value => value._id.toString()}
         renderItem={(value: any) => {
-          const {name, icon} = value.item;
+          const {name, icon, _id} = value.item;
           return (
             <StyledButton
               title={name}
               iconName={icon}
-              onPress={() => console.log(newCategory)}
+              onPress={() => deleteCategory(_id)}
             />
           );
         }}
@@ -50,8 +53,7 @@ const CategoriesOption = ({navigation}: CategoriesOptionProps) => {
         style={[
           styles.buttonContainer,
           {
-            backgroundColor:
-              themes[currentThemeName.currentThemeName].iconBackground,
+            backgroundColor: theme.iconBackground,
           },
         ]}>
         <StyledText bold="bold" variant="titleLarge" text="Agregar categoría" />

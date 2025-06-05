@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import {Dropdown} from 'react-native-element-dropdown';
 import {ThemesContext, ThemeType} from '../context/ThemesContext';
 import {Provider as PaperProvider, TextInput} from 'react-native-paper';
@@ -19,10 +19,12 @@ const OPTIONS = [
 ];
 
 const AddCategory = () => {
+  const [newCategory, setNewCategory] = useState({
+    name: '',
+    icon: '',
+  });
   const currentThemeName = useContext(ThemesContext) as ThemeType;
-  const {categories, setNewCategory, newCategory, addCategory} = useContext(
-    CategoriesContext,
-  ) as CategoriesContextType;
+  const {addCategory} = useContext(CategoriesContext) as CategoriesContextType;
   const insets = useSafeAreaInsets();
   // Esta linea exportala desde un utils o desde el mismo themes.js
   const theme = themes[currentThemeName.currentThemeName];
@@ -42,6 +44,7 @@ const AddCategory = () => {
             label="Nombre de la nueva categoria"
             mode="outlined"
             textColor={theme.text}
+            value={newCategory.name}
             outlineColor={theme.text}
             activeOutlineColor={theme.text}
             style={[styles.textInput, {backgroundColor: theme.background}]}
@@ -55,9 +58,10 @@ const AddCategory = () => {
               {borderColor: theme.text, backgroundColor: theme.background},
             ]}
             itemTextStyle={{color: theme.text}}
+            placeholderStyle={{color: theme.text}}
             selectedTextStyle={{color: theme.text}}
             containerStyle={{backgroundColor: theme.background}}
-            itemContainerStyle={{backgroundColor: theme.iconBackground}}
+            itemContainerStyle={{backgroundColor: theme.background}}
             data={OPTIONS}
             labelField="label"
             valueField="value"
@@ -70,13 +74,23 @@ const AddCategory = () => {
           />
         </View>
         <TouchableOpacity
-          onPress={() => addCategory()}
-          onLongPress={() => console.log(categories[7].is_default)}
+          disabled={!newCategory.name.trim() || !newCategory.icon.trim()}
+          onPress={() => {
+            const {name, icon} = newCategory;
+            if (!name.trim() || !icon.trim()) {
+              return;
+            }
+            addCategory(name.trim(), icon.trim());
+            setNewCategory({name: '', icon: ''});
+          }}
           style={[
             styles.buttonContainer,
+            // eslint-disable-next-line react-native/no-inline-styles
             {
               backgroundColor:
                 themes[currentThemeName.currentThemeName].iconBackground,
+              opacity:
+                !newCategory.name.trim() || !newCategory.icon.trim() ? 0.5 : 1,
             },
           ]}>
           <StyledText
