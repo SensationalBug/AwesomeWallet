@@ -1,22 +1,11 @@
-import React, {useContext, useState} from 'react';
+import {themes} from '../styles/Theme';
+import React, {useContext} from 'react';
+import {View, StyleSheet} from 'react-native';
+import {updateState} from '../utils/updateState';
 import {Dropdown} from 'react-native-element-dropdown';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {ThemesContext, ThemeType} from '../context/ThemesContext';
 import {Provider as PaperProvider, TextInput} from 'react-native-paper';
-import {
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  Keyboard,
-  TouchableWithoutFeedback,
-} from 'react-native';
-import {
-  CategoriesContext,
-  CategoriesContextType,
-} from '../context/CategoriesContext';
-import {themes} from '../styles/Theme';
-import {updateState} from '../utils/updateState';
-import StyledText from '../components/custom/StyledText';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 const OPTIONS = [
   {label: 'Male', value: 'male'},
@@ -24,93 +13,64 @@ const OPTIONS = [
   {label: 'Other', value: 'other'},
 ];
 
-const AddCategory = () => {
-  const [newCategory, setNewCategory] = useState({
-    name: '',
-    icon: '',
-  });
-  const currentThemeName = useContext(ThemesContext) as ThemeType;
-  const {addCategory} = useContext(CategoriesContext) as CategoriesContextType;
+type AddCategoryProps = {
+  newCategory: {name: string; icon: string};
+  setNewCategory: React.Dispatch<
+    React.SetStateAction<{name: string; icon: string}>
+  >;
+};
+
+const AddCategory = ({newCategory, setNewCategory}: AddCategoryProps) => {
   const insets = useSafeAreaInsets();
-  // Esta linea exportala desde un utils o desde el mismo themes.js
+  const currentThemeName = useContext(ThemesContext) as ThemeType;
+
   const theme = themes[currentThemeName.currentThemeName];
 
   return (
     <PaperProvider>
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-        <View
-          style={[
-            styles.container,
-            {
-              paddingBottom: insets.bottom,
-              backgroundColor: theme.background,
-            },
-          ]}>
-          <View>
-            <TextInput
-              label="Nombre de la nueva categoria"
-              mode="outlined"
-              textColor={theme.text}
-              value={newCategory.name}
-              outlineColor={theme.text}
-              activeOutlineColor={theme.text}
-              onPointerLeave={Keyboard.dismiss}
-              style={[styles.textInput, {backgroundColor: theme.background}]}
-              onChangeText={(value: string) =>
-                updateState(setNewCategory, 'name', value)
-              }
-            />
-            <Dropdown
-              style={[
-                styles.dropdown,
-                {borderColor: theme.text, backgroundColor: theme.background},
-              ]}
-              itemTextStyle={{color: theme.text}}
-              placeholderStyle={{color: theme.text}}
-              selectedTextStyle={{color: theme.text}}
-              containerStyle={{backgroundColor: theme.background}}
-              itemContainerStyle={{backgroundColor: theme.background}}
-              data={OPTIONS}
-              labelField="label"
-              valueField="value"
-              placeholder="Selecciona un icono"
-              value={newCategory.icon}
-              onChange={item => {
-                Keyboard.dismiss();
-                updateState(setNewCategory, 'icon', item.value);
-              }}
-            />
-          </View>
-          <TouchableOpacity
-            disabled={!newCategory.name.trim() || !newCategory.icon.trim()}
-            onPress={() => {
-              const {name, icon} = newCategory;
-              if (!name.trim() || !icon.trim()) {
-                return;
-              }
-              addCategory(name.trim(), icon.trim());
-              setNewCategory({name: '', icon: ''});
-            }}
+      <View
+        style={[
+          styles.container,
+          {
+            paddingBottom: insets.bottom,
+            backgroundColor: theme.background,
+          },
+        ]}>
+        <View>
+          <TextInput
+            label="Nombre de la nueva categoria"
+            mode="outlined"
+            textColor={theme.text}
+            value={newCategory.name}
+            outlineColor={theme.text}
+            activeOutlineColor={theme.text}
+            style={[styles.textInput, {backgroundColor: theme.background}]}
+            onChangeText={(value: string) =>
+              updateState(setNewCategory, 'name', value)
+            }
+          />
+          <Dropdown
+            dropdownPosition="top"
             style={[
-              styles.buttonContainer,
-              // eslint-disable-next-line react-native/no-inline-styles
-              {
-                backgroundColor:
-                  themes[currentThemeName.currentThemeName].iconBackground,
-                opacity:
-                  !newCategory.name.trim() || !newCategory.icon.trim()
-                    ? 0.4
-                    : 1,
-              },
-            ]}>
-            <StyledText
-              bold="bold"
-              variant="titleLarge"
-              text="Agregar categoría"
-            />
-          </TouchableOpacity>
+              styles.dropdown,
+              {borderColor: theme.text, backgroundColor: theme.background},
+            ]}
+            itemTextStyle={{color: theme.text}}
+            placeholderStyle={{color: theme.text}}
+            selectedTextStyle={{color: theme.text}}
+            containerStyle={{backgroundColor: theme.background}}
+            itemContainerStyle={{backgroundColor: theme.background}}
+            data={OPTIONS}
+            labelField="label"
+            valueField="value"
+            placeholder="Selecciona un icono"
+            value={newCategory.icon}
+            onChange={item => {
+              updateState(setNewCategory, 'icon', item.value);
+            }}
+          />
         </View>
-      </TouchableWithoutFeedback>
+      </View>
     </PaperProvider>
   );
 };
@@ -119,7 +79,7 @@ export default AddCategory;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    height: 100,
     justifyContent: 'space-between',
   },
   textInput: {
@@ -133,12 +93,5 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginVertical: 10,
     paddingHorizontal: 10,
-  },
-  buttonContainer: {
-    margin: 20,
-    padding: 15,
-    borderRadius: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
 });
