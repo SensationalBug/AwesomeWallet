@@ -1,5 +1,5 @@
 import {realm} from '../db';
-import { BSON } from 'realm';
+import {BSON} from 'realm';
 import {Alert} from 'react-native';
 import {Category} from '../db/schemas';
 import {showToast} from '../utils/toastAlert';

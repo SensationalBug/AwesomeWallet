@@ -11,7 +11,7 @@ import {
   Keyboard,
   StyleSheet,
   TouchableOpacity,
-  TouchableWithoutFeedback,
+  KeyboardAvoidingView,
 } from 'react-native';
 import {
   CategoriesContext,
@@ -22,41 +22,79 @@ import AddCategory from '../../views/AddCategory';
 
 const CategoriesOption = () => {
   const insets = useSafeAreaInsets();
-  const [visible, setVisible] = useState(false);
+
+  const slideAnim = useRef(new Animated.Value(0)).current; // empieza oculto (0 altura)
+  const animatedWidth = useRef(new Animated.Value(0)).current;
+  const opacity = useRef(new Animated.Value(0)).current;
+
+  const [expanded, setExpanded] = useState(false);
   const [newCategory, setNewCategory] = useState({
     name: '',
     icon: '',
   });
-  const currentThemeName = useContext(ThemesContext) as ThemeType;
+
   const {categories, deleteCategory, addCategory} = useContext(
     CategoriesContext,
   ) as CategoriesContextType;
 
+  const currentThemeName = useContext(ThemesContext) as ThemeType;
   const theme = themes[currentThemeName.currentThemeName];
 
-  // Animaciones
-  const slideAnim = useRef(new Animated.Value(0)).current; // empieza oculto (0 altura)
-  const buttonWidth = useRef(new Animated.Value(1)).current; // escala inicial normal
+  const interpolatedWidth = animatedWidth.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['100%', '80%'],
+  });
 
-  const toggleSlide = () => {
-    if (visible) {
+  const animate = () => {
+    if (!expanded) {
+      // CONTRAE → primero contraer, luego mostrar el botón
+      Animated.timing(slideAnim, {
+        toValue: -200, // ocultar
+        duration: 200,
+        useNativeDriver: true,
+      }).start(() => {
+        Animated.timing(animatedWidth, {
+          toValue: expanded ? 0 : 1,
+          duration: 200,
+          useNativeDriver: false,
+        }).start(() => {
+          Animated.timing(opacity, {
+            toValue: expanded ? 0 : 1,
+            duration: 200,
+            useNativeDriver: true,
+          }).start(() => {
+            setExpanded(!expanded);
+          });
+        });
+      });
+    } else {
+      // EXPANDE → primero ocultar el botón, luego expandir
       Animated.timing(slideAnim, {
         toValue: 0, // ocultar
-        duration: 600,
+        duration: 200,
         useNativeDriver: true,
-      }).start(() => setVisible(false));
-    } else {
-      setVisible(true); // mostrar primero, luego animar
-      Animated.timing(slideAnim, {
-        toValue: -150, // ajusta la altura negativa según necesites
-        duration: 600,
-        useNativeDriver: true,
-      }).start();
+      }).start(() => {
+        Animated.timing(opacity, {
+          toValue: expanded ? 0 : 1,
+          duration: 200,
+          useNativeDriver: true,
+        }).start(() => {
+          Animated.timing(animatedWidth, {
+            toValue: expanded ? 0 : 1,
+            duration: 200,
+            useNativeDriver: false,
+          }).start(() => {
+            setExpanded(!expanded);
+          });
+        });
+      });
     }
   };
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={'height'}>
       <View
         style={[
           styles.container,
@@ -79,30 +117,42 @@ const CategoriesOption = () => {
             );
           }}
         />
-        <View style={styles.parentButtonContainer}>
-          {!visible ? (
-            <Animated.View
-              style={{
-                width: buttonWidth.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: ['0%', '100%'],
-                }),
-              }}>
+        <Animated.View
+          style={{
+            transform: [{translateY: slideAnim}],
+          }}>
+          <View
+            style={[
+              styles.buttonContainer,
+              {backgroundColor: theme.background},
+            ]}>
+            <Animated.View style={{width: interpolatedWidth}}>
               <TouchableOpacity
+                disabled={
+                  expanded &&
+                  (!newCategory.name.trim() || !newCategory.icon.trim())
+                }
                 onPress={() => {
-                  Animated.timing(buttonWidth, {
-                    toValue: 0.8, // lo haces más pequeño
-                    duration: 400,
-                    useNativeDriver: false,
-                  }).start(() => {
-                    toggleSlide(); // muestra la vista expandida
-                    buttonWidth.setValue(1); // restauras el tamaño para la próxima vez
-                  });
+                  const {name, icon} = newCategory;
+                  if (!expanded) {
+                    animate();
+                  } else {
+                    addCategory(name, icon);
+                    setNewCategory({name: '', icon: ''});
+                    Keyboard.dismiss();
+                    animate();
+                  }
                 }}
                 style={[
                   styles.addButton,
+                  // eslint-disable-next-line react-native/no-inline-styles
                   {
                     backgroundColor: theme.iconBackground,
+                    opacity:
+                      expanded &&
+                      (!newCategory.name.trim() || !newCategory.icon.trim())
+                        ? 0.4
+                        : 1,
                   },
                 ]}>
                 <StyledText
@@ -112,65 +162,28 @@ const CategoriesOption = () => {
                 />
               </TouchableOpacity>
             </Animated.View>
-          ) : (
-            <Animated.View
-              style={{
-                transform: [{translateY: slideAnim}],
-                backgroundColor: theme.background,
-              }}>
-              <View style={styles.buttonContainer}>
-                <TouchableOpacity
-                  disabled={
-                    !newCategory.name.trim() || !newCategory.icon.trim()
-                  }
-                  onPress={() => {
-                    if (visible) {
-                      const {name, icon} = newCategory;
-                      if (!name.trim() || !icon.trim()) {
-                        return;
-                      }
-                      addCategory(name.trim(), icon.trim());
-                      setNewCategory({name: '', icon: ''});
-                      toggleSlide();
-                    }
-                  }}
-                  style={[
-                    styles.addButton,
-                    // eslint-disable-next-line react-native/no-inline-styles
-                    {
-                      width: '80%',
-                      backgroundColor: theme.iconBackground,
-                      opacity:
-                        !newCategory.name.trim() || !newCategory.icon.trim()
-                          ? 0.4
-                          : 1,
-                    },
-                  ]}>
-                  <StyledText
-                    bold="bold"
-                    variant="titleLarge"
-                    text="Agregar categoría"
-                  />
-                </TouchableOpacity>
-                <FAB
-                  icon="close"
-                  style={[styles.fab, {backgroundColor: theme.iconBackground}]}
-                  color={theme.text}
-                  onPress={() => {
-                    toggleSlide();
-                    setNewCategory({name: '', icon: ''});
-                  }}
-                />
-              </View>
-              <AddCategory
-                newCategory={newCategory}
-                setNewCategory={setNewCategory}
+            <Animated.View style={{opacity}}>
+              <FAB
+                icon="close"
+                color={theme.text}
+                style={[styles.fab, {backgroundColor: theme.iconBackground}]}
+                onPress={() => {
+                  animate();
+                  Keyboard.dismiss();
+                  setNewCategory({name: '', icon: ''});
+                }}
               />
             </Animated.View>
-          )}
-        </View>
+          </View>
+          <Animated.View style={{opacity}}>
+            <AddCategory
+              newCategory={newCategory}
+              setNewCategory={setNewCategory}
+            />
+          </Animated.View>
+        </Animated.View>
       </View>
-    </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -180,13 +193,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  parentButtonContainer: {
-    paddingHorizontal: 10,
-  },
   buttonContainer: {
-    width: '100%',
-    alignItems: 'center',
     flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 20,
     justifyContent: 'space-between',
   },
   addButton: {
@@ -197,6 +207,5 @@ const styles = StyleSheet.create({
   },
   fab: {
     borderRadius: 50,
-    backgroundColor: 'red',
   },
 });
