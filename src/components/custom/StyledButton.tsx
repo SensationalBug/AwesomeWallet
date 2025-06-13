@@ -55,7 +55,14 @@ const StyledButton = ({
         )}
         {amount ? (
           <View style={styles.amountView}>
-            <Text style={{color: type}} variant="labelLarge">
+            <Text
+              style={{
+                color:
+                  type === 'debito'
+                    ? theme.transactionTypeDebit
+                    : theme.transactionTypeCredit,
+              }}
+              variant="labelLarge">
               RD$10000000.00
             </Text>
           </View>

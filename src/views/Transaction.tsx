@@ -73,6 +73,48 @@ const Transaction = () => {
         amount={amount}
         type={type[0]}
       />
+      <StyledButton
+        title={concept}
+        iconName={category}
+        subTitle={date}
+        amount={amount}
+        type={type[1]}
+      />
+      <StyledButton
+        title={concept}
+        iconName={category}
+        subTitle={date}
+        amount={amount}
+        type={type[0]}
+      />
+      <StyledButton
+        title={concept}
+        iconName={category}
+        subTitle={date}
+        amount={amount}
+        type={type[1]}
+      />
+      <StyledButton
+        title={concept}
+        iconName={category}
+        subTitle={date}
+        amount={amount}
+        type={type[0]}
+      />
+      <StyledButton
+        title={concept}
+        iconName={category}
+        subTitle={date}
+        amount={amount}
+        type={type[1]}
+      />
+      <StyledButton
+        title={concept}
+        iconName={category}
+        subTitle={date}
+        amount={amount}
+        type={type[0]}
+      />
     </StyledView>
   );
 };
