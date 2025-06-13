@@ -5,6 +5,8 @@ export const themes = {
     textLabel: '#60748A',
     background: '#fff',
     iconBackground: '#F0F2F5',
+    transactionTypeDebit: 'red',
+    transactionTypeCredit: 'green',
   },
   dark: {
     name: 'Oscuro',
@@ -12,6 +14,8 @@ export const themes = {
     textLabel: '#60748A',
     background: '#101323',
     iconBackground: '#21284A',
+    transactionTypeDebit: 'red',
+    transactionTypeCredit: 'green',
   },
   blue: {
     name: 'Azul',
@@ -19,6 +23,8 @@ export const themes = {
     textLabel: '#60748A',
     background: 'blue',
     iconBackground: '#F0F2F5',
+    transactionTypeDebit: 'red',
+    transactionTypeCredit: 'green',
   },
   green: {
     name: 'Verde',
@@ -26,5 +32,7 @@ export const themes = {
     textLabel: '#60748A',
     background: 'green',
     iconBackground: '#F0F2F5',
+    transactionTypeDebit: 'red',
+    transactionTypeCredit: 'black',
   },
 };

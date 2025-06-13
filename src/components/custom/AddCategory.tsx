@@ -1,10 +1,10 @@
-import {themes} from '../styles/Theme';
+import {themes} from '../../styles/Theme';
 import React, {useContext} from 'react';
 import {View, StyleSheet} from 'react-native';
-import {updateState} from '../utils/updateState';
+import {updateState} from '../../utils/updateState';
 import {Dropdown} from 'react-native-element-dropdown';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {ThemesContext, ThemeType} from '../context/ThemesContext';
+import {ThemesContext, ThemeType} from '../../context/ThemesContext';
 import {Provider as PaperProvider, TextInput} from 'react-native-paper';
 
 const OPTIONS = [

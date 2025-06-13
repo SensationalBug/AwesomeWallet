@@ -18,7 +18,7 @@ import {
   CategoriesContextType,
 } from '../../context/CategoriesContext';
 import {FAB} from 'react-native-paper';
-import AddCategory from '../../views/AddCategory';
+import AddCategory from '../custom/AddCategory';
 
 const CategoriesOption = () => {
   const insets = useSafeAreaInsets();
