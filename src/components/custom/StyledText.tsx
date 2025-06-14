@@ -2,8 +2,9 @@ import React, {useContext} from 'react';
 import {Text} from 'react-native-paper';
 
 import {themes} from '../../styles/Theme';
+import {ThemeType} from '../../types/Types';
 import type {TextProps} from 'react-native-paper';
-import {ThemesContext, ThemeType} from '../../context/ThemesContext';
+import {ThemesContext} from '../../context/ThemesContext';
 
 type StyledTextProps = {
   text?: string;

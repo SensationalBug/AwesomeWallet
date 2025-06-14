@@ -2,20 +2,14 @@ import React, {useContext} from 'react';
 import {View, StyleSheet} from 'react-native';
 import Section from '../components/custom/Section';
 import {useNavigation} from '@react-navigation/native';
+import {ThemesContext} from '../context/ThemesContext';
 import ModalWindow from '../components/custom/ModalWindow';
 import StyledButton from '../components/custom/StyledButton';
-import {ThemesContext, ThemeType} from '../context/ThemesContext';
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
 
-import {Text} from 'react-native-paper';
 import {themes} from '../styles/Theme';
-
-// Define your stack param list type here or import it from your navigation types file
-type SettingsStackParamList = {
-  ThemesOption: undefined;
-  CategoriesOption: undefined;
-  // Add other screens here if needed
-};
+import {Text} from 'react-native-paper';
+import {SettingsStackParamList, ThemeType} from '../types/Types';
 
 const Settings = () => {
   const currentThemeName = useContext(ThemesContext) as ThemeType;

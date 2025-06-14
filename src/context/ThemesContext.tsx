@@ -1,30 +1,14 @@
-import {View, StyleSheet} from 'react-native';
-import React, {createContext, useState, useEffect} from 'react';
 import {themes} from '../styles/Theme';
+import React, {createContext, useState, useEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const ThemesContext = createContext({});
-
-export interface ThemeType {
-  theme: typeof themes.light;
-  currentThemeName: 'light' | 'dark' | 'blue' | 'green';
-  storageTheme: (
-    themeName: 'light' | 'dark' | 'blue' | 'green',
-  ) => Promise<void>;
-}
 
 export const ThemesProvider: React.FC<React.PropsWithChildren<{}>> = ({
   children,
 }) => {
   const [currentThemeName, setCurrentThemeName] =
     useState<keyof typeof themes>('light'); // Default to light theme
-
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: themes.dark.background,
-    },
-  });
 
   const storageTheme = async (themeName: keyof typeof themes) => {
     try {
@@ -58,7 +42,7 @@ export const ThemesProvider: React.FC<React.PropsWithChildren<{}>> = ({
 
   return (
     <ThemesContext.Provider value={{storageTheme, currentThemeName}}>
-      <View style={styles.container}>{children}</View>
+      {children}
     </ThemesContext.Provider>
   );
 };

@@ -5,24 +5,20 @@ import MyChart from '../components/Charts';
 import {View, StyleSheet, TouchableOpacity, ScrollView} from 'react-native';
 
 import {themes} from '../styles/Theme';
+import {ThemesContext} from '../context/ThemesContext';
 import StyledText from '../components/custom/StyledText';
-import {ThemesContext, ThemeType} from '../context/ThemesContext';
+import {NavigationProps, ThemeType} from '../types/Types';
 
-import type { StackNavigationProp } from '@react-navigation/stack';
-
-type OverviewProps = {
-  navigation: StackNavigationProp<any, any>;
-};
-
-const Overview = ({navigation}: OverviewProps) => {
+const Overview = ({navigation}: NavigationProps) => {
   const currentThemeName = useContext(ThemesContext) as ThemeType;
+  const theme = themes[currentThemeName.currentThemeName];
 
   return (
     <View
       style={[
         styles.container,
         {
-          backgroundColor: themes[currentThemeName.currentThemeName].background,
+          backgroundColor: theme.background,
         },
       ]}>
       {/* Surface components for displaying balance */}
@@ -32,8 +28,7 @@ const Overview = ({navigation}: OverviewProps) => {
           style={[
             styles.surface,
             {
-              backgroundColor:
-                themes[currentThemeName.currentThemeName].iconBackground,
+              backgroundColor: theme.iconBackground,
             },
           ]}>
           <StyledText variant="titleMedium" text="Balance:" />
@@ -44,8 +39,7 @@ const Overview = ({navigation}: OverviewProps) => {
           style={[
             styles.surface,
             {
-              backgroundColor:
-                themes[currentThemeName.currentThemeName].iconBackground,
+              backgroundColor: theme.iconBackground,
             },
           ]}>
           <StyledText variant="titleMedium" text="Balance:" />
@@ -65,8 +59,7 @@ const Overview = ({navigation}: OverviewProps) => {
           style={[
             styles.addTransactionButton,
             {
-              backgroundColor:
-                themes[currentThemeName.currentThemeName].iconBackground,
+              backgroundColor: theme.iconBackground,
             },
           ]}>
           <StyledText

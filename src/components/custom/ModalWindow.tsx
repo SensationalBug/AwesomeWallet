@@ -7,8 +7,9 @@ import {
   StyleSheet,
   DimensionValue,
 } from 'react-native';
-import {ThemesContext, ThemeType} from '../../context/ThemesContext';
 import {themes} from '../../styles/Theme';
+import {ThemeType} from '../../types/Types';
+import {ThemesContext} from '../../context/ThemesContext';
 
 type ModalWindowProps = {
   modalVisible: boolean;

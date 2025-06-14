@@ -1,8 +1,9 @@
-import React, {useContext} from 'react';
-import {View, Dimensions, StyleSheet} from 'react-native';
-import {BarChart} from 'react-native-chart-kit';
-import {ThemesContext, ThemeType} from '../context/ThemesContext';
 import {themes} from '../styles/Theme';
+import React, {useContext} from 'react';
+import { ThemeType } from '../types/Types';
+import {BarChart} from 'react-native-chart-kit';
+import {ThemesContext} from '../context/ThemesContext';
+import {View, Dimensions, StyleSheet} from 'react-native';
 
 const screenWidth = Dimensions.get('window').width;
 

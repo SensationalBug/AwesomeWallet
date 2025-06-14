@@ -1,11 +1,13 @@
-import {themes} from '../../styles/Theme';
 import React, {useContext} from 'react';
+import {themes} from '../styles/Theme';
 import {View, StyleSheet} from 'react-native';
-import {updateState} from '../../utils/updateState';
-import {Dropdown} from 'react-native-element-dropdown';
+import {updateState} from '../utils/updateState';
+import {ThemesContext} from '../context/ThemesContext';
+import {Provider as PaperProvider} from 'react-native-paper';
+import {AddCategoryProps, ThemeType} from '../types/Types';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {ThemesContext, ThemeType} from '../../context/ThemesContext';
-import {Provider as PaperProvider, TextInput} from 'react-native-paper';
+import StyledDropDown from '../components/custom/StyledDropDown';
+import StyledTextInput from '../components/custom/StyledTextInput';
 
 const OPTIONS = [
   {label: 'Male', value: 'male'},
@@ -13,17 +15,9 @@ const OPTIONS = [
   {label: 'Other', value: 'other'},
 ];
 
-type AddCategoryProps = {
-  newCategory: {name: string; icon: string};
-  setNewCategory: React.Dispatch<
-    React.SetStateAction<{name: string; icon: string}>
-  >;
-};
-
 const AddCategory = ({newCategory, setNewCategory}: AddCategoryProps) => {
   const insets = useSafeAreaInsets();
   const currentThemeName = useContext(ThemesContext) as ThemeType;
-
   const theme = themes[currentThemeName.currentThemeName];
 
   return (
@@ -37,35 +31,19 @@ const AddCategory = ({newCategory, setNewCategory}: AddCategoryProps) => {
           },
         ]}>
         <View>
-          <TextInput
+          <StyledTextInput
             label="Nombre de la nueva categoria"
-            mode="outlined"
-            textColor={theme.text}
             value={newCategory.name}
-            outlineColor={theme.text}
-            activeOutlineColor={theme.text}
-            style={[styles.textInput, {backgroundColor: theme.background}]}
             onChangeText={(value: string) =>
               updateState(setNewCategory, 'name', value)
             }
           />
-          <Dropdown
-            dropdownPosition="top"
-            style={[
-              styles.dropdown,
-              {borderColor: theme.text, backgroundColor: theme.background},
-            ]}
-            itemTextStyle={{color: theme.text}}
-            placeholderStyle={{color: theme.text}}
-            selectedTextStyle={{color: theme.text}}
-            containerStyle={{backgroundColor: theme.background}}
-            itemContainerStyle={{backgroundColor: theme.background}}
+          <StyledDropDown
             data={OPTIONS}
-            labelField="label"
-            valueField="value"
-            placeholder="Selecciona un icono"
+            dropdownPosition={'top'}
             value={newCategory.icon}
-            onChange={item => {
+            placeholder={'Selecciona un icono'}
+            onChange={(item: {label: string; value: string}) => {
               updateState(setNewCategory, 'icon', item.value);
             }}
           />
@@ -81,10 +59,6 @@ const styles = StyleSheet.create({
   container: {
     height: 100,
     justifyContent: 'space-between',
-  },
-  textInput: {
-    margin: 20,
-    marginVertical: 10,
   },
   dropdown: {
     margin: 20,

@@ -3,13 +3,8 @@ import {BSON} from 'realm';
 import {Alert} from 'react-native';
 import {Category} from '../db/schemas';
 import {showToast} from '../utils/toastAlert';
+import {CategoriesContextType} from '../types/Types';
 import React, {createContext, useState, useEffect} from 'react';
-
-export interface CategoriesContextType {
-  categories: Category[];
-  addCategory: (name: string, icon: string) => void;
-  deleteCategory: (id: Realm.BSON.ObjectId) => void;
-}
 
 export const CategoriesContext = createContext<CategoriesContextType>({
   categories: [],

@@ -2,8 +2,8 @@ import {themes} from '../../styles/Theme';
 import StyledText from '../custom/StyledText';
 import StyledButton from '../custom/StyledButton';
 import React, {useContext, useState, useRef} from 'react';
+import {ThemesContext} from '../../context/ThemesContext';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {ThemesContext, ThemeType} from '../../context/ThemesContext';
 import {
   View,
   Animated,
@@ -13,12 +13,10 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
 } from 'react-native';
-import {
-  CategoriesContext,
-  CategoriesContextType,
-} from '../../context/CategoriesContext';
 import {FAB} from 'react-native-paper';
-import AddCategory from '../custom/AddCategory';
+import AddCategory from '../../views/AddCategory';
+import {CategoriesContext} from '../../context/CategoriesContext';
+import {CategoriesContextType, ThemeType} from '../../types/Types';
 
 const CategoriesOption = () => {
   const insets = useSafeAreaInsets();
@@ -92,9 +90,7 @@ const CategoriesOption = () => {
   };
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={'height'}>
+    <KeyboardAvoidingView style={styles.container} behavior={'height'}>
       <View
         style={[
           styles.container,

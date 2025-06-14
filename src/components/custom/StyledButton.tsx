@@ -5,21 +5,13 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import StyledText from './StyledText';
+import {Text} from 'react-native-paper';
 import React, {useContext} from 'react';
 import {themes} from '../../styles/Theme';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import {ThemesContext, ThemeType} from '../../context/ThemesContext';
-import {Text} from 'react-native-paper';
+import {ThemesContext} from '../../context/ThemesContext';
+import {SettingsButtonProps, ThemeType} from '../../types/Types';
 
-interface SettingsButtonProps {
-  title: string;
-  subTitle?: string;
-  iconName?: string;
-  amount?: number;
-  type?: string;
-  onPress?: () => void;
-  onLongPress?: () => void;
-}
 const StyledButton = ({
   title,
   subTitle,

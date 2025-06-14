@@ -10,18 +10,10 @@ type Props = {
 };
 
 const ThemedSafeArea = ({children, style = {}}: Props) => {
-  // const insets = useSafeAreaInsets();
   return (
     <SafeAreaView style={[styles.container]}>
       <StatusBar />
-      <SafeAreaView
-        style={[
-          style,
-          styles.container,
-          // {paddingBottom: insets.bottom, paddingTop: insets.top},
-        ]}>
-        {children}
-      </SafeAreaView>
+      <SafeAreaView style={[style, styles.container]}>{children}</SafeAreaView>
     </SafeAreaView>
   );
 };

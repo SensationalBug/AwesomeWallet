@@ -1,6 +1,8 @@
-import {} from 'react-native';
 import React from 'react';
+import {StyleSheet, View} from 'react-native';
+import { NavigationProps } from '../types/Types';
 import StyledView from '../components/custom/StyledView';
+import AnimatedButton from '../components/AnimatedButton';
 import StyledButton from '../components/custom/StyledButton';
 
 const transacitionP = {
@@ -13,110 +15,135 @@ const transacitionP = {
   type: ['debito', 'credito'],
 };
 
-const Transaction = () => {
+const Transaction = ({navigation}:NavigationProps) => {
   const {category, amount, concept, date, type} = transacitionP;
+
+  const [isExtended, setIsExtended] = React.useState(true);
+
+  const onScrollStart = () => {
+    setIsExtended(false);
+  };
+
+  const onScrollEnd = () => {
+    setIsExtended(true);
+  };
+
   return (
-    <StyledView>
-      <StyledButton
-        title={concept}
-        iconName={category}
-        subTitle={date}
-        amount={amount}
-        type={type[1]}
+    <View style={styles.container}>
+      <StyledView onScroll={onScrollStart} onScrollEnd={onScrollEnd}>
+        <StyledButton
+          title={concept}
+          iconName={category}
+          subTitle={date}
+          amount={amount}
+          type={type[1]}
+        />
+        <StyledButton
+          title={concept}
+          iconName={category}
+          subTitle={date}
+          amount={amount}
+          type={type[0]}
+        />
+        <StyledButton
+          title={concept}
+          iconName={category}
+          subTitle={date}
+          amount={amount}
+          type={type[1]}
+        />
+        <StyledButton
+          title={concept}
+          iconName={category}
+          subTitle={date}
+          amount={amount}
+          type={type[0]}
+        />
+        <StyledButton
+          title={concept}
+          iconName={category}
+          subTitle={date}
+          amount={amount}
+          type={type[1]}
+        />
+        <StyledButton
+          title={concept}
+          iconName={category}
+          subTitle={date}
+          amount={amount}
+          type={type[0]}
+        />
+        <StyledButton
+          title={concept}
+          iconName={category}
+          subTitle={date}
+          amount={amount}
+          type={type[1]}
+        />
+        <StyledButton
+          title={concept}
+          iconName={category}
+          subTitle={date}
+          amount={amount}
+          type={type[0]}
+        />
+        <StyledButton
+          title={concept}
+          iconName={category}
+          subTitle={date}
+          amount={amount}
+          type={type[1]}
+        />
+        <StyledButton
+          title={concept}
+          iconName={category}
+          subTitle={date}
+          amount={amount}
+          type={type[0]}
+        />
+        <StyledButton
+          title={concept}
+          iconName={category}
+          subTitle={date}
+          amount={amount}
+          type={type[1]}
+        />
+        <StyledButton
+          title={concept}
+          iconName={category}
+          subTitle={date}
+          amount={amount}
+          type={type[0]}
+        />
+        <StyledButton
+          title={concept}
+          iconName={category}
+          subTitle={date}
+          amount={amount}
+          type={type[1]}
+        />
+        <StyledButton
+          title={concept}
+          iconName={category}
+          subTitle={date}
+          amount={amount}
+          type={type[0]}
+        />
+      </StyledView>
+      <AnimatedButton
+        visible
+        isExtended={isExtended}
+        label="Nueva transacción"
+        onPress={() => navigation.navigate('AddTransaction')}
       />
-      <StyledButton
-        title={concept}
-        iconName={category}
-        subTitle={date}
-        amount={amount}
-        type={type[0]}
-      />
-      <StyledButton
-        title={concept}
-        iconName={category}
-        subTitle={date}
-        amount={amount}
-        type={type[1]}
-      />
-      <StyledButton
-        title={concept}
-        iconName={category}
-        subTitle={date}
-        amount={amount}
-        type={type[0]}
-      />
-      <StyledButton
-        title={concept}
-        iconName={category}
-        subTitle={date}
-        amount={amount}
-        type={type[1]}
-      />
-      <StyledButton
-        title={concept}
-        iconName={category}
-        subTitle={date}
-        amount={amount}
-        type={type[0]}
-      />
-      <StyledButton
-        title={concept}
-        iconName={category}
-        subTitle={date}
-        amount={amount}
-        type={type[1]}
-      />
-      <StyledButton
-        title={concept}
-        iconName={category}
-        subTitle={date}
-        amount={amount}
-        type={type[0]}
-      />
-      <StyledButton
-        title={concept}
-        iconName={category}
-        subTitle={date}
-        amount={amount}
-        type={type[1]}
-      />
-      <StyledButton
-        title={concept}
-        iconName={category}
-        subTitle={date}
-        amount={amount}
-        type={type[0]}
-      />
-      <StyledButton
-        title={concept}
-        iconName={category}
-        subTitle={date}
-        amount={amount}
-        type={type[1]}
-      />
-      <StyledButton
-        title={concept}
-        iconName={category}
-        subTitle={date}
-        amount={amount}
-        type={type[0]}
-      />
-      <StyledButton
-        title={concept}
-        iconName={category}
-        subTitle={date}
-        amount={amount}
-        type={type[1]}
-      />
-      <StyledButton
-        title={concept}
-        iconName={category}
-        subTitle={date}
-        amount={amount}
-        type={type[0]}
-      />
-    </StyledView>
+    </View>
   );
 };
 
 export default Transaction;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});

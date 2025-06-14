@@ -2,8 +2,9 @@ import React, {useContext} from 'react';
 import Section from '../custom/Section';
 import {Text} from 'react-native-paper';
 import {themes} from '../../styles/Theme';
+import {ThemeType} from '../../types/Types';
+import {ThemesContext} from '../../context/ThemesContext';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
-import {ThemesContext, ThemeType} from '../../context/ThemesContext';
 
 const ThemesOption = () => {
   const {currentThemeName, storageTheme} = useContext(

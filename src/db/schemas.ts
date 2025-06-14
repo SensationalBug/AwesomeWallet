@@ -1,5 +1,5 @@
 // src/db/schemas.ts
-import {BSON} from 'realm';
+import Realm, {BSON} from 'realm';
 
 export class Category extends Realm.Object<Category> {
   _id!: BSON.ObjectId;
@@ -24,7 +24,7 @@ export class Transaction extends Realm.Object<Transaction> {
   category!: Category;
   amount!: number;
   concept?: string;
-  date!: Date;
+  date!: string;
   file?: string;
   type!: 'debito' | 'credito';
 

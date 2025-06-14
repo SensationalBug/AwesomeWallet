@@ -1,7 +1,8 @@
 import {useContext} from 'react';
 import {themes} from './styles/Theme';
+import {ThemeType} from './types/Types';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {ThemesContext, ThemeType} from './context/ThemesContext';
+import {ThemesContext} from './context/ThemesContext';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
 // Views import
@@ -70,11 +71,7 @@ const Main = () => {
       <Tab.Screen
         name="Ajustes"
         component={Settings}
-        options={tabScreenOptions(
-          'Ajustes',
-          'cog',
-          'cog-outline',
-        )}
+        options={tabScreenOptions('Ajustes', 'cog', 'cog-outline')}
       />
     </Tab.Navigator>
   );

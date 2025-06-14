@@ -1,9 +1,10 @@
 import {themes} from '../styles/Theme';
 import React, {useContext} from 'react';
+import { ThemeType } from '../types/Types';
 import StyledText from './custom/StyledText';
 import {View, StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {ThemesContext, ThemeType} from '../context/ThemesContext';
+import {ThemesContext} from '../context/ThemesContext';
 
 const Recent = () => {
   const currentThemeName = useContext(ThemesContext) as ThemeType;

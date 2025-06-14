@@ -1,6 +1,6 @@
 import {useContext} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
-import {ThemesContext, ThemeType} from '../context/ThemesContext';
+import {ThemesContext} from '../context/ThemesContext';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import Main from '../Main';
@@ -8,6 +8,7 @@ import AddTransaction from '../views/AddTransaction';
 import ThemesOption from '../components/settingsOptions/ThemesOption';
 import {themes} from '../styles/Theme';
 import CategoriesOption from '../components/settingsOptions/CategoriesOption';
+import { ThemeType } from '../types/Types';
 
 const Navigation = () => {
   const currentThemeName = useContext(ThemesContext) as ThemeType;
@@ -31,7 +32,7 @@ const Navigation = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="Main"
+        initialRouteName="AddTransaction"
         screenOptions={{
           headerShown: false,
         }}>
