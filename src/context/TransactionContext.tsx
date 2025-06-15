@@ -4,6 +4,7 @@ import {Transaction} from '../db/schemas';
 import {showToast} from '../utils/toastAlert';
 import {TransactionContextType} from '../types/Types';
 import React, {createContext, useEffect, useState} from 'react';
+import {Alert} from 'react-native';
 
 export const TransactionContext = createContext<TransactionContextType>({
   transactions: [],
@@ -19,33 +20,22 @@ export const TransactionProvider: React.FC<React.PropsWithChildren<{}>> = ({
     try {
       const transacciones = realm.objects<Transaction>('Transaction');
       setTransactions(Array.from(transacciones));
-      console.log(transacciones);
     } catch (error) {
       console.error('Error al obtener categorías:', error);
     }
   };
 
-  // properties: {
-  //     _id: 'objectId',
-  //     category: 'Category',
-  //     amount: 'double',
-  //     concept: 'string?',
-  //     date: 'date',
-  //     file: 'string?',
-  //     type: 'string', // puedes usar enum-like validación manual
-  //   },
-
-  const addTransaction = (newTransaction: Transaction) => {
-    const {category, amount, concept, date, file, type} = newTransaction;
+  const addTransaction = (newTransaction: any) => {
+    const {category, amount, concept, cDate, file, type} = newTransaction;
     try {
       console.log(category);
       realm.write(() => {
         realm.create('Transaction', {
           _id: new BSON.ObjectId(),
           category,
-          amount,
+          amount: parseFloat(amount),
           concept,
-          date,
+          cDate,
           file,
           type,
         });
@@ -56,8 +46,37 @@ export const TransactionProvider: React.FC<React.PropsWithChildren<{}>> = ({
       console.error('Error al agregar transacción:', error);
     }
   };
-  const deleteTransaction = () => {
-    console.log('deleteTransaction called');
+
+  const deleteTransaction = (id: BSON.ObjectId) => {
+    try {
+      realm.write(() => {
+        const transaccion = realm.objectForPrimaryKey('Transaction', id);
+        if (!transaccion) {
+          return;
+        }
+
+        Alert.alert(
+          'Cuidado',
+          'Estas seguro que deseas eliminar esta transacción',
+          [
+            {
+              text: 'Si',
+              onPress: () => {
+                realm.write(() => {
+                  realm.delete(transaccion);
+                  showToast('success', 'Transacción eliminada');
+                });
+                getTransactions();
+              },
+            },
+            {text: 'No'},
+          ],
+        );
+      });
+      getTransactions();
+    } catch (error) {
+      console.error('Error al borrar la transaccion', error);
+    }
   };
 
   useEffect(() => {

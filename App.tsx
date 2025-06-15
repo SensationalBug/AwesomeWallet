@@ -8,10 +8,15 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {CategoriesProvider} from './src/context/CategoriesContext';
 import ThemedSafeArea from './src/components/custom/ThemedSafeArea';
 import {TransactionProvider} from './src/context/TransactionContext';
+// import {Category, Transaction} from './src/db/schemas';
+// import Realm from 'realm';
 
 function App(): React.JSX.Element {
   useEffect(() => {
     inicializarCategorias();
+    // Realm.deleteFile({
+    //   schema: [Category, Transaction],
+    // });
   }, []);
 
   return (

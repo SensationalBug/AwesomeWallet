@@ -80,7 +80,8 @@ type StyledDropDownProps = {
   dropdownPosition?: 'auto' | 'top' | 'bottom';
   placeholder?: string;
   value?: any;
-  onChange: (item: {label: string; value: string; category: Category}) => void;
+  width?: number;
+  onChange: (item: {label: string; value: string}) => void;
 };
 
 export type {

@@ -21,10 +21,10 @@ export class Category extends Realm.Object<Category> {
 
 export class Transaction extends Realm.Object<Transaction> {
   _id!: BSON.ObjectId;
-  category!: Category;
-  amount!: number;
+  category!: string;
+  amount?: number;
   concept?: string;
-  date!: string;
+  cDate!: string;
   file?: string;
   type!: 'debito' | 'credito';
 
@@ -33,10 +33,10 @@ export class Transaction extends Realm.Object<Transaction> {
     primaryKey: '_id',
     properties: {
       _id: 'objectId',
-      category: 'Category',
+      category: 'string',
       amount: 'double',
       concept: 'string?',
-      date: 'date',
+      cDate: 'string',
       file: 'string?',
       type: 'string', // puedes usar enum-like validación manual
     },

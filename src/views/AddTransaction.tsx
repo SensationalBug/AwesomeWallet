@@ -3,7 +3,6 @@ import {
   CategoriesContextType,
   TransactionContextType,
 } from '../types/Types';
-import {Category} from '../db/schemas';
 import {themes} from '../styles/Theme';
 import Radio from '../components/Radio';
 import {updateState} from '../utils/updateState';
@@ -13,8 +12,8 @@ import StyledText from '../components/custom/StyledText';
 import {CategoriesContext} from '../context/CategoriesContext';
 import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import StyledDropDown from '../components/custom/StyledDropDown';
-import StyledTextInput from '../components/custom/StyledTextInput';
 import {TransactionContext} from '../context/TransactionContext';
+import StyledTextInput from '../components/custom/StyledTextInput';
 
 const AddTransaction = () => {
   const {addTransaction} = useContext(
@@ -26,17 +25,17 @@ const AddTransaction = () => {
   const theme = themes[currentThemeName.currentThemeName];
 
   const date = new Date();
-  const currentDate = `${date.getDay()}/${
+  const currentDate = `${date.getDate()}/${
     date.getMonth() + 1
   }/${date.getFullYear()}`;
 
   const [newTransaction, setNewTransaction] = useState<any>({
-    amount: 0,
-    category: undefined as unknown as Category,
+    amount: '',
+    category: '',
     concept: '',
     cDate: currentDate,
     file: '/home',
-    type: 'debito',
+    type: '',
   });
   return (
     <View style={[styles.container, {backgroundColor: theme.background}]}>
@@ -54,32 +53,25 @@ const AddTransaction = () => {
       <StyledDropDown
         data={categories.map(category => ({
           label: category.name,
-          value: String(category._id),
-          category,
+          value: category.icon,
         }))}
-        value={(value: any) => {
-          console.log(value);
-        }}
+        value={newTransaction.category}
         placeholder={'Selecciona una categoría'}
-        onChange={(item: {
-          label: string;
-          value: string;
-          category: Category;
-        }) => {
-          console.log(item);
-          updateState(setNewTransaction, 'category', item.category);
+        onChange={(item: {label: string; value: string}) => {
+          updateState(setNewTransaction, 'category', item.value);
         }}
       />
       <View style={styles.radioButtonView}>
+        <StyledText variant="titleMedium" text="Tipo de transacción:" />
         <Radio
-          color="green"
+          color={theme.transactionTypeDebit}
           text="Débito"
           value="debito"
           onPress={() => updateState(setNewTransaction, 'type', 'debito')}
           status={newTransaction.type === 'debito' ? 'checked' : 'unchecked'}
         />
         <Radio
-          color="red"
+          color={theme.transactionTypeCredit}
           text="Crédito"
           value="credito"
           onPress={() => updateState(setNewTransaction, 'type', 'credito')}
@@ -88,19 +80,31 @@ const AddTransaction = () => {
       </View>
       <TouchableOpacity
         disabled={
-          !newTransaction.amount ||
           !newTransaction.concept.trim() ||
+          !newTransaction.amount ||
+          !newTransaction.category.trim() ||
           !newTransaction.type.trim()
         }
-        onPress={() => addTransaction(newTransaction)}
+        onPress={() => {
+          addTransaction(newTransaction);
+          setNewTransaction({
+            amount: '',
+            category: '',
+            concept: '',
+            cDate: currentDate,
+            file: '/home',
+            type: '',
+          });
+        }}
         style={[
           styles.addButton,
           // eslint-disable-next-line react-native/no-inline-styles
           {
             backgroundColor: theme.iconBackground,
             opacity:
-              !newTransaction.amount ||
               !newTransaction.concept.trim() ||
+              !newTransaction.amount ||
+              !newTransaction.category.trim() ||
               !newTransaction.type.trim()
                 ? 0.4
                 : 1,
@@ -127,8 +131,9 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
   },
   radioButtonView: {
-    padding: 20,
+    margin: 20,
     flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'space-between',
   },
   addButton: {

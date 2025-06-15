@@ -10,6 +10,7 @@ const StyledDropDown = ({
   dropdownPosition,
   placeholder,
   value,
+  width,
   onChange,
 }: StyledDropDownProps) => {
   const currentThemeName = useContext(ThemesContext) as ThemeType;
@@ -23,7 +24,7 @@ const StyledDropDown = ({
       dropdownPosition={dropdownPosition}
       style={[
         styles.dropdown,
-        {borderColor: theme.text, backgroundColor: theme.background},
+        {borderColor: theme.text, backgroundColor: theme.background, width},
       ]}
       itemTextStyle={{color: theme.text}}
       placeholderStyle={{color: theme.text}}

@@ -1,18 +1,22 @@
 import React, {useContext} from 'react';
-import Recent from '../components/Recent';
 import {Surface} from 'react-native-paper';
 import MyChart from '../components/Charts';
-import {View, StyleSheet, TouchableOpacity, ScrollView} from 'react-native';
+import {View, StyleSheet, TouchableOpacity} from 'react-native';
 
 import {themes} from '../styles/Theme';
 import {ThemesContext} from '../context/ThemesContext';
 import StyledText from '../components/custom/StyledText';
 import {NavigationProps, ThemeType} from '../types/Types';
+import StyledView from '../components/custom/StyledView';
+import StyledButton from '../components/custom/StyledButton';
+import {TransactionContext} from '../context/TransactionContext';
+import StyledDropDown from '../components/custom/StyledDropDown';
 
 const Overview = ({navigation}: NavigationProps) => {
   const currentThemeName = useContext(ThemesContext) as ThemeType;
   const theme = themes[currentThemeName.currentThemeName];
-
+  const {transactions} = useContext(TransactionContext);
+  const [recent, setRecent] = React.useState<number>(3);
   return (
     <View
       style={[
@@ -76,15 +80,37 @@ const Overview = ({navigation}: NavigationProps) => {
       {/* Recent transactions section */}
       <View style={styles.recentTransactions}>
         <StyledText variant="headlineMedium" text="Transacciones recientes" />
+        <StyledDropDown
+          data={[
+            {label: '3', value: 3},
+            {label: '5', value: 5},
+            {label: '10', value: 10},
+          ]}
+          value={recent}
+          placeholder={''}
+          width={60}
+          onChange={(item: {label: string; value: string}) =>
+            setRecent(Number(item.value))
+          }
+        />
       </View>
 
       {/* Recent transactions items */}
-      <ScrollView>
-        <Recent />
-        <Recent />
-        <Recent />
-        <Recent />
-      </ScrollView>
+      <StyledView>
+        {transactions.slice(-recent).map((value: any, index: number) => {
+          const {concept, amount, category, cDate, type} = value;
+          return (
+            <StyledButton
+              key={index}
+              title={concept}
+              iconName={category}
+              subTitle={cDate}
+              amount={amount}
+              type={type}
+            />
+          );
+        })}
+      </StyledView>
     </View>
   );
 };
@@ -123,6 +149,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   recentTransactions: {
-    paddingHorizontal: 10,
+    flexDirection: 'row',
+    paddingHorizontal: 5,
+    alignItems: 'center',
   },
 });

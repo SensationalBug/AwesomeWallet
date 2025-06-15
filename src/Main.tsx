@@ -49,7 +49,7 @@ const Main = () => {
 
   return (
     <Tab.Navigator
-      initialRouteName="Transaction"
+      initialRouteName="Overview"
       screenOptions={{
         tabBarActiveTintColor: themes[currentThemeName.currentThemeName].text,
         tabBarInactiveTintColor:

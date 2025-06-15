@@ -32,7 +32,7 @@ const Navigation = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="AddTransaction"
+        initialRouteName="Main"
         screenOptions={{
           headerShown: false,
         }}>

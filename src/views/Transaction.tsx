@@ -1,23 +1,13 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {StyleSheet, View} from 'react-native';
-import { NavigationProps } from '../types/Types';
+import {NavigationProps} from '../types/Types';
 import StyledView from '../components/custom/StyledView';
 import AnimatedButton from '../components/AnimatedButton';
 import StyledButton from '../components/custom/StyledButton';
+import {TransactionContext} from '../context/TransactionContext';
 
-const transacitionP = {
-  _id: 1,
-  category: 'Category',
-  amount: 500.0,
-  concept: 'stringCategory',
-  date: 'DateCategory',
-  file: 'stringCategory',
-  type: ['debito', 'credito'],
-};
-
-const Transaction = ({navigation}:NavigationProps) => {
-  const {category, amount, concept, date, type} = transacitionP;
-
+const Transaction = ({navigation}: NavigationProps) => {
+  const {transactions, deleteTransaction} = useContext(TransactionContext);
   const [isExtended, setIsExtended] = React.useState(true);
 
   const onScrollStart = () => {
@@ -31,104 +21,20 @@ const Transaction = ({navigation}:NavigationProps) => {
   return (
     <View style={styles.container}>
       <StyledView onScroll={onScrollStart} onScrollEnd={onScrollEnd}>
-        <StyledButton
-          title={concept}
-          iconName={category}
-          subTitle={date}
-          amount={amount}
-          type={type[1]}
-        />
-        <StyledButton
-          title={concept}
-          iconName={category}
-          subTitle={date}
-          amount={amount}
-          type={type[0]}
-        />
-        <StyledButton
-          title={concept}
-          iconName={category}
-          subTitle={date}
-          amount={amount}
-          type={type[1]}
-        />
-        <StyledButton
-          title={concept}
-          iconName={category}
-          subTitle={date}
-          amount={amount}
-          type={type[0]}
-        />
-        <StyledButton
-          title={concept}
-          iconName={category}
-          subTitle={date}
-          amount={amount}
-          type={type[1]}
-        />
-        <StyledButton
-          title={concept}
-          iconName={category}
-          subTitle={date}
-          amount={amount}
-          type={type[0]}
-        />
-        <StyledButton
-          title={concept}
-          iconName={category}
-          subTitle={date}
-          amount={amount}
-          type={type[1]}
-        />
-        <StyledButton
-          title={concept}
-          iconName={category}
-          subTitle={date}
-          amount={amount}
-          type={type[0]}
-        />
-        <StyledButton
-          title={concept}
-          iconName={category}
-          subTitle={date}
-          amount={amount}
-          type={type[1]}
-        />
-        <StyledButton
-          title={concept}
-          iconName={category}
-          subTitle={date}
-          amount={amount}
-          type={type[0]}
-        />
-        <StyledButton
-          title={concept}
-          iconName={category}
-          subTitle={date}
-          amount={amount}
-          type={type[1]}
-        />
-        <StyledButton
-          title={concept}
-          iconName={category}
-          subTitle={date}
-          amount={amount}
-          type={type[0]}
-        />
-        <StyledButton
-          title={concept}
-          iconName={category}
-          subTitle={date}
-          amount={amount}
-          type={type[1]}
-        />
-        <StyledButton
-          title={concept}
-          iconName={category}
-          subTitle={date}
-          amount={amount}
-          type={type[0]}
-        />
+        {transactions.map((value: any, index: any) => {
+          const {_id, concept, amount, category, cDate, type} = value;
+          return (
+            <StyledButton
+              key={index}
+              title={concept}
+              iconName={category}
+              subTitle={cDate}
+              amount={amount}
+              type={type}
+              onLongPress={() => deleteTransaction(_id)}
+            />
+          );
+        })}
       </StyledView>
       <AnimatedButton
         visible
