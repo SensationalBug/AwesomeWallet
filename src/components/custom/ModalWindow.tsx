@@ -10,6 +10,7 @@ import {
 import {themes} from '../../styles/Theme';
 import {ThemeType} from '../../types/Types';
 import {ThemesContext} from '../../context/ThemesContext';
+import StyledText from './StyledText';
 
 type ModalWindowProps = {
   modalVisible: boolean;
@@ -17,7 +18,6 @@ type ModalWindowProps = {
   component?: React.ReactNode; // Component to render inside the modal
   width?: DimensionValue; // Width can be a number or a percentage string
   height?: DimensionValue; // Height can be a number or a percentage string
-  borderColor?: string;
 };
 
 const ModalWindow: React.FC<ModalWindowProps> = ({
@@ -26,7 +26,6 @@ const ModalWindow: React.FC<ModalWindowProps> = ({
   component,
   width = '100%', // Default width if not provided	',
   height = '100%', // Default height if not provided
-  borderColor = '',
 }) => {
   const currentThemeName = useContext(ThemesContext) as ThemeType;
   return (
@@ -35,7 +34,7 @@ const ModalWindow: React.FC<ModalWindowProps> = ({
       transparent={true}
       visible={modalVisible}
       onRequestClose={() => setModalVisible(!modalVisible)}>
-      <View style={[styles.modalContainer]}>
+      <View style={[styles.modalContainer, {backgroundColor: themes[currentThemeName.currentThemeName].modalBackdrop}]}>
         <View
           style={[
             styles.modalView,
@@ -44,11 +43,11 @@ const ModalWindow: React.FC<ModalWindowProps> = ({
                 themes[currentThemeName.currentThemeName].background,
               width,
               height,
-              borderColor: borderColor,
+              borderColor: themes[currentThemeName.currentThemeName].modalBorder,
             },
           ]}>
           <Pressable onPress={() => setModalVisible(!modalVisible)}>
-            <Text>Cerrar</Text>
+            <StyledText text="Cerrar" />
           </Pressable>
           {component}
         </View>
@@ -71,7 +70,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#122e49',
+    // backgroundColor: '#122e49', // Removed as it's now set dynamically
   },
   buttonIcon: {
     width: 50,
