@@ -31,7 +31,7 @@ export default function MyChart() {
       <BarChart
         data={data}
         width={screenWidth - 20}
-        height={180}
+        height={220}
         yAxisLabel=""
         fromZero
         yAxisSuffix={''}
@@ -43,18 +43,18 @@ export default function MyChart() {
           barPercentage: 0.6,
           fillShadowGradientOpacity: 1,
           color: (opacity = 1) => {
-            // Handle potential hex accentColor and apply opacity
-            const accent = theme.accentColor;
-            if (accent.startsWith('#')) {
-              const r = parseInt(accent.slice(1, 3), 16);
-              const g = parseInt(accent.slice(3, 5), 16);
-              const b = parseInt(accent.slice(5, 7), 16);
+            // Handle potential hex iconBackground and apply opacity
+            const bgColor = theme.iconBackground; // Changed from accentColor to iconBackground
+            if (bgColor.startsWith('#')) {
+              const r = parseInt(bgColor.slice(1, 3), 16);
+              const g = parseInt(bgColor.slice(3, 5), 16);
+              const b = parseInt(bgColor.slice(5, 7), 16);
               return `rgba(${r}, ${g}, ${b}, ${opacity})`;
             }
-            return accent; // If it's already rgba or another format chart kit handles
+            return bgColor; // If it's already rgba or another format chart kit handles
           },
           labelColor: (opacity = 1) => `rgba(${parseInt(theme.text.slice(1, 3), 16)}, ${parseInt(theme.text.slice(3, 5), 16)}, ${parseInt(theme.text.slice(5, 7), 16)}, ${opacity})`,
-          fillShadowGradient: theme.accentColor, // Use accentColor for shadow gradient
+          fillShadowGradient: theme.text, // Changed from accentColor to text
           backgroundColor: theme.iconBackground,
           backgroundGradientTo: theme.iconBackground,
           backgroundGradientFrom: theme.iconBackground,

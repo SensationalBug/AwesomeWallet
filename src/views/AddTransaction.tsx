@@ -64,16 +64,16 @@ const AddTransaction = () => {
       <View style={styles.radioButtonView}>
         <StyledText variant="titleMedium" text="Tipo de transacción:" />
         <Radio
+          color={theme.transactionTypeDebit}
           text="Débito"
           value="debito"
-          color={theme.transactionTypeDebit}
           onPress={() => updateState(setNewTransaction, 'type', 'debito')}
           status={newTransaction.type === 'debito' ? 'checked' : 'unchecked'}
         />
         <Radio
+          color={theme.transactionTypeCredit}
           text="Crédito"
           value="credito"
-          color={theme.transactionTypeCredit}
           onPress={() => updateState(setNewTransaction, 'type', 'credito')}
           status={newTransaction.type === 'credito' ? 'checked' : 'unchecked'}
         />
