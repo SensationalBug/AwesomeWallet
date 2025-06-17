@@ -9,6 +9,8 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Overview from './views/Overview';
 import Settings from './views/Settings';
 import Transaction from './views/Transaction';
+// import {View} from 'react-native';
+// import {FAB} from 'react-native-paper';
 
 const Tab = createBottomTabNavigator();
 
@@ -22,6 +24,15 @@ const tabBarIcon = (
   ) : (
     <Icon name={iconNameOutline} size={24} color={color} />
   );
+
+// const Vista = () => {
+//   return (
+//     <View style={{flexDirection: 'row', gap: 10, marginRight: 10}}>
+//       <FAB icon="close" size="small" onPress={() => console.log('1')} />
+//       <FAB icon="close" size="small" onPress={() => console.log('2')} />
+//     </View>
+//   );
+// };
 
 const Main = () => {
   const currentThemeName = useContext(ThemesContext) as ThemeType;
@@ -49,7 +60,7 @@ const Main = () => {
 
   return (
     <Tab.Navigator
-      initialRouteName="Overview"
+      initialRouteName="Transaction"
       screenOptions={{
         tabBarActiveTintColor: themes[currentThemeName.currentThemeName].text,
         tabBarInactiveTintColor:
@@ -66,7 +77,10 @@ const Main = () => {
       <Tab.Screen
         name="Transaction"
         component={Transaction}
-        options={tabScreenOptions('Transacciones', 'grid', 'grid-outline')}
+        options={{
+          ...tabScreenOptions('Transacciones', 'grid', 'grid-outline'),
+          // headerRight: true ? Vista : undefined,
+        }}
       />
       <Tab.Screen
         name="Ajustes"

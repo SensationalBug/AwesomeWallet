@@ -11,6 +11,10 @@ const AnimatedButton = ({
   animateFrom,
   isExtended,
   label = 'Button',
+  icon,
+  color,
+  right = 20,
+  bottom = 20,
   onPress,
 }: AnimatedButtonProps) => {
   const fabStyle = animateFrom ? {[animateFrom]: 16} : {};
@@ -18,17 +22,17 @@ const AnimatedButton = ({
   const theme = themes[currentThemeName.currentThemeName];
   return (
     <AnimatedFAB
-      icon={'plus'}
+      icon={icon}
       label={label}
       onPress={onPress}
       visible={visible}
-      color={theme.text}
+      color={color}
       extended={isExtended}
       style={[
         style,
         fabStyle,
         styles.fabStyle,
-        {backgroundColor: theme.iconBackground},
+        {backgroundColor: theme.iconBackground, right, bottom},
       ]}
     />
   );
@@ -38,8 +42,6 @@ export default AnimatedButton;
 
 const styles = StyleSheet.create({
   fabStyle: {
-    right: 20,
-    bottom: 20,
     position: 'absolute',
   },
 });

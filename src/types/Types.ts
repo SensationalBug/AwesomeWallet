@@ -14,6 +14,10 @@ type AnimatedButtonProps = {
   label?: string;
   isExtended: boolean;
   onPress?: () => void;
+  icon: string;
+  color: string;
+  right?: number;
+  bottom?: number;
 };
 
 type StyledViewProps = {

@@ -1,6 +1,6 @@
 import {themes} from '../styles/Theme';
 import React, {useContext} from 'react';
-import { ThemeType } from '../types/Types';
+import {ThemeType} from '../types/Types';
 import {BarChart} from 'react-native-chart-kit';
 import {ThemesContext} from '../context/ThemesContext';
 import {View, Dimensions, StyleSheet} from 'react-native';
@@ -13,17 +13,18 @@ export default function MyChart() {
   const theme = themes[currentThemeName]; // Get the full theme object
 
   const data = {
-    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'ddd', 'eee'],
     datasets: [
       {
-        data: [80, 100, 30, 45, 45, 80],
+        data: [80, 100, 30, 45, 45, 80, 90, 30],
       },
     ],
   };
 
   const chartStyle = {
-    marginVertical: 8,
-    borderRadius: 16,
+    paddingRight: 0,
+    borderRadius: 10,
+    marginVertical: 5,
   };
 
   return (
@@ -31,30 +32,20 @@ export default function MyChart() {
       <BarChart
         data={data}
         width={screenWidth - 20}
-        height={220}
+        height={180}
         yAxisLabel=""
         fromZero
-        yAxisSuffix={''}
+        yAxisSuffix=""
         style={chartStyle}
         withInnerLines={false}
+        withHorizontalLabels={false}
         showValuesOnTopOfBars={false}
         chartConfig={{
           decimalPlaces: 0,
-          barPercentage: 0.6,
-          fillShadowGradientOpacity: 1,
-          color: (opacity = 1) => {
-            // Handle potential hex iconBackground and apply opacity
-            const bgColor = theme.iconBackground; // Changed from accentColor to iconBackground
-            if (bgColor.startsWith('#')) {
-              const r = parseInt(bgColor.slice(1, 3), 16);
-              const g = parseInt(bgColor.slice(3, 5), 16);
-              const b = parseInt(bgColor.slice(5, 7), 16);
-              return `rgba(${r}, ${g}, ${b}, ${opacity})`;
-            }
-            return bgColor; // If it's already rgba or another format chart kit handles
-          },
-          labelColor: (opacity = 1) => `rgba(${parseInt(theme.text.slice(1, 3), 16)}, ${parseInt(theme.text.slice(3, 5), 16)}, ${parseInt(theme.text.slice(5, 7), 16)}, ${opacity})`,
-          fillShadowGradient: theme.text, // Changed from accentColor to text
+          barPercentage: 1,
+          color: () => theme.text,
+          labelColor: () => theme.text,
+          fillShadowGradient: theme.text,
           backgroundColor: theme.iconBackground,
           backgroundGradientTo: theme.iconBackground,
           backgroundGradientFrom: theme.iconBackground,
