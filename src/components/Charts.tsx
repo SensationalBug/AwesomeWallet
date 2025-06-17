@@ -31,7 +31,7 @@ export default function MyChart() {
       <BarChart
         data={data}
         width={screenWidth - 20}
-        height={220}
+        height={180}
         yAxisLabel=""
         fromZero
         yAxisSuffix={''}

@@ -38,7 +38,7 @@ export class Transaction extends Realm.Object<Transaction> {
       concept: 'string?',
       cDate: 'string',
       file: 'string?',
-      type: 'string', // puedes usar enum-like validación manual
+      type: 'string',
     },
   };
 }

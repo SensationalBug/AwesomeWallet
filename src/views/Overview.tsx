@@ -79,16 +79,15 @@ const Overview = ({navigation}: NavigationProps) => {
 
       {/* Recent transactions section */}
       <View style={styles.recentTransactions}>
-        <StyledText variant="headlineMedium" text="Transacciones recientes" />
+        <StyledText variant="titleLarge" text="Transacciones recientes" />
         <StyledDropDown
           data={[
             {label: '3', value: 3},
             {label: '5', value: 5},
             {label: '10', value: 10},
           ]}
-          value={recent}
-          placeholder={''}
           width={60}
+          value={recent}
           onChange={(item: {label: string; value: string}) =>
             setRecent(Number(item.value))
           }
@@ -123,7 +122,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   surfaceContainer: {
-    height: '15%',
+    height: 100,
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -152,5 +151,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingHorizontal: 5,
     alignItems: 'center',
+    justifyContent: 'space-between',
   },
 });
