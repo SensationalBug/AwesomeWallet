@@ -5,10 +5,11 @@ import {useNavigation} from '@react-navigation/native';
 import {ThemesContext} from '../context/ThemesContext';
 import ModalWindow from '../components/custom/ModalWindow';
 import StyledButton from '../components/custom/StyledButton';
+import StyledText from '../components/custom/StyledText'; // Added import
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
 
 import {themes} from '../styles/Theme';
-import {Text} from 'react-native-paper';
+// import {Text} from 'react-native-paper'; // Text from react-native-paper is no longer used directly here for "Perfil"
 import {SettingsStackParamList, ThemeType} from '../types/Types';
 
 const Settings = () => {
@@ -35,7 +36,7 @@ const Settings = () => {
         iconName="user"
         title="Perfil"
         subTitle="Configuraciones del perfil"
-        onPress={() => openModal(<Text>Perfil</Text>)}
+        onPress={() => openModal(<StyledText text="Perfil" />)}
       />
       <StyledButton
         iconName="bell"
