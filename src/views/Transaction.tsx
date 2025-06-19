@@ -1,31 +1,48 @@
-import React, {useContext, useState} from 'react';
-import {StyleSheet, View} from 'react-native';
-import {NavigationProps, ThemeType} from '../types/Types';
-import StyledView from '../components/custom/StyledView';
-import AnimatedButton from '../components/AnimatedButton';
-import StyledButton from '../components/custom/StyledButton';
-import {TransactionContext} from '../context/TransactionContext';
-import {ThemesContext} from '../context/ThemesContext';
 import {themes} from '../styles/Theme';
+import {ThemesContext} from '../context/ThemesContext';
+import StyledView from '../components/custom/StyledView';
+import {NavigationProps, ThemeType} from '../types/Types';
+import AnimatedButton from '../components/AnimatedButton';
+import {BackHandler, StyleSheet, View} from 'react-native';
+import StyledButton from '../components/custom/StyledButton';
+import React, {useContext, useEffect, useState} from 'react';
+import {TransactionContext} from '../context/TransactionContext';
 
 const Transaction = ({navigation}: NavigationProps) => {
-  const {transactions, deleteTransaction} = useContext(TransactionContext);
+  const {transactions, deleteTransaction, updateTransaction} =
+    useContext(TransactionContext);
 
   const [transactionSelected, setTransactionSelected] = useState<any[]>([]);
 
-  const [isExtended, setIsExtended] = React.useState(false); //esto va true
+  const [isExtended, setIsExtended] = React.useState(true);
   const [isVisible, setIsVisible] = React.useState(false);
 
   const currentThemeName = useContext(ThemesContext) as ThemeType;
   const theme = themes[currentThemeName.currentThemeName];
 
-  const onScrollStart = () => {
-    setIsExtended(false);
-  };
+  const onScrollEnd = () => setIsExtended(true);
+  const onScrollStart = () => setIsExtended(false);
 
-  const onScrollEnd = () => {
-    setIsExtended(true);
-  };
+  useEffect(() => {
+    transactionSelected.length > 0 ? setIsVisible(true) : setIsVisible(false);
+
+    const backAction = () => {
+      if (transactionSelected.length > 0) {
+        // Si hay elementos seleccionados, vacía el array
+        setTransactionSelected([]);
+        // Puedes agregar un Toast o mensaje aquí si lo deseas
+        return true; // Consume el evento, evita que la navegación hacia atrás o la salida se ejecuten
+      }
+      return false; // Permite el comportamiento predeterminado (navegar hacia atrás o salir)
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+
+    return () => backHandler.remove(); // Limpia el event listener al desmontar el componente
+  }, [isVisible, transactionSelected]); // Dependencia: el efecto se re-evalúa si transactionSelected cambia
 
   return (
     <View style={styles.container}>
@@ -34,55 +51,64 @@ const Transaction = ({navigation}: NavigationProps) => {
           const {_id, concept, amount, category, cDate, type} = value;
           return (
             <StyledButton
+              backgroundColor={
+                transactionSelected.some(
+                  elem => elem.toString() === _id.toString(),
+                )
+                  ? theme.iconBackground
+                  : undefined
+              }
               key={index}
               title={concept}
               iconName={category}
               subTitle={cDate}
               amount={amount}
               type={type}
-              // onLongPress={() => deleteTransaction(_id)}
               onPress={() => {
-                if (
-                  transactionSelected.some(
-                    elem => elem.toString() === _id.toString(),
-                  )
-                ) {
-                  transactionSelected.filter(
-                    id => id.toString() !== _id.toString(),
-                  );
-                  console.log('eliminado');
-                } else {
-                  setTransactionSelected(prev => [...prev, _id]);
-                  console.log('agregado');
-                }
+                // onLongPress={() => {
+                // Evalua si la transaccion esta seleccionada
+                transactionSelected.some(
+                  elem => elem.toString() === _id.toString(),
+                )
+                  ? // Si está lo elimina
+                    setTransactionSelected(prev =>
+                      prev.filter(id => id.toString() !== _id.toString()),
+                    )
+                  : // Si no está lo agrega
+                    setTransactionSelected(prev => [...prev, _id]);
               }}
             />
           );
         })}
       </StyledView>
-      {/* <AnimatedButton
+      <AnimatedButton
+        icon="plus"
+        color={theme.text}
         visible={!isVisible}
         isExtended={isExtended}
         label="Nueva transacción"
         onPress={() => navigation.navigate('AddTransaction')}
-        icon="plus"
-        color={theme.text}
-      /> */}
-      {/* <AnimatedButton
-        visible={isVisible}
-        isExtended={false}
-        onPress={() => {}}
+      />
+      <AnimatedButton
         icon="pencil"
         color={theme.text}
-      /> */}
-      <AnimatedButton
-        // visible={isVisible}
-        visible
+        visible={isVisible}
         isExtended={false}
-        onPress={() => console.log(transactionSelected)}
+        onPress={() => updateTransaction(transactionSelected, {})}
+        opacity={transactionSelected.length > 1 ? 0.7 : 1}
+        disabled={transactionSelected.length > 1 ? true : false}
+      />
+      <AnimatedButton
+        right={100}
         icon="close"
         color={theme.text}
-        right={100}
+        visible={isVisible}
+        isExtended={false}
+        onPress={() => {
+          deleteTransaction(transactionSelected).then(() =>
+            setTransactionSelected([]),
+          );
+        }}
       />
     </View>
   );

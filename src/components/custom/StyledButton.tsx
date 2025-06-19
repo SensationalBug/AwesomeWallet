@@ -20,13 +20,14 @@ const StyledButton = ({
   type,
   onPress,
   onLongPress,
+  backgroundColor,
 }: SettingsButtonProps) => {
   const currentThemeName = useContext(ThemesContext) as ThemeType;
   const theme = themes[currentThemeName.currentThemeName];
   const {width} = useWindowDimensions();
   return (
     <TouchableOpacity
-      style={styles.container}
+      style={[styles.container, {backgroundColor}]}
       onPress={onPress}
       onLongPress={onLongPress}>
       <View

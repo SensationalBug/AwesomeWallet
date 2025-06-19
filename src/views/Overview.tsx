@@ -111,7 +111,7 @@ const Overview = ({navigation}: NavigationProps) => {
           );
         })}
       </StyledView>
-    </View>
+     </View>
   );
 };
 

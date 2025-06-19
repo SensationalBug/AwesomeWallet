@@ -18,6 +18,8 @@ type AnimatedButtonProps = {
   color: string;
   right?: number;
   bottom?: number;
+  opacity?: number;
+  disabled?: boolean;
 };
 
 type StyledViewProps = {
@@ -34,6 +36,7 @@ type SettingsButtonProps = {
   type?: string;
   onPress?: () => void;
   onLongPress?: () => void;
+  backgroundColor?: string;
 };
 
 type ThemeType = {
@@ -60,7 +63,11 @@ type CategoriesContextType = {
 type TransactionContextType = {
   transactions: Transaction[];
   addTransaction: (newTransaction: any) => void;
-  deleteTransaction: (id: Realm.BSON.ObjectId) => void;
+  updateTransaction: (
+    id: Realm.Object[],
+    updates: {},
+  ) => Promise<Transaction | null>;
+  deleteTransaction: (transactionSelected: Realm.Object[]) => Promise<void>;
 };
 
 // Define your stack param list type here or import it from your navigation types file

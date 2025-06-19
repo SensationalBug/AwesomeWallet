@@ -1,9 +1,7 @@
 import React, {useContext} from 'react';
-// import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {SafeAreaView, StatusBar, ViewStyle, StyleSheet} from 'react-native';
-import {ThemesContext} from '../../context/ThemesContext';
 import {themes} from '../../styles/Theme';
-import {ThemeType} from '../../types/Types';
+import {ThemesContext} from '../../context/ThemesContext';
+import {SafeAreaView, StatusBar, ViewStyle, StyleSheet} from 'react-native';
 
 type Props = {
   children: React.ReactNode;
@@ -11,15 +9,20 @@ type Props = {
 };
 
 const ThemedSafeArea = ({children, style = {}}: Props) => {
-  const currentThemeName = useContext(ThemesContext);
-  const theme: ThemeType = themes[currentThemeName.currentThemeName];
+  const currentThemeName = useContext(ThemesContext) as {
+    currentThemeName: keyof typeof themes;
+  };
+  const theme = themes[currentThemeName.currentThemeName];
 
   return (
-    <SafeAreaView style={[styles.container, {backgroundColor: theme.background}]}>
+    <SafeAreaView
+      style={[styles.container, {backgroundColor: theme.background}]}>
       <StatusBar
-        barStyle={theme.barStyle}
-        backgroundColor={theme.background}
         translucent={false}
+        backgroundColor={theme.background}
+        barStyle={
+          theme.barStyle as 'default' | 'light-content' | 'dark-content'
+        }
       />
       <SafeAreaView style={[style, styles.container]}>{children}</SafeAreaView>
     </SafeAreaView>

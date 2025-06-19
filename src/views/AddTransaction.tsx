@@ -30,13 +30,22 @@ const AddTransaction = () => {
   }/${date.getFullYear()}`;
 
   const [newTransaction, setNewTransaction] = useState<any>({
-    amount: '',
-    category: '',
-    concept: '',
+    amount: '500',
+    category: 'hghgh',
+    concept: 'ghghg',
     cDate: currentDate,
     file: '/home',
-    type: '',
+    type: 'debito',
   });
+
+  // const [newTransaction, setNewTransaction] = useState<any>({
+  //   amount: '',
+  //   category: '',
+  //   concept: '',
+  //   cDate: currentDate,
+  //   file: '/home',
+  //   type: '',
+  // });
   return (
     <View style={[styles.container, {backgroundColor: theme.background}]}>
       <StyledTextInput
@@ -88,12 +97,18 @@ const AddTransaction = () => {
         onPress={() => {
           addTransaction(newTransaction);
           setNewTransaction({
-            amount: '',
-            category: '',
-            concept: '',
+            amount: '500',
+            category: 'hghgh',
+            concept: 'ghghg',
             cDate: currentDate,
             file: '/home',
-            type: '',
+            type: 'debito',
+            // amount: '',
+            // category: '',
+            // concept: '',
+            // cDate: currentDate,
+            // file: '/home',
+            // type: '',
           });
         }}
         style={[
