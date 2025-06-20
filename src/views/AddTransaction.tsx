@@ -2,21 +2,22 @@ import {
   ThemeType,
   CategoriesContextType,
   TransactionContextType,
+  NavigationProps,
 } from '../types/Types';
 import {themes} from '../styles/Theme';
 import Radio from '../components/Radio';
 import {updateState} from '../utils/updateState';
-import React, {useContext, useState} from 'react';
 import {ThemesContext} from '../context/ThemesContext';
 import StyledText from '../components/custom/StyledText';
+import React, {useContext, useEffect, useState} from 'react';
 import {CategoriesContext} from '../context/CategoriesContext';
 import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import StyledDropDown from '../components/custom/StyledDropDown';
 import {TransactionContext} from '../context/TransactionContext';
 import StyledTextInput from '../components/custom/StyledTextInput';
 
-const AddTransaction = () => {
-  const {addTransaction} = useContext(
+const AddTransaction = ({navigation, route}: NavigationProps) => {
+  const {addTransaction, updateTransaction} = useContext(
     TransactionContext,
   ) as TransactionContextType;
   const {categories} = useContext(CategoriesContext) as CategoriesContextType;
@@ -24,28 +25,35 @@ const AddTransaction = () => {
   const currentThemeName = useContext(ThemesContext) as ThemeType;
   const theme = themes[currentThemeName.currentThemeName];
 
+  const transactionToUpdate = route?.params;
+
   const date = new Date();
   const currentDate = `${date.getDate()}/${
     date.getMonth() + 1
   }/${date.getFullYear()}`;
 
   const [newTransaction, setNewTransaction] = useState<any>({
-    amount: '500',
-    category: 'hghgh',
-    concept: 'ghghg',
+    amount: '',
+    category: '',
+    concept: '',
     cDate: currentDate,
     file: '/home',
-    type: 'debito',
+    type: '',
   });
 
-  // const [newTransaction, setNewTransaction] = useState<any>({
-  //   amount: '',
-  //   category: '',
-  //   concept: '',
-  //   cDate: currentDate,
-  //   file: '/home',
-  //   type: '',
-  // });
+  useEffect(() => {
+    if (transactionToUpdate) {
+      const {amount, category, concept, cDate, file, type} =
+        transactionToUpdate;
+      updateState(setNewTransaction, 'amount', String(amount));
+      updateState(setNewTransaction, 'category', category);
+      updateState(setNewTransaction, 'concept', concept);
+      updateState(setNewTransaction, 'cDate', cDate);
+      updateState(setNewTransaction, 'file', file);
+      updateState(setNewTransaction, 'type', type);
+    }
+  }, [transactionToUpdate]);
+
   return (
     <View style={[styles.container, {backgroundColor: theme.background}]}>
       <StyledTextInput
@@ -95,20 +103,24 @@ const AddTransaction = () => {
           !newTransaction.type.trim()
         }
         onPress={() => {
-          addTransaction(newTransaction);
+          if (transactionToUpdate) {
+            updateTransaction(
+              transactionToUpdate.transactionId,
+              newTransaction,
+            ).then(() => {
+              navigation.goBack();
+              transactionToUpdate.setTransactionSelected([]);
+            });
+          } else {
+            addTransaction(newTransaction);
+          }
           setNewTransaction({
-            amount: '500',
-            category: 'hghgh',
-            concept: 'ghghg',
+            amount: '',
+            category: '',
+            concept: '',
             cDate: currentDate,
             file: '/home',
-            type: 'debito',
-            // amount: '',
-            // category: '',
-            // concept: '',
-            // cDate: currentDate,
-            // file: '/home',
-            // type: '',
+            type: '',
           });
         }}
         style={[
@@ -128,7 +140,9 @@ const AddTransaction = () => {
         <StyledText
           bold="bold"
           variant="titleMedium"
-          text="Agregar transacción"
+          text={
+            transactionToUpdate ? 'Editar transacción' : 'Agregar transacción'
+          }
         />
       </TouchableOpacity>
     </View>

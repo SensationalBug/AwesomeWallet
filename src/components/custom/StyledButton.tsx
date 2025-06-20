@@ -11,6 +11,7 @@ import {themes} from '../../styles/Theme';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {ThemesContext} from '../../context/ThemesContext';
 import {SettingsButtonProps, ThemeType} from '../../types/Types';
+import {formatNumber} from '../../utils/formatNumber';
 
 const StyledButton = ({
   title,
@@ -56,7 +57,7 @@ const StyledButton = ({
                     : theme.transactionTypeCredit,
               }}
               variant="labelLarge">
-              RD$10000000.00
+              RD${formatNumber(amount)}
             </Text>
           </View>
         ) : null}

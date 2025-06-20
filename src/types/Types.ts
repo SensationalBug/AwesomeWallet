@@ -1,10 +1,13 @@
+import {Realm} from 'realm';
 import {themes} from '../styles/Theme';
 import {StyleProp, ViewStyle} from 'react-native';
 import {Category, Transaction} from '../db/schemas';
 import {StackNavigationProp} from '@react-navigation/stack';
+import {RouteProp} from '@react-navigation/native';
 
 type NavigationProps = {
   navigation: StackNavigationProp<any, any>;
+  route?: RouteProp<any, any>;
 };
 
 type AnimatedButtonProps = {
@@ -62,11 +65,12 @@ type CategoriesContextType = {
 
 type TransactionContextType = {
   transactions: Transaction[];
-  addTransaction: (newTransaction: any) => void;
+  addTransaction: (newTransaction: any) => Promise<void>;
   updateTransaction: (
-    id: Realm.Object[],
-    updates: {},
-  ) => Promise<Transaction | null>;
+    id: Realm.BSON.ObjectId,
+    transaction: any,
+  ) => Promise<void>;
+  getTransactionByID: (id: Realm.Object[]) => Promise<Transaction | null>;
   deleteTransaction: (transactionSelected: Realm.Object[]) => Promise<void>;
 };
 

@@ -1,6 +1,6 @@
 import React, {useContext} from 'react';
 import {Surface} from 'react-native-paper';
-import MyChart from '../components/Charts';
+import MyChart from '../components/Chart';
 import {View, StyleSheet, TouchableOpacity} from 'react-native';
 
 import {themes} from '../styles/Theme';

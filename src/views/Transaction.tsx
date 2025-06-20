@@ -9,7 +9,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import {TransactionContext} from '../context/TransactionContext';
 
 const Transaction = ({navigation}: NavigationProps) => {
-  const {transactions, deleteTransaction, updateTransaction} =
+  const {transactions, deleteTransaction, getTransactionByID} =
     useContext(TransactionContext);
 
   const [transactionSelected, setTransactionSelected] = useState<any[]>([]);
@@ -28,9 +28,7 @@ const Transaction = ({navigation}: NavigationProps) => {
 
     const backAction = () => {
       if (transactionSelected.length > 0) {
-        // Si hay elementos seleccionados, vacía el array
         setTransactionSelected([]);
-        // Puedes agregar un Toast o mensaje aquí si lo deseas
         return true; // Consume el evento, evita que la navegación hacia atrás o la salida se ejecuten
       }
       return false; // Permite el comportamiento predeterminado (navegar hacia atrás o salir)
@@ -64,17 +62,16 @@ const Transaction = ({navigation}: NavigationProps) => {
               subTitle={cDate}
               amount={amount}
               type={type}
-              onPress={() => {
-                // onLongPress={() => {
+              onLongPress={() => {
                 // Evalua si la transaccion esta seleccionada
                 transactionSelected.some(
                   elem => elem.toString() === _id.toString(),
                 )
-                  ? // Si está lo elimina
+                  ? // Si está la elimina
                     setTransactionSelected(prev =>
                       prev.filter(id => id.toString() !== _id.toString()),
                     )
-                  : // Si no está lo agrega
+                  : // Si no está la agrega
                     setTransactionSelected(prev => [...prev, _id]);
               }}
             />
@@ -94,7 +91,20 @@ const Transaction = ({navigation}: NavigationProps) => {
         color={theme.text}
         visible={isVisible}
         isExtended={false}
-        onPress={() => updateTransaction(transactionSelected, {})}
+        onPress={() =>
+          getTransactionByID(transactionSelected).then(transactionToUpdate =>
+            navigation.navigate('AddTransaction', {
+              transactionId: transactionToUpdate?._id.toHexString(),
+              concept: transactionToUpdate?.concept,
+              amount: transactionToUpdate?.amount,
+              category: transactionToUpdate?.category,
+              cDate: transactionToUpdate?.cDate,
+              file: transactionToUpdate?.file,
+              type: transactionToUpdate?.type,
+              setTransactionSelected,
+            }),
+          )
+        }
         opacity={transactionSelected.length > 1 ? 0.7 : 1}
         disabled={transactionSelected.length > 1 ? true : false}
       />

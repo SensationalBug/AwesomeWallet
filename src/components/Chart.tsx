@@ -1,9 +1,10 @@
 import {themes} from '../styles/Theme';
 import React, {useContext} from 'react';
 import {ThemeType} from '../types/Types';
-import {BarChart} from 'react-native-chart-kit';
 import {ThemesContext} from '../context/ThemesContext';
-import {View, Dimensions, StyleSheet} from 'react-native';
+import {View, Dimensions, StyleSheet, ScrollView} from 'react-native';
+import StyledButton from './custom/StyledButton';
+import ChartBar from './charts/ChartBar';
 // import {themes} from '../styles/Theme'; // Ensure themes is imported - REMOVED DUPLICATE
 
 const screenWidth = Dimensions.get('window').width;
@@ -28,8 +29,8 @@ export default function MyChart() {
   };
 
   return (
-    <View style={viewStyle.container}>
-      <BarChart
+    <ScrollView horizontal style={viewStyle.container}>
+      {/* <BarChart
         data={data}
         width={screenWidth - 20}
         height={180}
@@ -50,10 +51,17 @@ export default function MyChart() {
           backgroundGradientTo: theme.iconBackground,
           backgroundGradientFrom: theme.iconBackground,
         }}
-      />
-    </View>
+      /> */}
+      <ChartBar />
+      <ChartBar />
+      <ChartBar />
+    </ScrollView>
   );
 }
 
-const viewStyle = StyleSheet.create({container: {alignItems: 'center'}});
+const viewStyle = StyleSheet.create({
+  container: {
+    backgroundColor: 'blue',
+  },
+});
 // This style is used to center the chart within its parent container
