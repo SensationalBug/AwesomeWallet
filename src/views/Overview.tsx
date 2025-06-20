@@ -75,7 +75,9 @@ const Overview = ({navigation}: NavigationProps) => {
       </View>
 
       {/* Chart section */}
-      <MyChart />
+      <View style={styles.chartSection}>
+        <MyChart />
+      </View>
 
       {/* Recent transactions section */}
       <View style={styles.recentTransactions}>
@@ -111,7 +113,7 @@ const Overview = ({navigation}: NavigationProps) => {
           );
         })}
       </StyledView>
-     </View>
+    </View>
   );
 };
 
@@ -148,6 +150,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  chartSection: {height: 180},
   recentTransactions: {
     flexDirection: 'row',
     paddingHorizontal: 5,

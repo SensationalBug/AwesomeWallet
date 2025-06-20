@@ -29,7 +29,7 @@ export default function MyChart() {
   };
 
   return (
-    <ScrollView horizontal style={viewStyle.container}>
+    <ScrollView horizontal style={styles.container}>
       {/* <BarChart
         data={data}
         width={screenWidth - 20}
@@ -52,14 +52,19 @@ export default function MyChart() {
           backgroundGradientFrom: theme.iconBackground,
         }}
       /> */}
-      <ChartBar />
-      <ChartBar />
-      <ChartBar />
+      <ChartBar height={68.535} />
+      <ChartBar height={50} />
+      <ChartBar height={30} />
+      <ChartBar height={60} />
+      <ChartBar height={90} />
+      <ChartBar height={68.535} />
+      <ChartBar height={10} />
+      <ChartBar height={40} />
     </ScrollView>
   );
 }
 
-const viewStyle = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     backgroundColor: 'blue',
   },
