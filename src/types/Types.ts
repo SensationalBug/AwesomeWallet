@@ -29,6 +29,7 @@ type StyledViewProps = {
   children: React.ReactNode;
   onScroll?: (event: {nativeEvent: {contentOffset: {y: number}}}) => void;
   onScrollEnd?: () => void;
+  horizontal?: boolean;
 };
 
 type SettingsButtonProps = {
@@ -61,6 +62,7 @@ type CategoriesContextType = {
   categories: Category[];
   addCategory: (name: string, icon: string) => void;
   deleteCategory: (id: Realm.BSON.ObjectId) => void;
+  getCategoryById: (id: Realm.BSON.ObjectId) => void;
 };
 
 type TransactionContextType = {
@@ -72,6 +74,20 @@ type TransactionContextType = {
   ) => Promise<void>;
   getTransactionByID: (id: Realm.Object[]) => Promise<Transaction | null>;
   deleteTransaction: (transactionSelected: Realm.Object[]) => Promise<void>;
+};
+
+type MetricsContextType = {
+  transactionsByCategories: {};
+  getTransactionsGroupByCategories: () => void;
+};
+
+type CategoryTotal = {
+  name: string; // The category name
+  totalAmount: number; // The sum of amounts for this category
+};
+
+type GroupedTransactions = {
+  [category: string]: CategoryTotal;
 };
 
 // Define your stack param list type here or import it from your navigation types file
@@ -91,12 +107,21 @@ type StyledTextInputProps = {
 };
 
 type StyledDropDownProps = {
-  data: Array<{label: string; value: string | number}>;
+  data: Array<{
+    label: string;
+    value: string | number;
+    id?: Realm.BSON.ObjectId;
+  }>;
   dropdownPosition?: 'auto' | 'top' | 'bottom';
   placeholder?: string;
   value?: any;
   width?: number;
   onChange: (item: {label: string; value: string}) => void;
+};
+
+type ChartBarProps = {
+  height: number;
+  text: string;
 };
 
 export type {
@@ -108,7 +133,10 @@ export type {
   AddCategoryProps,
   CategoriesContextType,
   TransactionContextType,
+  MetricsContextType,
+  GroupedTransactions,
   SettingsStackParamList,
   StyledTextInputProps,
   StyledDropDownProps,
+  ChartBarProps,
 };

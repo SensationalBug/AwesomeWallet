@@ -1,21 +1,25 @@
 import React, {useContext} from 'react';
 import {Surface} from 'react-native-paper';
-import MyChart from '../components/Chart';
+import Chart from '../components/Chart';
 import {View, StyleSheet, TouchableOpacity} from 'react-native';
 
 import {themes} from '../styles/Theme';
 import {ThemesContext} from '../context/ThemesContext';
 import StyledText from '../components/custom/StyledText';
-import {NavigationProps, ThemeType} from '../types/Types';
 import StyledView from '../components/custom/StyledView';
+import {MetricsContext} from '../context/MetricsContext';
+import {NavigationProps, ThemeType} from '../types/Types';
 import StyledButton from '../components/custom/StyledButton';
 import {TransactionContext} from '../context/TransactionContext';
 import StyledDropDown from '../components/custom/StyledDropDown';
+import {CategoriesContext} from '../context/CategoriesContext';
 
 const Overview = ({navigation}: NavigationProps) => {
   const currentThemeName = useContext(ThemesContext) as ThemeType;
   const theme = themes[currentThemeName.currentThemeName];
   const {transactions} = useContext(TransactionContext);
+  const {getCategoryById} = useContext(CategoriesContext);
+  const {transactionsByCategories} = useContext(MetricsContext);
   const [recent, setRecent] = React.useState<number>(3);
   return (
     <View
@@ -76,7 +80,7 @@ const Overview = ({navigation}: NavigationProps) => {
 
       {/* Chart section */}
       <View style={styles.chartSection}>
-        <MyChart />
+        <Chart data={transactionsByCategories} />
       </View>
 
       {/* Recent transactions section */}
@@ -101,11 +105,14 @@ const Overview = ({navigation}: NavigationProps) => {
       <StyledView>
         {transactions.slice(-recent).map((value: any, index: number) => {
           const {concept, amount, category, cDate, type} = value;
+          const categoryIcon = (
+            getCategoryById(category) as unknown as {icon?: string}
+          )?.icon;
           return (
             <StyledButton
               key={index}
               title={concept}
-              iconName={category}
+              iconName={categoryIcon}
               subTitle={cDate}
               amount={amount}
               type={type}

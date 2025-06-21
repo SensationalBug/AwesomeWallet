@@ -2,53 +2,54 @@ export const themes = {
   light: {
     name: 'Claro',
     text: '#000',
-    textLabel: '#60748A', // Ensured
+    textLabel: '#60748A',
     background: '#fff',
-    iconBackground: '#F0F2F5', // Ensured
-    transactionTypeDebit: '#FF3B30', // Ensured
-    transactionTypeCredit: '#34C759', // Ensured
-    barStyle: 'dark-content', // Ensured
+    iconBackground: '#F0F2F5',
+    transactionTypeDebit: '#FF3B30',
+    transactionTypeCredit: '#34C759',
+    barStyle: 'dark-content',
     modalBackdrop: 'rgba(0, 0, 0, 0.5)',
     modalBorder: '#CCCCCC',
-    // accentColor removed
+    chartBarColor: '#ADD8E6', // Light Blue
   },
   dark: {
     name: 'Oscuro',
     text: '#fff',
-    textLabel: '#60748A', // Ensured
-    background: '#101323',
-    iconBackground: '#21284A', // Ensured
-    transactionTypeDebit: '#FF3B30', // Ensured
-    transactionTypeCredit: '#34C759', // Ensured
-    barStyle: 'light-content', // Ensured
+    textLabel: '#60748A',
+    background: '#101323', // Tu fondo oscuro
+    iconBackground: '#21284A',
+    transactionTypeDebit: '#FF3B30',
+    transactionTypeCredit: '#34C759',
+    barStyle: 'light-content',
     modalBackdrop: 'rgba(0, 0, 0, 0.7)',
     modalBorder: '#444444',
-    // accentColor removed
+    // Nuevo color para las barras del gráfico: Un azul eléctrico que resalta
+    chartBarColor: '#00BFFF', // Deep Sky Blue - es brillante y contrasta mucho
   },
   blue: {
     name: 'Azul',
-    text: '#FFFFFF', // Updated
-    textLabel: '#D1E7FF', // Updated
-    background: '#007AFF', // Updated
-    iconBackground: '#A8D0F0', // Updated
-    transactionTypeDebit: '#FF3B30', // Updated
-    transactionTypeCredit: '#34C759', // Updated
-    barStyle: 'light-content', // Updated
-    modalBackdrop: 'rgba(0, 0, 0, 0.5)', // Updated
-    modalBorder: '#004C99', // Updated
-    // accentColor removed
+    text: '#FFFFFF',
+    textLabel: '#D1E7FF',
+    background: '#007AFF',
+    iconBackground: '#A8D0F0',
+    transactionTypeDebit: '#FF3B30',
+    transactionTypeCredit: '#34C759',
+    barStyle: 'light-content',
+    modalBackdrop: 'rgba(0, 0, 0, 0.5)',
+    modalBorder: '#004C99',
+    chartBarColor: '#33CCFF', // Sky Blue / Capri
   },
   green: {
     name: 'Verde',
-    text: '#FFFFFF', // Updated
-    textLabel: '#D4F0DC', // Updated
-    background: '#34C759', // Updated
-    iconBackground: '#AEE5BB', // Updated
-    transactionTypeDebit: '#FF3B30', // Updated
-    transactionTypeCredit: '#34C759', // Updated
-    barStyle: 'light-content', // Updated
-    modalBackdrop: 'rgba(0, 0, 0, 0.5)', // Updated
-    modalBorder: '#1E7B38', // Updated
-    // accentColor removed
+    text: '#FFFFFF',
+    textLabel: '#D4F0DC',
+    background: '#34C759',
+    iconBackground: '#AEE5BB',
+    transactionTypeDebit: '#FF3B30',
+    transactionTypeCredit: '#34C759',
+    barStyle: 'light-content',
+    modalBackdrop: 'rgba(0, 0, 0, 0.5)',
+    modalBorder: '#1E7B38',
+    chartBarColor: '#7CFC00', // Lawn Green
   },
 };

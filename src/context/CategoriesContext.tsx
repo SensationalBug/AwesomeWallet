@@ -10,6 +10,7 @@ export const CategoriesContext = createContext<CategoriesContextType>({
   categories: [],
   addCategory: () => {},
   deleteCategory: () => {},
+  getCategoryById: () => {},
 });
 
 export const CategoriesProvider: React.FC<React.PropsWithChildren<{}>> = ({
@@ -23,6 +24,23 @@ export const CategoriesProvider: React.FC<React.PropsWithChildren<{}>> = ({
       setCategories(Array.from(categorias));
     } catch (error) {
       console.error('Error al obtener categorías:', error);
+    }
+  };
+
+  const getCategoryById = (id: Realm.BSON.ObjectId) => {
+    if (id) {
+      try {
+        const category = realm.objectForPrimaryKey(
+          'Category',
+          new BSON.ObjectId(id),
+        );
+        if (!category) {
+          return;
+        }
+        return {name: category.name, icon: category.icon};
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
@@ -90,6 +108,7 @@ export const CategoriesProvider: React.FC<React.PropsWithChildren<{}>> = ({
         categories,
         addCategory,
         deleteCategory,
+        getCategoryById,
       }}>
       {children}
     </CategoriesContext.Provider>

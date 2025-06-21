@@ -1,0 +1,23 @@
+[33m714de5e[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m HEAD@{0}: pull origin main: Fast-forward
+[33m31c6c30[m HEAD@{1}: checkout: moving from improve-theme-adaptation to main
+[33m4368a4c[m HEAD@{2}: commit: Sigue con lo de actualizar
+[33m714de5e[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m HEAD@{3}: pull origin main: Fast-forward
+[33md154940[m HEAD@{4}: pull origin improve-theme-adaptation: Fast-forward
+[33m31c6c30[m HEAD@{5}: checkout: moving from main to improve-theme-adaptation
+[33m31c6c30[m HEAD@{6}: commit: feat: ya se arreglaron lo de agregar categorias a las transacciones, ahora es necesario que se puedan editar y ver los detalles
+[33m7c6ce3e[m HEAD@{7}: commit: arregla lo de las categorias en las trasacciones, solo necesitas el iconName
+[33m07a5fc6[m HEAD@{8}: commit: transacciones
+[33ma48cf50[m HEAD@{9}: commit: vamos por las transacciones
+[33mf64b1fa[m HEAD@{10}: commit: que lio
+[33m3fe6171[m HEAD@{11}: commit: sigue
+[33m744e66d[m HEAD@{12}: pull origin main: Fast-forward
+[33m7dff4f0[m HEAD@{13}: commit: agrega los iconos al dropdown
+[33md6cebd5[m HEAD@{14}: pull origin main: Fast-forward
+[33m4243d01[m HEAD@{15}: commit: arregla realm
+[33mf10d104[m HEAD@{16}: commit: Arregla el dropdown
+[33ma45e67a[m HEAD@{17}: commit: Agrega la logica de las bategorias
+[33m74078a2[m HEAD@{18}: pull origin main: Fast-forward
+[33mf299d01[m HEAD@{19}: commit: Arregla las ventanas modales
+[33m39d913f[m HEAD@{20}: Branch: renamed refs/heads/main to refs/heads/main
+[33m39d913f[m HEAD@{22}: commit: feat: Creacion de OverView.tsx
+[33m4a42e2c[m HEAD@{23}: commit (initial): Initial commit

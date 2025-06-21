@@ -4,6 +4,7 @@ import {
   TransactionContextType,
   NavigationProps,
 } from '../types/Types';
+import {BSON} from 'realm';
 import {themes} from '../styles/Theme';
 import Radio from '../components/Radio';
 import {updateState} from '../utils/updateState';
@@ -20,7 +21,9 @@ const AddTransaction = ({navigation, route}: NavigationProps) => {
   const {addTransaction, updateTransaction} = useContext(
     TransactionContext,
   ) as TransactionContextType;
-  const {categories} = useContext(CategoriesContext) as CategoriesContextType;
+  const {categories, getCategoryById} = useContext(
+    CategoriesContext,
+  ) as CategoriesContextType;
 
   const currentThemeName = useContext(ThemesContext) as ThemeType;
   const theme = themes[currentThemeName.currentThemeName];
@@ -70,12 +73,20 @@ const AddTransaction = ({navigation, route}: NavigationProps) => {
       <StyledDropDown
         data={categories.map(category => ({
           label: category.name,
-          value: category.icon,
+          value: category.name,
+          id: category._id,
         }))}
-        value={newTransaction.category}
+        value={(getCategoryById(newTransaction.category) as { name?: string } | undefined)?.name}
         placeholder={'Selecciona una categoría'}
-        onChange={(item: {label: string; value: string}) => {
-          updateState(setNewTransaction, 'category', item.value);
+        onChange={(item: {
+          label: string;
+          value: string;
+          id?: BSON.ObjectId;
+        }) => {
+          if (item.id) {
+            getCategoryById(item.id);
+            updateState(setNewTransaction, 'category', String(item.id));
+          }
         }}
       />
       <View style={styles.radioButtonView}>
@@ -99,7 +110,7 @@ const AddTransaction = ({navigation, route}: NavigationProps) => {
         disabled={
           !newTransaction.concept.trim() ||
           !newTransaction.amount ||
-          !newTransaction.category.trim() ||
+          !newTransaction.category ||
           !newTransaction.type.trim()
         }
         onPress={() => {
@@ -131,7 +142,7 @@ const AddTransaction = ({navigation, route}: NavigationProps) => {
             opacity:
               !newTransaction.concept.trim() ||
               !newTransaction.amount ||
-              !newTransaction.category.trim() ||
+              !newTransaction.category ||
               !newTransaction.type.trim()
                 ? 0.4
                 : 1,

@@ -4,11 +4,12 @@ import {ScrollView, StyleSheet} from 'react-native';
 import {ThemesContext} from '../../context/ThemesContext';
 import {StyledViewProps, ThemeType} from '../../types/Types';
 
-const StyledView = ({children, onScroll, onScrollEnd}: StyledViewProps) => {
+const StyledView = ({children, onScroll, onScrollEnd,horizontal}: StyledViewProps) => {
   const currentThemeName = useContext(ThemesContext) as ThemeType;
   const theme = themes[currentThemeName.currentThemeName];
   return (
     <ScrollView
+      horizontal={horizontal}
       onScroll={onScroll}
       scrollEventThrottle={16}
       onScrollEndDrag={onScrollEnd}

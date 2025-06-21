@@ -7,10 +7,12 @@ import {BackHandler, StyleSheet, View} from 'react-native';
 import StyledButton from '../components/custom/StyledButton';
 import React, {useContext, useEffect, useState} from 'react';
 import {TransactionContext} from '../context/TransactionContext';
+import { CategoriesContext } from '../context/CategoriesContext';
 
 const Transaction = ({navigation}: NavigationProps) => {
   const {transactions, deleteTransaction, getTransactionByID} =
     useContext(TransactionContext);
+  const {getCategoryById} = useContext(CategoriesContext);
 
   const [transactionSelected, setTransactionSelected] = useState<any[]>([]);
 
@@ -47,6 +49,9 @@ const Transaction = ({navigation}: NavigationProps) => {
       <StyledView onScroll={onScrollStart} onScrollEnd={onScrollEnd}>
         {transactions.map((value: any, index: any) => {
           const {_id, concept, amount, category, cDate, type} = value;
+          const categoryIcon = (
+            getCategoryById(category) as unknown as {icon?: string}
+          )?.icon;
           return (
             <StyledButton
               backgroundColor={
@@ -58,10 +63,11 @@ const Transaction = ({navigation}: NavigationProps) => {
               }
               key={index}
               title={concept}
-              iconName={category}
+              iconName={categoryIcon}
               subTitle={cDate}
               amount={amount}
               type={type}
+              onPress={() => console.log(category)}
               onLongPress={() => {
                 // Evalua si la transaccion esta seleccionada
                 transactionSelected.some(
