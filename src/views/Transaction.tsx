@@ -7,13 +7,13 @@ import {BackHandler, StyleSheet, View} from 'react-native';
 import StyledButton from '../components/custom/StyledButton';
 import React, {useContext, useEffect, useState} from 'react';
 import {TransactionContext} from '../context/TransactionContext';
-import { CategoriesContext } from '../context/CategoriesContext';
+import {CategoriesContext} from '../context/CategoriesContext';
+import StyledText from '../components/custom/StyledText';
 
 const Transaction = ({navigation}: NavigationProps) => {
   const {transactions, deleteTransaction, getTransactionByID} =
     useContext(TransactionContext);
   const {getCategoryById} = useContext(CategoriesContext);
-
   const [transactionSelected, setTransactionSelected] = useState<any[]>([]);
 
   const [isExtended, setIsExtended] = React.useState(true);
@@ -47,42 +47,55 @@ const Transaction = ({navigation}: NavigationProps) => {
   return (
     <View style={styles.container}>
       <StyledView onScroll={onScrollStart} onScrollEnd={onScrollEnd}>
-        {transactions.map((value: any, index: any) => {
-          const {_id, concept, amount, category, cDate, type} = value;
-          const categoryIcon = (
-            getCategoryById(category) as unknown as {icon?: string}
-          )?.icon;
-          return (
-            <StyledButton
-              backgroundColor={
-                transactionSelected.some(
-                  elem => elem.toString() === _id.toString(),
-                )
-                  ? theme.iconBackground
-                  : undefined
-              }
-              key={index}
-              title={concept}
-              iconName={categoryIcon}
-              subTitle={cDate}
-              amount={amount}
-              type={type}
-              onPress={() => console.log(category)}
-              onLongPress={() => {
-                // Evalua si la transaccion esta seleccionada
-                transactionSelected.some(
-                  elem => elem.toString() === _id.toString(),
-                )
-                  ? // Si está la elimina
-                    setTransactionSelected(prev =>
-                      prev.filter(id => id.toString() !== _id.toString()),
-                    )
-                  : // Si no está la agrega
-                    setTransactionSelected(prev => [...prev, _id]);
-              }}
+        {!(transactions.length > 0) ? (
+          <StyledView contentContainerStyle={styles.noTransactionView}>
+            <StyledText
+              variant="titleLarge"
+              text="Aún no tienes transacciones 😐"
             />
-          );
-        })}
+            <StyledText
+              variant="titleMedium"
+              text='Pulsa "+ Nueva Transacción" para agregar alguna.'
+            />
+          </StyledView>
+        ) : (
+          transactions.map((value: any, index: any) => {
+            const {_id, concept, amount, category, cDate, type} = value;
+            const categoryIcon = (
+              getCategoryById(category) as unknown as {icon?: string}
+            )?.icon;
+            return (
+              <StyledButton
+                backgroundColor={
+                  transactionSelected.some(
+                    elem => elem.toString() === _id.toString(),
+                  )
+                    ? theme.iconBackground
+                    : undefined
+                }
+                key={index}
+                title={concept}
+                iconName={categoryIcon}
+                subTitle={cDate}
+                amount={amount}
+                type={type}
+                // onPress={() => console.log(category)}
+                onPress={() => {
+                  // Evalua si la transaccion esta seleccionada
+                  transactionSelected.some(
+                    elem => elem.toString() === _id.toString(),
+                  )
+                    ? // Si está la elimina
+                      setTransactionSelected(prev =>
+                        prev.filter(id => id.toString() !== _id.toString()),
+                      )
+                    : // Si no está la agrega
+                      setTransactionSelected(prev => [...prev, _id]);
+                }}
+              />
+            );
+          })
+        )}
       </StyledView>
       <AnimatedButton
         icon="plus"
@@ -135,5 +148,9 @@ export default Transaction;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  noTransactionView: {
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

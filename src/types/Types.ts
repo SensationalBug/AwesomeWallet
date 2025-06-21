@@ -145,13 +145,6 @@ type ChartProps = {
   data: Array<{name: string; amount: number}>;
 };
 
-type MetricsTypeProps = {
-  transactionsByType: {
-    name: string;
-    amount: number;
-  }[];
-};
-
 export type {
   NavigationProps,
   AnimatedButtonProps,
@@ -168,6 +161,5 @@ export type {
   StyledDropDownProps,
   ChartBarProps,
   StyledSurfaceProps,
-  MetricsTypeProps,
   ChartProps,
 };

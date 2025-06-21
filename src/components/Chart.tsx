@@ -1,13 +1,11 @@
 import React, {useContext} from 'react';
 import ChartBar from './charts/ChartBar';
+import {ChartProps} from '../types/Types';
 import StyledView from './custom/StyledView';
 import {MetricsContext} from '../context/MetricsContext';
-import {ChartProps, MetricsTypeProps} from '../types/Types';
 
-export default function Chart({data}: ChartProps) {
-  const {transactionsByType} = useContext(
-    MetricsContext,
-  ) as unknown as MetricsTypeProps;
+const Chart = ({data}: ChartProps) => {
+  const {totalCredit} = useContext(MetricsContext);
 
   return (
     <StyledView horizontal>
@@ -16,10 +14,12 @@ export default function Chart({data}: ChartProps) {
           <ChartBar
             key={index}
             text={elem.name}
-            maxValue={transactionsByType[1].amount}
-            height={(elem.amount / transactionsByType[1].amount) * 100}
+            maxValue={totalCredit}
+            height={(elem.amount / totalCredit) * 100}
           />
         ))}
     </StyledView>
   );
-}
+};
+
+export default Chart;

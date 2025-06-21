@@ -37,7 +37,7 @@ export default StyledSurface;
 
 const styles = StyleSheet.create({
   surface: {
-    paddingHorizontal: 10,
+    paddingHorizontal: 15,
     borderRadius: 10,
     marginVertical: 5,
     backgroundColor: '#fff',

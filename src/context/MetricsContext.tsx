@@ -68,20 +68,21 @@ export const MetricsProvider: React.FC<React.PropsWithChildren<{}>> = ({
       const groupedByCategory = allTransactions.reduce(
         (acc: GroupedTransactions, transaction) => {
           const {category, type} = transaction;
-          console.log(type);
-          const categoryObj = getCategoryById(new BSON.ObjectId(category)) as
-            | {name: string}
-            | undefined;
-          const categoryName = categoryObj?.name;
+          if (type === 'debito') {
+            const categoryObj = getCategoryById(new BSON.ObjectId(category)) as
+              | {name: string}
+              | undefined;
+            const categoryName = categoryObj?.name;
 
-          if (categoryName) {
-            if (!acc[categoryName]) {
-              acc[categoryName] = {
-                name: categoryName,
-                totalAmount: 0,
-              };
+            if (categoryName) {
+              if (!acc[categoryName]) {
+                acc[categoryName] = {
+                  name: categoryName,
+                  totalAmount: 0,
+                };
+              }
+              acc[categoryName].totalAmount += Number(transaction.amount);
             }
-            acc[categoryName].totalAmount += Number(transaction.amount);
           }
           return acc;
         },
@@ -93,6 +94,7 @@ export const MetricsProvider: React.FC<React.PropsWithChildren<{}>> = ({
           name: item.name,
           amount: item.totalAmount,
         }));
+      console.log(groupedByCategory);
       setTransactionsByCategories(formattedData);
     } catch (error) {
       console.log(error);

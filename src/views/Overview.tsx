@@ -34,8 +34,8 @@ const Overview = ({navigation}: NavigationProps) => {
       {/* Surface components for displaying balance */}
       <View style={styles.surfaceContainer}>
         <View style={styles.surfaceView}>
-          <StyledSurface>
-            <StyledText variant="bodyMedium" text="Total Crédito:" />
+          <StyledSurface height={60}>
+            <StyledText variant="bodyMedium" text="Créditos:" />
             <StyledText
               bold={'bold'}
               variant="titleLarge"
@@ -43,8 +43,8 @@ const Overview = ({navigation}: NavigationProps) => {
             />
             {}
           </StyledSurface>
-          <StyledSurface>
-            <StyledText variant="bodyMedium" text="Total Débito:" />
+          <StyledSurface height={60}>
+            <StyledText variant="bodyMedium" text="Débitos:" />
             <StyledText
               bold={'bold'}
               variant="titleLarge"
@@ -53,7 +53,7 @@ const Overview = ({navigation}: NavigationProps) => {
           </StyledSurface>
         </View>
         <View style={styles.surfaceView}>
-          <StyledSurface height={'100%'} alignItems="center">
+          <StyledSurface height={130} alignItems="center">
             <StyledText variant="titleMedium" text="Balance Total:" />
             <StyledText
               bold={'bold'}
@@ -72,7 +72,6 @@ const Overview = ({navigation}: NavigationProps) => {
           <StyledText variant="titleSmall" text="Este mes +10%" />
         </View>
         <TouchableOpacity
-          // onPress={() => console.log(totalBalance, totalCredit, totalDebit)}
           onPress={() => navigation.navigate('AddTransaction')}
           style={[
             styles.addTransactionButton,
@@ -90,18 +89,7 @@ const Overview = ({navigation}: NavigationProps) => {
 
       {/* Chart section */}
       <View style={styles.chartSection}>
-        {!transactions ? (
-          <StyledView contentContainerStyle={styles.noTransactionView}>
-            <StyledText
-              variant="titleLarge"
-              text="Aún no tienes transacciones 😐"
-            />
-            <StyledText
-              variant="titleMedium"
-              text='Pulsa "Añadir Transacción" para agregar alguna.'
-            />
-          </StyledView>
-        ) : (
+        {Object.keys(transactionsByCategories).length ? (
           <Chart
             data={
               Array.isArray(transactionsByCategories)
@@ -109,26 +97,36 @@ const Overview = ({navigation}: NavigationProps) => {
                 : []
             }
           />
+        ) : (
+          <StyledView contentContainerStyle={styles.noTransactionView}>
+            <StyledText variant="titleLarge" text="Aún no tienes débitos 😐." />
+            <StyledText
+              variant="titleMedium"
+              text="Se mostrarán aquí cuando agregues alguno."
+            />
+          </StyledView>
         )}
       </View>
 
       {/* Recent transactions section */}
-      <View style={styles.recentTransactions}>
-        <StyledText variant="headlineMedium" text="Transacciones recientes" />
-        <StyledDropDown
-          data={[
-            {label: '3', value: 3},
-            {label: '5', value: 5},
-            {label: '10', value: 10},
-          ]}
-          value={recent}
-          placeholder={''}
-          width={60}
-          onChange={(item: {label: string; value: string}) =>
-            setRecent(Number(item.value))
-          }
-        />
-      </View>
+      {Object.keys(transactions).length ? (
+        <View style={styles.recentTransactions}>
+          <StyledText variant="headlineMedium" text="Transacciones recientes" />
+          <StyledDropDown
+            data={[
+              {label: '3', value: 3},
+              {label: '5', value: 5},
+              {label: '10', value: 10},
+            ]}
+            value={recent}
+            placeholder={''}
+            width={60}
+            onChange={(item: {label: string; value: string}) =>
+              setRecent(Number(item.value))
+            }
+          />
+        </View>
+      ) : null}
 
       {/* Recent transactions items */}
       <StyledView>
@@ -158,14 +156,10 @@ export default Overview;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 10,
+    padding: 5,
   },
   surfaceContainer: {
-    height: '15%',
-    marginTop: 10,
-    alignItems: 'center',
     flexDirection: 'row',
-    justifyContent: 'space-between',
   },
   surfaceView: {
     width: '50%',
@@ -173,13 +167,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   thisMonth: {
-    paddingVertical: 10,
+    padding: 10,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
   },
   addTransactionButton: {
     padding: 15,
+    elevation: 8,
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
