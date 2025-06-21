@@ -12,13 +12,19 @@ import React, {
   useEffect,
   useContext,
   useCallback,
+  useMemo,
 } from 'react';
 import {Transaction} from '../db/schemas';
 import {TransactionContext} from './TransactionContext';
 
 export const MetricsContext = createContext<MetricsContextType>({
   transactionsByCategories: {},
-  getTransactionsGroupByCategories: () => {},
+  transactionsByType: {},
+  groupByCategories: () => {},
+  groupByType: () => {},
+  totalCredit: 0,
+  totalDebit: 0,
+  totalBalance: 0,
 });
 
 export const MetricsProvider: React.FC<React.PropsWithChildren<{}>> = ({
@@ -33,14 +39,36 @@ export const MetricsProvider: React.FC<React.PropsWithChildren<{}>> = ({
     Array<{name: string; amount: number}>
   >([]);
 
-  const getTransactionsGroupByCategories = useCallback(() => {
+  const [transactionsByType, setTransactionsByType] = useState<
+    Array<{name: string; amount: number}>
+  >([
+    {name: '', amount: 0},
+    {name: '', amount: 0},
+  ]);
+
+  const totalCredit = useMemo(() => {
+    const creditEntry = transactionsByType.find(
+      item => item.name === 'credito',
+    );
+    return creditEntry ? creditEntry.amount : 0;
+  }, [transactionsByType]);
+
+  const totalDebit = useMemo(() => {
+    const debitEntry = transactionsByType.find(item => item.name === 'debito');
+    return debitEntry ? debitEntry.amount : 0;
+  }, [transactionsByType]);
+
+  const totalBalance = totalCredit - totalDebit;
+
+  const groupByCategories = useCallback(() => {
     try {
       const allTransactions = Array.from(
         realm.objects<Transaction>('Transaction'),
       );
-      const groupedTransactions = allTransactions.reduce(
+      const groupedByCategory = allTransactions.reduce(
         (acc: GroupedTransactions, transaction) => {
-          const {category} = transaction;
+          const {category, type} = transaction;
+          console.log(type);
           const categoryObj = getCategoryById(new BSON.ObjectId(category)) as
             | {name: string}
             | undefined;
@@ -59,7 +87,7 @@ export const MetricsProvider: React.FC<React.PropsWithChildren<{}>> = ({
         },
         {},
       );
-      const categoryDataArray = Object.values(groupedTransactions);
+      const categoryDataArray = Object.values(groupedByCategory);
       const formattedData: Array<{name: string; amount: number}> =
         categoryDataArray.map(item => ({
           name: item.name,
@@ -71,13 +99,61 @@ export const MetricsProvider: React.FC<React.PropsWithChildren<{}>> = ({
     }
   }, [getCategoryById]);
 
+  const groupByType = useCallback(() => {
+    try {
+      const allTransactions = Array.from(
+        realm.objects<Transaction>('Transaction'),
+      );
+
+      const groupedByType = allTransactions.reduce(
+        (acc: GroupedTransactions, transaction) => {
+          const typeName = transaction.type;
+          if (typeName) {
+            if (!acc[typeName]) {
+              acc[typeName] = {
+                name: typeName,
+                totalAmount: 0,
+              };
+            }
+            acc[typeName].totalAmount += Number(transaction.amount);
+          }
+          return acc;
+        },
+        {},
+      );
+
+      const typeDataArray = Object.values(groupedByType) as Array<{
+        name: string;
+        totalAmount: number;
+      }>;
+
+      const formattedData = typeDataArray.map(item => ({
+        name: item.name,
+        amount: item.totalAmount,
+      }));
+
+      setTransactionsByType(formattedData);
+    } catch (error) {
+      console.log('Error al agrupar transacciones por tipo:', error);
+    }
+  }, []);
+
   useEffect(() => {
-    getTransactionsGroupByCategories();
-  }, [getTransactionsGroupByCategories, transactions]);
+    groupByCategories();
+    groupByType();
+  }, [groupByCategories, groupByType, transactions]);
 
   return (
     <MetricsContext.Provider
-      value={{transactionsByCategories, getTransactionsGroupByCategories}}>
+      value={{
+        transactionsByCategories,
+        transactionsByType,
+        groupByCategories,
+        groupByType,
+        totalCredit,
+        totalDebit,
+        totalBalance,
+      }}>
       {children}
     </MetricsContext.Provider>
   );

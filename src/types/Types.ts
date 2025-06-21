@@ -30,6 +30,8 @@ type StyledViewProps = {
   onScroll?: (event: {nativeEvent: {contentOffset: {y: number}}}) => void;
   onScrollEnd?: () => void;
   horizontal?: boolean;
+  style?: StyleProp<ViewStyle>;
+  contentContainerStyle?: StyleProp<ViewStyle>;
 };
 
 type SettingsButtonProps = {
@@ -78,16 +80,21 @@ type TransactionContextType = {
 
 type MetricsContextType = {
   transactionsByCategories: {};
-  getTransactionsGroupByCategories: () => void;
+  transactionsByType: {};
+  groupByCategories: () => void;
+  groupByType: () => void;
+  totalCredit: number;
+  totalDebit: number;
+  totalBalance: number;
 };
 
-type CategoryTotal = {
-  name: string; // The category name
-  totalAmount: number; // The sum of amounts for this category
+type GroupTotal = {
+  name: string;
+  totalAmount: number;
 };
 
 type GroupedTransactions = {
-  [category: string]: CategoryTotal;
+  [key: string]: GroupTotal;
 };
 
 // Define your stack param list type here or import it from your navigation types file
@@ -122,6 +129,27 @@ type StyledDropDownProps = {
 type ChartBarProps = {
   height: number;
   text: string;
+  maxValue: number;
+};
+
+type StyledSurfaceProps = {
+  children: React.ReactNode;
+  style?: StyleProp<ViewStyle>;
+  elevation?: 0 | 1 | 2 | 3 | 4 | 5;
+  width?: any;
+  height?: any;
+  alignItems?: any;
+};
+
+type ChartProps = {
+  data: Array<{name: string; amount: number}>;
+};
+
+type MetricsTypeProps = {
+  transactionsByType: {
+    name: string;
+    amount: number;
+  }[];
 };
 
 export type {
@@ -139,4 +167,7 @@ export type {
   StyledTextInputProps,
   StyledDropDownProps,
   ChartBarProps,
+  StyledSurfaceProps,
+  MetricsTypeProps,
+  ChartProps,
 };

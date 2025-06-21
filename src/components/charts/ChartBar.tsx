@@ -7,7 +7,7 @@ import {formatNumber} from '../../utils/formatNumber';
 import {ThemesContext} from '../../context/ThemesContext';
 import {themes} from '../../styles/Theme';
 
-const ChartBar = ({height, text}: ChartBarProps) => {
+const ChartBar = ({height, text, maxValue}: ChartBarProps) => {
   const currentThemeName = useContext(ThemesContext) as ThemeType;
   const theme = themes[currentThemeName.currentThemeName];
   return (
@@ -15,7 +15,7 @@ const ChartBar = ({height, text}: ChartBarProps) => {
       <Tooltip
         enterTouchDelay={250}
         leaveTouchDelay={1000}
-        title={`RD$${String(formatNumber((height / 100) * 150))}`}>
+        title={`RD$${String(formatNumber((height / 100) * maxValue))}`}>
         <View
           style={[
             styles.content,
@@ -23,9 +23,14 @@ const ChartBar = ({height, text}: ChartBarProps) => {
           ]}
         />
       </Tooltip>
-      <View style={styles.label}>
-        <StyledText text={text} variant="labelLarge" />
-      </View>
+      <Tooltip
+        enterTouchDelay={250}
+        leaveTouchDelay={1000}
+        title={`RD$${String(formatNumber((height / 100) * maxValue))}`}>
+        <View style={styles.label}>
+          <StyledText text={text} variant="labelLarge" />
+        </View>
+      </Tooltip>
     </View>
   );
 };
@@ -39,7 +44,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   content: {
-    width: 70,
+    width: 60,
     maxHeight: 150,
     borderTopEndRadius: 10,
     borderTopStartRadius: 10,

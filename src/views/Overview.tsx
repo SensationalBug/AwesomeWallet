@@ -1,25 +1,27 @@
 import React, {useContext} from 'react';
-import {Surface} from 'react-native-paper';
 import Chart from '../components/Chart';
 import {View, StyleSheet, TouchableOpacity} from 'react-native';
 
 import {themes} from '../styles/Theme';
+import {formatNumber} from '../utils/formatNumber';
 import {ThemesContext} from '../context/ThemesContext';
 import StyledText from '../components/custom/StyledText';
 import StyledView from '../components/custom/StyledView';
 import {MetricsContext} from '../context/MetricsContext';
-import {NavigationProps, ThemeType} from '../types/Types';
 import StyledButton from '../components/custom/StyledButton';
+import {CategoriesContext} from '../context/CategoriesContext';
+import StyledSurface from '../components/custom/StyledSurface';
 import {TransactionContext} from '../context/TransactionContext';
 import StyledDropDown from '../components/custom/StyledDropDown';
-import {CategoriesContext} from '../context/CategoriesContext';
+import {MetricsContextType, NavigationProps, ThemeType} from '../types/Types';
 
 const Overview = ({navigation}: NavigationProps) => {
   const currentThemeName = useContext(ThemesContext) as ThemeType;
   const theme = themes[currentThemeName.currentThemeName];
   const {transactions} = useContext(TransactionContext);
   const {getCategoryById} = useContext(CategoriesContext);
-  const {transactionsByCategories} = useContext(MetricsContext);
+  const {transactionsByCategories, totalCredit, totalDebit, totalBalance} =
+    useContext(MetricsContext) as MetricsContextType;
   const [recent, setRecent] = React.useState<number>(3);
   return (
     <View
@@ -31,28 +33,35 @@ const Overview = ({navigation}: NavigationProps) => {
       ]}>
       {/* Surface components for displaying balance */}
       <View style={styles.surfaceContainer}>
-        <Surface
-          elevation={2}
-          style={[
-            styles.surface,
-            {
-              backgroundColor: theme.iconBackground,
-            },
-          ]}>
-          <StyledText variant="titleMedium" text="Balance:" />
-          <StyledText variant="titleLarge" text="RD$10,000" bold={'bold'} />
-        </Surface>
-        <Surface
-          elevation={2}
-          style={[
-            styles.surface,
-            {
-              backgroundColor: theme.iconBackground,
-            },
-          ]}>
-          <StyledText variant="titleMedium" text="Balance:" />
-          <StyledText variant="titleLarge" text="RD$10,000" bold={'bold'} />
-        </Surface>
+        <View style={styles.surfaceView}>
+          <StyledSurface>
+            <StyledText variant="bodyMedium" text="Total Crédito:" />
+            <StyledText
+              bold={'bold'}
+              variant="titleLarge"
+              text={`RD$${formatNumber(totalCredit)}`}
+            />
+            {}
+          </StyledSurface>
+          <StyledSurface>
+            <StyledText variant="bodyMedium" text="Total Débito:" />
+            <StyledText
+              bold={'bold'}
+              variant="titleLarge"
+              text={`RD$${formatNumber(totalDebit)}`}
+            />
+          </StyledSurface>
+        </View>
+        <View style={styles.surfaceView}>
+          <StyledSurface height={'100%'} alignItems="center">
+            <StyledText variant="titleMedium" text="Balance Total:" />
+            <StyledText
+              bold={'bold'}
+              variant="headlineSmall"
+              text={`RD$${formatNumber(totalBalance)}`}
+            />
+          </StyledSurface>
+        </View>
       </View>
 
       {/* This month section */}
@@ -63,6 +72,7 @@ const Overview = ({navigation}: NavigationProps) => {
           <StyledText variant="titleSmall" text="Este mes +10%" />
         </View>
         <TouchableOpacity
+          // onPress={() => console.log(totalBalance, totalCredit, totalDebit)}
           onPress={() => navigation.navigate('AddTransaction')}
           style={[
             styles.addTransactionButton,
@@ -80,7 +90,26 @@ const Overview = ({navigation}: NavigationProps) => {
 
       {/* Chart section */}
       <View style={styles.chartSection}>
-        <Chart data={transactionsByCategories} />
+        {!transactions ? (
+          <StyledView contentContainerStyle={styles.noTransactionView}>
+            <StyledText
+              variant="titleLarge"
+              text="Aún no tienes transacciones 😐"
+            />
+            <StyledText
+              variant="titleMedium"
+              text='Pulsa "Añadir Transacción" para agregar alguna.'
+            />
+          </StyledView>
+        ) : (
+          <Chart
+            data={
+              Array.isArray(transactionsByCategories)
+                ? transactionsByCategories
+                : []
+            }
+          />
+        )}
       </View>
 
       {/* Recent transactions section */}
@@ -133,16 +162,14 @@ const styles = StyleSheet.create({
   },
   surfaceContainer: {
     height: '15%',
+    marginTop: 10,
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  surface: {
-    width: '48%',
-    height: '90%',
-    padding: 10,
-    borderRadius: 10,
-    backgroundColor: '#fff',
+  surfaceView: {
+    width: '50%',
+    alignItems: 'center',
     justifyContent: 'center',
   },
   thisMonth: {
@@ -158,6 +185,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   chartSection: {height: 180},
+  noTransactionView: {
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   recentTransactions: {
     flexDirection: 'row',
     paddingHorizontal: 5,
