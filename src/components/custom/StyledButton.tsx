@@ -22,6 +22,7 @@ const StyledButton = ({
   onPress,
   onLongPress,
   backgroundColor,
+  date,
 }: SettingsButtonProps) => {
   const currentThemeName = useContext(ThemesContext) as ThemeType;
   const theme = themes[currentThemeName.currentThemeName];
@@ -59,6 +60,9 @@ const StyledButton = ({
               variant="labelLarge">
               RD${formatNumber(amount)}
             </Text>
+            {date ? (
+              <StyledText variant="labelLarge" text={date} label />
+            ) : null}
           </View>
         ) : null}
       </View>

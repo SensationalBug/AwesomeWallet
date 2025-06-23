@@ -31,9 +31,9 @@ const AddTransaction = ({navigation, route}: NavigationProps) => {
   const transactionToUpdate = route?.params;
 
   const date = new Date();
-  const currentDate = `${date.getDate()}/${
+  const currentDate = `${date.getDate()}-${
     date.getMonth() + 1
-  }/${date.getFullYear()}`;
+  }-${date.getFullYear()}`;
 
   const [newTransaction, setNewTransaction] = useState<any>({
     amount: '',

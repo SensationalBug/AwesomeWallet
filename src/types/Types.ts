@@ -1,9 +1,10 @@
 import {Realm} from 'realm';
 import {themes} from '../styles/Theme';
-import {StyleProp, ViewStyle} from 'react-native';
+import {StyleProp, TextStyle, ViewStyle} from 'react-native';
 import {Category, Transaction} from '../db/schemas';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
+import {TextProps} from 'react-native-paper';
 
 type NavigationProps = {
   navigation: StackNavigationProp<any, any>;
@@ -43,6 +44,7 @@ type SettingsButtonProps = {
   onPress?: () => void;
   onLongPress?: () => void;
   backgroundColor?: string;
+  date?: string;
 };
 
 type ThemeType = {
@@ -51,6 +53,14 @@ type ThemeType = {
   storageTheme: (
     themeName: 'light' | 'dark' | 'blue' | 'green',
   ) => Promise<void>;
+};
+
+type StyledTextProps = {
+  text?: string;
+  variant?: TextProps<any>['variant'];
+  bold?: any; // 'normal' | 'bold' | '100' | '200' | '300' | '400' | '500' | '600' | '700' | '800' | '900'
+  label?: boolean;
+  style?: StyleProp<TextStyle>;
 };
 
 type AddCategoryProps = {
@@ -81,8 +91,10 @@ type TransactionContextType = {
 type MetricsContextType = {
   transactionsByCategories: {};
   transactionsByType: {};
+  transactionsByDate: {};
   groupByCategories: () => void;
   groupByType: () => void;
+  groupByDate: () => void;
   totalCredit: number;
   totalDebit: number;
   totalBalance: number;
@@ -93,8 +105,26 @@ type GroupTotal = {
   totalAmount: number;
 };
 
+// Interfaz para un grupo de fecha (ej. "2024", "Jun-2024", "23-Jun-2024")
+type DateGroup = {
+  name: string; // La fecha formateada (ej. "2024", "Jun-2024", "23-Jun-2024")
+  transactions: Transaction[]; // Array de transacciones para esa fecha
+};
+
+// Interfaz para el acumulador del reduce
+type DateGroupsAccumulator = {
+  [key: string]: DateGroup;
+};
+
 type GroupedTransactions = {
   [key: string]: GroupTotal;
+};
+
+// Interfaz para el resultado final de la función
+type GroupedTransactionsByDate = {
+  byYear: DateGroup[];
+  byMonthYear: DateGroup[];
+  byDayMonthYear: DateGroup[];
 };
 
 // Define your stack param list type here or import it from your navigation types file
@@ -138,7 +168,6 @@ type StyledSurfaceProps = {
   elevation?: 0 | 1 | 2 | 3 | 4 | 5;
   width?: any;
   height?: any;
-  alignItems?: any;
 };
 
 type ChartProps = {
@@ -162,4 +191,7 @@ export type {
   ChartBarProps,
   StyledSurfaceProps,
   ChartProps,
+  StyledTextProps,
+  DateGroupsAccumulator,
+  GroupedTransactionsByDate,
 };

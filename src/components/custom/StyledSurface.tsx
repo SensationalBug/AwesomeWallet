@@ -11,7 +11,6 @@ const StyledSurface = ({
   elevation = 3,
   width = '95%',
   height = '45%',
-  alignItems,
 }: StyledSurfaceProps) => {
   const currentThemeName = useContext(ThemesContext) as ThemeType;
   const theme = themes[currentThemeName.currentThemeName];
@@ -24,7 +23,6 @@ const StyledSurface = ({
         {
           width,
           height,
-          alignItems,
           backgroundColor: theme.iconBackground,
         },
       ]}>

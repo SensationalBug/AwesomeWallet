@@ -20,8 +20,14 @@ const Overview = ({navigation}: NavigationProps) => {
   const theme = themes[currentThemeName.currentThemeName];
   const {transactions} = useContext(TransactionContext);
   const {getCategoryById} = useContext(CategoriesContext);
-  const {transactionsByCategories, totalCredit, totalDebit, totalBalance} =
-    useContext(MetricsContext) as MetricsContextType;
+
+  const {
+    transactionsByCategories,
+    groupByDate,
+    totalCredit,
+    totalDebit,
+    totalBalance,
+  } = useContext(MetricsContext) as MetricsContextType;
   const [recent, setRecent] = React.useState<number>(3);
   return (
     <View
@@ -53,11 +59,11 @@ const Overview = ({navigation}: NavigationProps) => {
           </StyledSurface>
         </View>
         <View style={styles.surfaceView}>
-          <StyledSurface height={130} alignItems="center">
+          <StyledSurface height={130}>
             <StyledText variant="titleMedium" text="Balance Total:" />
             <StyledText
               bold={'bold'}
-              variant="headlineSmall"
+              variant="titleLarge"
               text={`RD$${formatNumber(totalBalance)}`}
             />
           </StyledSurface>
@@ -72,7 +78,16 @@ const Overview = ({navigation}: NavigationProps) => {
           <StyledText variant="titleSmall" text="Este mes +10%" />
         </View>
         <TouchableOpacity
-          onPress={() => navigation.navigate('AddTransaction')}
+          // onPress={() => navigation.navigate('AddTransaction')}
+          // onPress={() => groupByDate()}
+          onPress={() => {
+            const date = new Date('26-6-2025');
+            if (isNaN(date.getTime())) {
+              console.warn('Fecha inválida para la transacción.');
+            }
+
+            console.log(date);
+          }}
           style={[
             styles.addTransactionButton,
             {
@@ -131,16 +146,19 @@ const Overview = ({navigation}: NavigationProps) => {
       {/* Recent transactions items */}
       <StyledView>
         {transactions.slice(-recent).map((value: any, index: number) => {
-          const {concept, amount, category, cDate, type} = value;
+          const {concept, amount, category, type} = value;
           const categoryIcon = (
             getCategoryById(category) as unknown as {icon?: string}
           )?.icon;
+          const categoryName = (
+            getCategoryById(category) as unknown as {name?: string}
+          )?.name;
           return (
             <StyledButton
               key={index}
               title={concept}
               iconName={categoryIcon}
-              subTitle={cDate}
+              subTitle={categoryName}
               amount={amount}
               type={type}
             />

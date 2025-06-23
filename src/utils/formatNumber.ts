@@ -8,22 +8,41 @@
  * @param {number} [maximumFractionDigits=2] Número máximo de dígitos decimales.
  * @returns {string} El número formateado como string.
  */
+
 export const formatNumber = (
   value: number | string,
-  locale: string = 'en-US', // Por defecto a 'en-US' (separador de miles con coma, decimal con punto)
-  minimumFractionDigits: number = 2,
-  maximumFractionDigits: number = 2,
+  notation = true,
 ): string => {
-  // Asegúrate de que el valor sea un número antes de formatearlo
-  const numValue = typeof value === 'string' ? parseFloat(value) : value;
+  const num = typeof value === 'string' ? parseFloat(value) : value;
 
-  // Si el valor no es un número válido, devuelve un string vacío o un valor por defecto
-  if (isNaN(numValue as number)) {
-    return ''; // O podrías devolver "0.00" o "N/A"
+  // Si el número no es válido, devuelve un valor por defecto o un string vacío
+  if (isNaN(num)) {
+    return '0.00'; // O '' o '-' según prefieras
   }
 
-  return new Intl.NumberFormat(locale, {
-    minimumFractionDigits: minimumFractionDigits,
-    maximumFractionDigits: maximumFractionDigits,
-  }).format(numValue as number);
+  // --- Lógica para la notación 'M' ---
+  if (notation && Math.abs(num) >= 1000000) {
+    // Si el valor absoluto es 1,000,000 o más
+    // Divide por 1000000 y añade 'M'
+    // Usamos toFixed(1) para mantener un decimal, puedes ajustarlo si lo necesitas
+    return (num / 1000000).toFixed(2) + 'M';
+  }
+
+  // --- Lógica para la notación 'k' ---
+  if (notation && Math.abs(num) >= 100000) {
+    // Si el valor absoluto es 100,000 o más
+    // Divide por 1000 y añade 'k'
+    // Usamos toFixed(1) para mantener un decimal, puedes ajustarlo si lo necesitas
+    return (num / 1000).toFixed(2) + 'k';
+  }
+  // --- Fin de lógica para notación 'k' ---
+
+  // Lógica original para números menores de 100,000
+  // Para valores entre 0 y 99,999.99 (sin el .toFixed(2) original para evitar doble formateo)
+  return num.toLocaleString('es-DO', {
+    // 'es-DO' para formato de pesos dominicanos
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+    useGrouping: true, // Esto añade los separadores de miles
+  });
 };

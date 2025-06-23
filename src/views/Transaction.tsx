@@ -64,6 +64,9 @@ const Transaction = ({navigation}: NavigationProps) => {
             const categoryIcon = (
               getCategoryById(category) as unknown as {icon?: string}
             )?.icon;
+            const categoryName = (
+              getCategoryById(category) as unknown as {name?: string}
+            )?.name;
             return (
               <StyledButton
                 backgroundColor={
@@ -76,9 +79,10 @@ const Transaction = ({navigation}: NavigationProps) => {
                 key={index}
                 title={concept}
                 iconName={categoryIcon}
-                subTitle={cDate}
+                subTitle={categoryName}
                 amount={amount}
                 type={type}
+                date={cDate}
                 // onPress={() => console.log(category)}
                 onPress={() => {
                   // Evalua si la transaccion esta seleccionada
