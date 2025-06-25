@@ -29,11 +29,7 @@ const AddTransaction = ({navigation, route}: NavigationProps) => {
   const theme = themes[currentThemeName.currentThemeName];
 
   const transactionToUpdate = route?.params;
-
-  const date = new Date();
-  const currentDate = `${date.getDate()}-${
-    date.getMonth() + 1
-  }-${date.getFullYear()}`;
+  const currentDate = new Date().toISOString();
 
   const [newTransaction, setNewTransaction] = useState<any>({
     amount: '',
@@ -76,7 +72,13 @@ const AddTransaction = ({navigation, route}: NavigationProps) => {
           value: category.name,
           id: category._id,
         }))}
-        value={(getCategoryById(newTransaction.category) as { name?: string } | undefined)?.name}
+        value={
+          (
+            getCategoryById(newTransaction.category) as
+              | {name?: string}
+              | undefined
+          )?.name
+        }
         placeholder={'Selecciona una categoría'}
         onChange={(item: {
           label: string;

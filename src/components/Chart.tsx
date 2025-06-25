@@ -6,7 +6,7 @@ import {MetricsContext} from '../context/MetricsContext';
 
 const Chart = ({data}: ChartProps) => {
   const {totalCredit} = useContext(MetricsContext);
-
+  const maxHeight = 160;
   return (
     <StyledView horizontal>
       {data &&
@@ -15,7 +15,8 @@ const Chart = ({data}: ChartProps) => {
             key={index}
             text={elem.name}
             maxValue={totalCredit}
-            height={(elem.amount / totalCredit) * 100}
+            maxHeight={maxHeight}
+            height={(elem.amount / totalCredit) * maxHeight}
           />
         ))}
     </StyledView>

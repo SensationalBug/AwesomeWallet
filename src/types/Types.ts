@@ -160,6 +160,7 @@ type ChartBarProps = {
   height: number;
   text: string;
   maxValue: number;
+  maxHeight: number;
 };
 
 type StyledSurfaceProps = {

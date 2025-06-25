@@ -105,7 +105,6 @@ export const MetricsProvider: React.FC<React.PropsWithChildren<{}>> = ({
           name: item.name,
           amount: item.totalAmount,
         }));
-      console.log(groupedByCategory);
       setTransactionsByCategories(formattedData);
     } catch (error) {
       console.log(error);
@@ -248,8 +247,8 @@ export const MetricsProvider: React.FC<React.PropsWithChildren<{}>> = ({
   }, []);
 
   useEffect(() => {
-    groupByCategories();
     groupByType();
+    groupByCategories();
   }, [groupByCategories, groupByType, transactions]);
 
   return (

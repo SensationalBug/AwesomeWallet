@@ -82,7 +82,7 @@ const Transaction = ({navigation}: NavigationProps) => {
                 subTitle={categoryName}
                 amount={amount}
                 type={type}
-                date={cDate}
+                date={cDate.split('T')[0]}
                 // onPress={() => console.log(category)}
                 onPress={() => {
                   // Evalua si la transaccion esta seleccionada

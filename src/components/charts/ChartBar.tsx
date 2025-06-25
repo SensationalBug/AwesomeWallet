@@ -7,7 +7,7 @@ import {formatNumber} from '../../utils/formatNumber';
 import {ThemesContext} from '../../context/ThemesContext';
 import {themes} from '../../styles/Theme';
 
-const ChartBar = ({height, text, maxValue}: ChartBarProps) => {
+const ChartBar = ({height, text, maxValue, maxHeight}: ChartBarProps) => {
   const currentThemeName = useContext(ThemesContext) as ThemeType;
   const theme = themes[currentThemeName.currentThemeName];
   return (
@@ -15,7 +15,8 @@ const ChartBar = ({height, text, maxValue}: ChartBarProps) => {
       <Tooltip
         enterTouchDelay={250}
         leaveTouchDelay={1000}
-        title={`RD$${String(formatNumber((height / 100) * maxValue))}`}>
+        // title={`RD$${String(formatNumber(maxValue))}`}>
+        title={`RD$${String(formatNumber((height / maxHeight) * maxValue))}`}>
         <View
           style={[
             styles.content,
@@ -26,7 +27,8 @@ const ChartBar = ({height, text, maxValue}: ChartBarProps) => {
       <Tooltip
         enterTouchDelay={250}
         leaveTouchDelay={1000}
-        title={`RD$${String(formatNumber((height / 100) * maxValue))}`}>
+        // title={`RD$${String(formatNumber(maxValue))}`}>
+        title={`RD$${String(formatNumber((height / maxHeight) * maxValue))}`}>
         <View style={styles.label}>
           <StyledText text={text} variant="labelLarge" />
         </View>
@@ -46,7 +48,7 @@ const styles = StyleSheet.create({
   content: {
     width: 60,
     minHeight: 1,
-    maxHeight: 150,
+    maxHeight: 160,
     borderTopEndRadius: 10,
     borderTopStartRadius: 10,
   },

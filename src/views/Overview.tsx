@@ -14,6 +14,7 @@ import StyledSurface from '../components/custom/StyledSurface';
 import {TransactionContext} from '../context/TransactionContext';
 import StyledDropDown from '../components/custom/StyledDropDown';
 import {MetricsContextType, NavigationProps, ThemeType} from '../types/Types';
+import AtScript from '../utils/AtScript';
 
 const Overview = ({navigation}: NavigationProps) => {
   const currentThemeName = useContext(ThemesContext) as ThemeType;
@@ -27,6 +28,7 @@ const Overview = ({navigation}: NavigationProps) => {
     totalCredit,
     totalDebit,
     totalBalance,
+    transactionsByDate,
   } = useContext(MetricsContext) as MetricsContextType;
   const [recent, setRecent] = React.useState<number>(3);
   return (
@@ -77,17 +79,11 @@ const Overview = ({navigation}: NavigationProps) => {
           <StyledText variant="titleLarge" text="RD$100.000.00" bold={'bold'} />
           <StyledText variant="titleSmall" text="Este mes +10%" />
         </View>
+        <AtScript />
         <TouchableOpacity
           // onPress={() => navigation.navigate('AddTransaction')}
           // onPress={() => groupByDate()}
-          onPress={() => {
-            const date = new Date('26-6-2025');
-            if (isNaN(date.getTime())) {
-              console.warn('Fecha inválida para la transacción.');
-            }
-
-            console.log(date);
-          }}
+          onPress={() => console.log(transactionsByDate)}
           style={[
             styles.addTransactionButton,
             {
