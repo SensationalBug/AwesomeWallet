@@ -86,12 +86,13 @@ type TransactionContextType = {
   ) => Promise<void>;
   getTransactionByID: (id: Realm.Object[]) => Promise<Transaction | null>;
   deleteTransaction: (transactionSelected: Realm.Object[]) => Promise<void>;
+  getTransactions: () => void;
 };
 
-type MetricsContextType = {
+type ReportsContextType = {
   transactionsByCategories: {};
   transactionsByType: {};
-  transactionsByDate: {};
+  transactionsByDate: GroupedTransactionsByDate;
   groupByCategories: () => void;
   groupByType: () => void;
   groupByDate: () => void;
@@ -105,26 +106,37 @@ type GroupTotal = {
   totalAmount: number;
 };
 
-// Interfaz para un grupo de fecha (ej. "2024", "Jun-2024", "23-Jun-2024")
-type DateGroup = {
-  name: string; // La fecha formateada (ej. "2024", "Jun-2024", "23-Jun-2024")
-  transactions: Transaction[]; // Array de transacciones para esa fecha
-};
+interface CategorySummary {
+  name: string; // Nombre de la categoría
+  totalCredit: number;
+  totalDebit: number;
+}
 
-// Interfaz para el acumulador del reduce
-type DateGroupsAccumulator = {
+// La interfaz principal para cada grupo de fecha
+interface DateGroup {
+  name: string; // El nombre legible del grupo (ej. "26 jun. 2025", "jun. 2025", "2025")
+  sortKey: string; // Una clave para la ordenación cronológica (ej. "2025-06-26", "2025-06", "2025")
+  transactions: Transaction[]; // Array de transacciones individuales en este grupo
+  totalAmount: number; // Saldo (Credito - Debito)
+  totalCredit: number; // Suma de todos los créditos
+  totalDebit: number; // Suma de todos los débitos
+  byCategories: CategorySummary[]; // Resumen de créditos/débitos por categoría dentro de este grupo
+}
+
+interface DateGroupsAccumulator {
   [key: string]: DateGroup;
-};
+}
+
+// Interfaz para el resultado final de la función
+interface GroupedTransactionsByDate {
+  byDayMonthYear: DateGroup[];
+  byDayMonth: DateGroup[]; // Nueva agrupación
+  byMonthYear: DateGroup[];
+  byYear: DateGroup[];
+}
 
 type GroupedTransactions = {
   [key: string]: GroupTotal;
-};
-
-// Interfaz para el resultado final de la función
-type GroupedTransactionsByDate = {
-  byYear: DateGroup[];
-  byMonthYear: DateGroup[];
-  byDayMonthYear: DateGroup[];
 };
 
 // Define your stack param list type here or import it from your navigation types file
@@ -172,7 +184,10 @@ type StyledSurfaceProps = {
 };
 
 type ChartProps = {
-  data: Array<{name: string; amount: number}>;
+  data: Array<{name: string; amount: number}> | DateGroup[] | any;
+  maxHeight: number;
+  maxValue: number;
+  height?: number;
 };
 
 export type {
@@ -184,7 +199,7 @@ export type {
   AddCategoryProps,
   CategoriesContextType,
   TransactionContextType,
-  MetricsContextType,
+  ReportsContextType,
   GroupedTransactions,
   SettingsStackParamList,
   StyledTextInputProps,

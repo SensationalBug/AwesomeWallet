@@ -9,6 +9,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Overview from './views/Overview';
 import Settings from './views/Settings';
 import Transaction from './views/Transaction';
+import Reports from './views/Reports';
 
 const Tab = createBottomTabNavigator();
 
@@ -68,6 +69,13 @@ const Main = () => {
         component={Transaction}
         options={{
           ...tabScreenOptions('Transacciones', 'grid', 'grid-outline'),
+        }}
+      />
+      <Tab.Screen
+        name="Reports"
+        component={Reports}
+        options={{
+          ...tabScreenOptions('Reportes', 'bar-chart', 'bar-chart-outline'),
         }}
       />
       <Tab.Screen

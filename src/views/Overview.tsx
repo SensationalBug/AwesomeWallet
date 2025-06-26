@@ -7,30 +7,30 @@ import {formatNumber} from '../utils/formatNumber';
 import {ThemesContext} from '../context/ThemesContext';
 import StyledText from '../components/custom/StyledText';
 import StyledView from '../components/custom/StyledView';
-import {MetricsContext} from '../context/MetricsContext';
+import {ReportsContext} from '../context/ReportsContext';
 import StyledButton from '../components/custom/StyledButton';
 import {CategoriesContext} from '../context/CategoriesContext';
 import StyledSurface from '../components/custom/StyledSurface';
 import {TransactionContext} from '../context/TransactionContext';
 import StyledDropDown from '../components/custom/StyledDropDown';
-import {MetricsContextType, NavigationProps, ThemeType} from '../types/Types';
+import {ReportsContextType, NavigationProps, ThemeType} from '../types/Types';
 import AtScript from '../utils/AtScript';
 
 const Overview = ({navigation}: NavigationProps) => {
   const currentThemeName = useContext(ThemesContext) as ThemeType;
   const theme = themes[currentThemeName.currentThemeName];
   const {transactions} = useContext(TransactionContext);
-  const {getCategoryById} = useContext(CategoriesContext);
+  const {getCategoryById, categories} = useContext(CategoriesContext);
 
   const {
+    transactionsByDate,
     transactionsByCategories,
-    groupByDate,
     totalCredit,
     totalDebit,
     totalBalance,
-    transactionsByDate,
-  } = useContext(MetricsContext) as MetricsContextType;
+  } = useContext(ReportsContext) as ReportsContextType;
   const [recent, setRecent] = React.useState<number>(3);
+
   return (
     <View
       style={[
@@ -81,9 +81,8 @@ const Overview = ({navigation}: NavigationProps) => {
         </View>
         <AtScript />
         <TouchableOpacity
+          onPress={() => console.log(transactionsByDate.byMonthYear)}
           // onPress={() => navigation.navigate('AddTransaction')}
-          // onPress={() => groupByDate()}
-          onPress={() => console.log(transactionsByDate)}
           style={[
             styles.addTransactionButton,
             {
@@ -100,13 +99,16 @@ const Overview = ({navigation}: NavigationProps) => {
 
       {/* Chart section */}
       <View style={styles.chartSection}>
-        {Object.keys(transactionsByCategories).length ? (
+        {transactionsByDate.byMonthYear[0] ? (
           <Chart
             data={
-              Array.isArray(transactionsByCategories)
-                ? transactionsByCategories
+              Array.isArray(transactionsByDate.byMonthYear[0].byCategories)
+                ? transactionsByDate.byMonthYear[0].byCategories
                 : []
             }
+            height={0}
+            maxHeight={110}
+            maxValue={totalCredit}
           />
         ) : (
           <StyledView contentContainerStyle={styles.noTransactionView}>
@@ -193,7 +195,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  chartSection: {height: 180},
+  chartSection: {height: 130, borderWidth: 1, borderColor: 'red'},
   noTransactionView: {
     height: '100%',
     alignItems: 'center',

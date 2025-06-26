@@ -8,7 +8,8 @@ import AddTransaction from '../views/AddTransaction';
 import ThemesOption from '../components/settingsOptions/ThemesOption';
 import {themes} from '../styles/Theme';
 import CategoriesOption from '../components/settingsOptions/CategoriesOption';
-import { ThemeType } from '../types/Types';
+import {ThemeType} from '../types/Types';
+import TransactionsGrouped from '../views/TransactionsGrouped';
 
 const Navigation = () => {
   const currentThemeName = useContext(ThemesContext) as ThemeType;
@@ -54,6 +55,11 @@ const Navigation = () => {
           name="CategoriesOption"
           component={CategoriesOption}
           options={stackScreenOptions(currentThemeName, 'Categorias')}
+        />
+        <Stack.Screen
+          name="TransactionsGrouped"
+          component={TransactionsGrouped}
+          options={stackScreenOptions(currentThemeName, 'Transacciones')}
         />
       </Stack.Navigator>
     </NavigationContainer>

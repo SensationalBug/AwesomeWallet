@@ -1,42 +1,57 @@
+import React, {useCallback, useContext} from 'react';
 import {View, TouchableOpacity} from 'react-native';
-import React, {useContext, useState} from 'react';
-// import {TransactionContext} from '../context/TransactionContext';
-import {CategoriesContext} from '../context/CategoriesContext';
 import StyledText from '../components/custom/StyledText';
+import {CategoriesContext} from '../context/CategoriesContext';
+import {TransactionContext} from '../context/TransactionContext';
+import Realm, {BSON} from 'realm';
+import {Category, Transaction} from '../db/schemas';
 
 const AtScript = () => {
-  // const {addTransaction} = useContext(TransactionContext);
+  const {addTransaction, getTransactions} = useContext(TransactionContext);
   const {categories} = useContext(CategoriesContext);
-  const currentDate = new Date().toISOString();
-  const [newTransaction, setNewTransaction] = useState<any>({
-    amount: '',
-    category: '',
-    concept: '',
-    cDate: currentDate,
-    file: '/home',
-    type: '',
-  });
 
-  const add = () => {
-    for (let i = 1; i <= 10; i++) {
-      setNewTransaction({
-        amount: Math.round(Math.random() * 100000),
-        category: String(categories[i]._id),
-        concept: String(categories[i].name),
-        cDate: currentDate,
-        file: '/home',
-        type: i % 2 === 0 ? 'debito' : 'credito',
-      });
-
-      console.log(newTransaction);
-      // addTransaction({})
-    }
+  const random = (min: number, max: number) => {
+    return Math.round(Math.random() * (max - min)) + min;
   };
+
+  const deleteAll = useCallback(() => {
+    Realm.deleteFile({
+      schema: [Transaction],
+    });
+    getTransactions();
+  }, [getTransactions]);
+
+  const addRandomTransactions = useCallback(() => {
+    try {
+      for (let i = 0; i < 5; i++) {
+        const selectedCategoryIndex = random(0, categories.length - 1);
+        const selectedCategory = categories[selectedCategoryIndex] as Category;
+        const currentDate = `${random(2022, 2024)}-${random(1, 6)}-${random(
+          1,
+          10,
+        )}`;
+
+        const transactionToAdd = {
+          _id: new BSON.ObjectId(),
+          amount: random(1000, 10000),
+          category: String(selectedCategory._id),
+          concept: String(selectedCategory.name),
+          cDate: currentDate,
+          file: '/home',
+          type: i % 3 === 0 ? 'credito' : 'debito',
+        };
+
+        addTransaction(transactionToAdd);
+      }
+    } catch (error) {
+      console.error('Error al añadir transacciones aleatorias:', error);
+    }
+  }, [categories, addTransaction]);
 
   return (
     <View>
       <TouchableOpacity
-        onPress={() => add()}
+        onPress={() => addRandomTransactions()}
         // eslint-disable-next-line react-native/no-inline-styles
         style={{
           padding: 15,
@@ -45,11 +60,19 @@ const AtScript = () => {
           alignItems: 'center',
           justifyContent: 'center',
         }}>
-        <StyledText
-          bold="bold"
-          variant="titleMedium"
-          text="Añadir Transacción"
-        />
+        <StyledText bold="bold" variant="titleMedium" text="Añadir" />
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => deleteAll()}
+        // eslint-disable-next-line react-native/no-inline-styles
+        style={{
+          padding: 15,
+          elevation: 8,
+          borderRadius: 10,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+        <StyledText bold="bold" variant="titleMedium" text="Borrar" />
       </TouchableOpacity>
     </View>
   );

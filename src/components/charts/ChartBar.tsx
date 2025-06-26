@@ -15,19 +15,17 @@ const ChartBar = ({height, text, maxValue, maxHeight}: ChartBarProps) => {
       <Tooltip
         enterTouchDelay={250}
         leaveTouchDelay={1000}
-        // title={`RD$${String(formatNumber(maxValue))}`}>
         title={`RD$${String(formatNumber((height / maxHeight) * maxValue))}`}>
         <View
           style={[
             styles.content,
-            {height, backgroundColor: theme.chartBarColor},
+            {height, backgroundColor: theme.chartBarColor, maxHeight},
           ]}
         />
       </Tooltip>
       <Tooltip
         enterTouchDelay={250}
         leaveTouchDelay={1000}
-        // title={`RD$${String(formatNumber(maxValue))}`}>
         title={`RD$${String(formatNumber((height / maxHeight) * maxValue))}`}>
         <View style={styles.label}>
           <StyledText text={text} variant="labelLarge" />
@@ -48,7 +46,6 @@ const styles = StyleSheet.create({
   content: {
     width: 60,
     minHeight: 1,
-    maxHeight: 160,
     borderTopEndRadius: 10,
     borderTopStartRadius: 10,
   },

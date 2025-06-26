@@ -61,12 +61,21 @@ const Transaction = ({navigation}: NavigationProps) => {
         ) : (
           transactions.map((value: any, index: any) => {
             const {_id, concept, amount, category, cDate, type} = value;
+
             const categoryIcon = (
               getCategoryById(category) as unknown as {icon?: string}
             )?.icon;
+
             const categoryName = (
               getCategoryById(category) as unknown as {name?: string}
             )?.name;
+
+            const fDate = new Date(cDate).toLocaleString('es-DO', {
+              day: '2-digit',
+              month: 'short',
+              year: 'numeric',
+            });
+
             return (
               <StyledButton
                 backgroundColor={
@@ -82,7 +91,7 @@ const Transaction = ({navigation}: NavigationProps) => {
                 subTitle={categoryName}
                 amount={amount}
                 type={type}
-                date={cDate.split('T')[0]}
+                date={fDate}
                 // onPress={() => console.log(category)}
                 onPress={() => {
                   // Evalua si la transaccion esta seleccionada

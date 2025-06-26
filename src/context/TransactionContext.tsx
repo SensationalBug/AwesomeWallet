@@ -12,6 +12,7 @@ export const TransactionContext = createContext<TransactionContextType>({
   updateTransaction: () => Promise.resolve(),
   getTransactionByID: () => Promise.resolve(null),
   deleteTransaction: async () => Promise.resolve(),
+  getTransactions: () => {},
 });
 export const TransactionProvider: React.FC<React.PropsWithChildren<{}>> = ({
   children,
@@ -169,6 +170,7 @@ export const TransactionProvider: React.FC<React.PropsWithChildren<{}>> = ({
         updateTransaction,
         getTransactionByID,
         deleteTransaction,
+        getTransactions,
       }}>
       {children}
     </TransactionContext.Provider>

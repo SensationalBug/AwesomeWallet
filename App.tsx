@@ -8,7 +8,7 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {CategoriesProvider} from './src/context/CategoriesContext';
 import ThemedSafeArea from './src/components/custom/ThemedSafeArea';
 import {TransactionProvider} from './src/context/TransactionContext';
-import {MetricsProvider} from './src/context/MetricsContext';
+import {ReportsProvider} from './src/context/ReportsContext';
 import {PaperProvider} from 'react-native-paper';
 // import {Category, Transaction} from './src/db/schemas';
 // import Realm from 'realm';
@@ -26,14 +26,14 @@ function App(): React.JSX.Element {
       <ThemesProvider>
         <CategoriesProvider>
           <TransactionProvider>
-            <MetricsProvider>
+            <ReportsProvider>
               <ThemedSafeArea>
                 <PaperProvider>
                   <Navigation />
                   <Toast config={toastConfig} />
                 </PaperProvider>
               </ThemedSafeArea>
-            </MetricsProvider>
+            </ReportsProvider>
           </TransactionProvider>
         </CategoriesProvider>
       </ThemesProvider>
