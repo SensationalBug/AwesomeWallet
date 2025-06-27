@@ -4,32 +4,24 @@ import {ChartProps} from '../types/Types';
 import StyledView from './custom/StyledView';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const Chart = ({data, maxHeight, maxValue, height}: ChartProps) => {
-  // console.log(data, 'data');
-  const totalCredit = () => {
-    let creditCounter = 0;
-
-    data &&
-      data.map((elem: any) => {
-        creditCounter += elem.totalCredit;
-      });
-
-    return creditCounter;
-  };
-  totalCredit();
+const Chart = ({data, maxHeight, height}: ChartProps) => {
+  const {totalCredit, totalDebit, totalAmount} = data;
+  console.log(totalCredit, totalDebit, totalAmount);
   return (
     <StyledView horizontal>
       {data &&
-        data.map((elem: any, index: number) => (
-          <ChartBar
-            key={index}
-            text={`${maxValue}`}
-            // text={elem.name}
-            maxValue={totalCredit()}
-            maxHeight={maxHeight}
-            height={(elem.amount / maxValue) * maxHeight}
-          />
-        ))}
+        data.byCategories.map((elem: any, index: number) => {
+          const {name} = elem;
+          return (
+            <ChartBar
+              key={index}
+              text={name}
+              maxValue={totalAmount}
+              maxHeight={maxHeight}
+              height={elem.totalCredit}
+            />
+          );
+        })}
     </StyledView>
   );
 };

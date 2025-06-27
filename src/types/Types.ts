@@ -186,7 +186,6 @@ type StyledSurfaceProps = {
 type ChartProps = {
   data: Array<{name: string; amount: number}> | DateGroup[] | any;
   maxHeight: number;
-  maxValue: number;
   height?: number;
 };
 

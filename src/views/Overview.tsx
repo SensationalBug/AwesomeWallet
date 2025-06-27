@@ -102,13 +102,12 @@ const Overview = ({navigation}: NavigationProps) => {
         {transactionsByDate.byMonthYear[0] ? (
           <Chart
             data={
-              Array.isArray(transactionsByDate.byMonthYear[0].byCategories)
-                ? transactionsByDate.byMonthYear[0].byCategories
+              Array.isArray(transactionsByDate.byMonthYear[2].byCategories)
+                ? transactionsByDate.byMonthYear[2]
                 : []
             }
             height={0}
             maxHeight={110}
-            maxValue={totalCredit}
           />
         ) : (
           <StyledView contentContainerStyle={styles.noTransactionView}>

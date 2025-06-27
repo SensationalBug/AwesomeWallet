@@ -10,6 +10,7 @@ import {themes} from '../../styles/Theme';
 const ChartBar = ({height, text, maxValue, maxHeight}: ChartBarProps) => {
   const currentThemeName = useContext(ThemesContext) as ThemeType;
   const theme = themes[currentThemeName.currentThemeName];
+
   return (
     <View style={styles.container}>
       <Tooltip
@@ -20,6 +21,7 @@ const ChartBar = ({height, text, maxValue, maxHeight}: ChartBarProps) => {
           style={[
             styles.content,
             {height, backgroundColor: theme.chartBarColor, maxHeight},
+            // {height, backgroundColor: theme.chartBarColor, maxHeight},
           ]}
         />
       </Tooltip>
