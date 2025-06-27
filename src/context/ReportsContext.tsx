@@ -6,6 +6,9 @@ import {
   GroupedTransactions,
   GroupedTransactionsByDate,
   DateGroupsAccumulator,
+  DateGroup,
+  // Asegúrate de importar DateGroup si no lo estás haciendo ya
+  // Y cualquier otro tipo relacionado con `globalTransactions`
 } from '../types/Types';
 import {CategoriesContext} from './CategoriesContext';
 import React, {
@@ -18,6 +21,11 @@ import React, {
 } from 'react';
 import {Category, Transaction} from '../db/schemas';
 import {TransactionContext} from './TransactionContext';
+
+// Define un tipo más específico para globalTransactions si es posible,
+// en lugar de `any`. Si esperas un DateGroup, defínelo así.
+// Por ejemplo:
+// interface DateGroup { /* ... definición de DateGroup ... */ }
 
 export const ReportsContext = createContext<ReportsContextType>({
   transactionsByCategories: {},
@@ -34,15 +42,27 @@ export const ReportsContext = createContext<ReportsContextType>({
   totalCredit: 0,
   totalDebit: 0,
   totalBalance: 0,
+  setSelectedPeriod: () => {},
+  selectedPeriod: 'byMonthYear', // Asegúrate de que el valor inicial coincida con el useState
+  globalTransactions: {
+    name: '',
+    sortKey: '',
+    transactions: [],
+    totalAmount: 0,
+    totalCredit: 0,
+    totalDebit: 0,
+    byCategories: [],
+  }, // <-- Inicializa con null o un objeto DateGroup vacío
+  setGlobalTransactions: () => {},
 });
 
 export const ReportsProvider: React.FC<React.PropsWithChildren<{}>> = ({
   children,
 }) => {
-  const {transactions} = useContext(TransactionContext);
   const {getCategoryById} = useContext(
     CategoriesContext,
   ) as CategoriesContextType;
+  const {transactions} = useContext(TransactionContext);
 
   const [transactionsByCategories, setTransactionsByCategories] = useState<
     Array<{name: string; amount: number}>
@@ -63,6 +83,20 @@ export const ReportsProvider: React.FC<React.PropsWithChildren<{}>> = ({
       byDayMonthYear: [],
     });
 
+  // ¡IMPORTANTE! Inicializa globalTransactions con null o un valor seguro.
+  // Será actualizado en un useEffect después de que transactionsByDate esté listo.
+  const [globalTransactions, setGlobalTransactions] = useState<DateGroup>({
+    name: '',
+    sortKey: '',
+    transactions: [],
+    totalAmount: 0,
+    totalCredit: 0,
+    totalDebit: 0,
+    byCategories: [],
+  });
+
+  const [selectedPeriod, setSelectedPeriod] = useState<string>('byMonthYear');
+
   const totalCredit = useMemo(() => {
     const creditEntry = transactionsByType.find(
       item => item.name === 'credito',
@@ -82,7 +116,6 @@ export const ReportsProvider: React.FC<React.PropsWithChildren<{}>> = ({
       const allTransactions = Array.from(
         realm.objects<Transaction>('Transaction'),
       );
-
       const groupedByCategory = allTransactions.reduce(
         (acc: GroupedTransactions, transaction) => {
           const {category, type} = transaction;
@@ -91,7 +124,6 @@ export const ReportsProvider: React.FC<React.PropsWithChildren<{}>> = ({
               | {name: string}
               | undefined;
             const categoryName = categoryObj?.name;
-
             if (categoryName) {
               if (!acc[categoryName]) {
                 acc[categoryName] = {
@@ -123,7 +155,6 @@ export const ReportsProvider: React.FC<React.PropsWithChildren<{}>> = ({
       const allTransactions = Array.from(
         realm.objects<Transaction>('Transaction'),
       );
-
       const groupedByType = allTransactions.reduce(
         (acc: GroupedTransactions, transaction) => {
           const typeName = transaction.type;
@@ -140,17 +171,14 @@ export const ReportsProvider: React.FC<React.PropsWithChildren<{}>> = ({
         },
         {},
       );
-
       const typeDataArray = Object.values(groupedByType) as Array<{
         name: string;
         totalAmount: number;
       }>;
-
       const formattedData = typeDataArray.map(item => ({
         name: item.name,
         amount: item.totalAmount,
       }));
-
       setTransactionsByType(formattedData);
     } catch (error) {
       console.log('Error al agrupar transacciones por tipo:', error);
@@ -162,25 +190,20 @@ export const ReportsProvider: React.FC<React.PropsWithChildren<{}>> = ({
       const allTransactions = Array.from(
         realm.objects<Transaction>('Transaction'),
       );
-
-      // Acumuladores para cada tipo de agrupación de fechas
       const accByDayMonthYear: DateGroupsAccumulator = {};
-      const accByDayMonth: DateGroupsAccumulator = {}; // Nuevo acumulador
+      const accByDayMonth: DateGroupsAccumulator = {};
       const accByMonthYear: DateGroupsAccumulator = {};
       const accByYear: DateGroupsAccumulator = {};
 
-      // Obtener las categorías para mapear _id a name
-      // Asumo que tienes una forma de acceder a todas tus categorías,
-      // por ejemplo, desde Realm o un contexto.
-      const allCategories = Array.from(realm.objects<Category>('Category')); // Asumo un modelo 'Category'
-      const categoryMap = new Map<string, string>(); // Mapa de _id a nombre de categoría
+      const allCategories = Array.from(realm.objects<Category>('Category'));
+      const categoryMap = new Map<string, string>();
       allCategories.forEach(cat => categoryMap.set(String(cat._id), cat.name));
 
       allTransactions.forEach(transaction => {
         const date = new Date(transaction.cDate);
-        const transactionAmount = Number(transaction.amount); // Asegúrate que es un número
+        const transactionAmount = Number(transaction.amount);
         const transactionType = transaction.type;
-        const categoryId = String(transaction.category); // Convertir ObjectId a string
+        const categoryId = String(transaction.category);
         const categoryName = categoryMap.get(categoryId) || 'Desconocida';
 
         if (isNaN(date.getTime()) || isNaN(transactionAmount)) {
@@ -190,7 +213,6 @@ export const ReportsProvider: React.FC<React.PropsWithChildren<{}>> = ({
           return;
         }
 
-        // Helper para actualizar un grupo de fecha (repetirá lógica)
         const updateDateGroup = (
           accumulator: DateGroupsAccumulator,
           name: string,
@@ -209,7 +231,6 @@ export const ReportsProvider: React.FC<React.PropsWithChildren<{}>> = ({
           }
           accumulator[name].transactions.push(transaction);
 
-          // Actualizar totales de crédito, débito y saldo
           if (transactionType === 'credito') {
             accumulator[name].totalCredit += transactionAmount;
             accumulator[name].totalAmount += transactionAmount;
@@ -218,7 +239,6 @@ export const ReportsProvider: React.FC<React.PropsWithChildren<{}>> = ({
             accumulator[name].totalAmount -= transactionAmount;
           }
 
-          // Actualizar sub-agrupación por categoría
           let categoryEntry = accumulator[name].byCategories.find(
             cat => cat.name === categoryName,
           );
@@ -233,57 +253,46 @@ export const ReportsProvider: React.FC<React.PropsWithChildren<{}>> = ({
           }
         };
 
-        // --- 1. Agrupación por Día - Mes - Año ---
         const dayMonthYearName = date.toLocaleString('es-DO', {
           day: '2-digit',
           month: '2-digit',
           year: 'numeric',
         });
-        const dayMonthYearSortKey = transaction.cDate; // 'YYYY-MM-DD'
+        const dayMonthYearSortKey = transaction.cDate;
         updateDateGroup(
           accByDayMonthYear,
           dayMonthYearName,
           dayMonthYearSortKey,
         );
 
-        // --- 2. Agrupación por Día - Mes (Nueva) ---
-        // Si necesitas el año para la unicidad de la clave, usa 'YYYY-MM-DD' como sortKey
-        // Si solo quieres 'DD mes' y no te importa el año (menos probable), la lógica cambia
-        // Para esta versión, lo haré por `DD mes` sin el año en el `name`,
-        // pero el `sortKey` incluirá el año para evitar colisiones si hay el mismo día/mes en años diferentes
         const dayMonthName = date.toLocaleString('es-DO', {
           day: '2-digit',
           month: 'short',
         });
-        // La clave de ordenación debe incluir el año para diferenciar "01 Ene 2024" de "01 Ene 2025"
         const dayMonthSortKey = `${date.getFullYear()}-${String(
           date.getMonth() + 1,
         ).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
         updateDateGroup(accByDayMonth, dayMonthName, dayMonthSortKey);
 
-        // --- 3. Agrupación por Mes - Año ---
         const monthYearName = date.toLocaleString('es-DO', {
-          month: '2-digit', // Esto da "MM/YYYY" como "06/2025"
+          month: '2-digit',
           year: 'numeric',
         });
         const monthYearSortKey = `${date.getFullYear()}-${String(
           date.getMonth() + 1,
-        ).padStart(2, '0')}`; // "YYYY-MM"
+        ).padStart(2, '0')}`;
         updateDateGroup(accByMonthYear, monthYearName, monthYearSortKey);
 
-        // --- 4. Agrupación por Año ---
         const yearName = date.getFullYear().toString();
-        const yearSortKey = yearName; // "YYYY"
+        const yearSortKey = yearName;
         updateDateGroup(accByYear, yearName, yearSortKey);
       });
 
-      // Convertir los objetos acumuladores a arrays formateados
       const formattedByDayMonthYear = Object.values(accByDayMonthYear);
-      const formattedByDayMonth = Object.values(accByDayMonth); // Nuevo array
+      const formattedByDayMonth = Object.values(accByDayMonth);
       const formattedByMonthYear = Object.values(accByMonthYear);
       const formattedByYear = Object.values(accByYear);
 
-      // --- Ordenación de Transacciones DENTRO de CADA GRUPO (Más Recientes Primero) ---
       const sortTransactions = (a: Transaction, b: Transaction) => {
         return new Date(b.cDate).getTime() - new Date(a.cDate).getTime();
       };
@@ -296,36 +305,41 @@ export const ReportsProvider: React.FC<React.PropsWithChildren<{}>> = ({
       ].forEach(groupArray => {
         groupArray.forEach(group => {
           group.transactions.sort(sortTransactions);
-          // También ordena las categorías por nombre si quieres
           group.byCategories.sort((a, b) => a.name.localeCompare(b.name));
         });
       });
 
-      // --- Ordenación de los GRUPOS de FECHA (Más Recientes Primero) ---
-      // Usamos la sortKey para una ordenación precisa y cronológica
       formattedByDayMonthYear.sort((a, b) =>
         b.sortKey.localeCompare(a.sortKey),
       );
-      formattedByDayMonth.sort((a, b) => b.sortKey.localeCompare(a.sortKey)); // Ordena by Day-Month por sortKey (YYYY-MM-DD)
+      formattedByDayMonth.sort((a, b) => b.sortKey.localeCompare(a.sortKey));
       formattedByMonthYear.sort((a, b) => b.sortKey.localeCompare(a.sortKey));
       formattedByYear.sort((a, b) => b.sortKey.localeCompare(a.sortKey));
 
       setTransactionsByDate({
         byDayMonthYear: formattedByDayMonthYear,
-        byDayMonth: formattedByDayMonth, // Asigna el nuevo array
+        byDayMonth: formattedByDayMonth,
         byMonthYear: formattedByMonthYear,
         byYear: formattedByYear,
       });
     } catch (error) {
       console.log('Error al agrupar transacciones por fecha:', error);
     }
-  }, []);
+  }, []); // No dependencies needed
 
+  // useEffect para ejecutar las agrupaciones iniciales y luego establecer globalTransactions
   useEffect(() => {
+    // Estas funciones se ejecutan cuando el Provider se monta por primera vez
+    // Y cada vez que 'transactions' cambian.
     groupByType();
     groupByDate();
     groupByCategories();
   }, [groupByCategories, groupByType, groupByDate, transactions]);
+
+  // Nuevo useEffect para inicializar globalTransactions una vez que transactionsByDate tenga datos
+  useEffect(() => {
+    setGlobalTransactions(transactionsByDate.byMonthYear[0]);
+  }, [transactionsByDate]); // Depende de transactionsByDate para que se ejecute cuando esté listo
 
   return (
     <ReportsContext.Provider
@@ -339,6 +353,10 @@ export const ReportsProvider: React.FC<React.PropsWithChildren<{}>> = ({
         totalCredit,
         totalDebit,
         totalBalance,
+        setSelectedPeriod,
+        selectedPeriod,
+        globalTransactions,
+        setGlobalTransactions,
       }}>
       {children}
     </ReportsContext.Provider>

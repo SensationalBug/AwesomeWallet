@@ -6,10 +6,11 @@ import {ThemesContext} from './context/ThemesContext';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
 // Views import
+import Reports from './views/Reports';
 import Overview from './views/Overview';
 import Settings from './views/Settings';
 import Transaction from './views/Transaction';
-import Reports from './views/Reports';
+import HeaderButton from './components/HeaderButton';
 
 const Tab = createBottomTabNavigator();
 
@@ -46,6 +47,12 @@ const Main = () => {
       fontSize: 24,
       fontWeight: 'bold' as 'bold',
     },
+    headerRight:
+      title === 'Inicio' || title === 'Transacciones' || title === 'Reportes'
+        ? () => (
+            <HeaderButton name="filter" onPress={() => console.log(title)} />
+          )
+        : undefined,
   });
 
   return (

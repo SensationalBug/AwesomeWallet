@@ -7,7 +7,7 @@ import {formatNumber} from '../../utils/formatNumber';
 import {ThemesContext} from '../../context/ThemesContext';
 import {themes} from '../../styles/Theme';
 
-const ChartBar = ({height, text, maxValue, maxHeight}: ChartBarProps) => {
+const ChartBar = ({height, text, value, maxHeight}: ChartBarProps) => {
   const currentThemeName = useContext(ThemesContext) as ThemeType;
   const theme = themes[currentThemeName.currentThemeName];
 
@@ -16,19 +16,18 @@ const ChartBar = ({height, text, maxValue, maxHeight}: ChartBarProps) => {
       <Tooltip
         enterTouchDelay={250}
         leaveTouchDelay={1000}
-        title={`RD$${String(formatNumber((height / maxHeight) * maxValue))}`}>
+        title={`RD$${String(formatNumber(value))}`}>
         <View
           style={[
             styles.content,
             {height, backgroundColor: theme.chartBarColor, maxHeight},
-            // {height, backgroundColor: theme.chartBarColor, maxHeight},
           ]}
         />
       </Tooltip>
       <Tooltip
         enterTouchDelay={250}
         leaveTouchDelay={1000}
-        title={`RD$${String(formatNumber((height / maxHeight) * maxValue))}`}>
+        title={`RD$${String(formatNumber(value))}`}>
         <View style={styles.label}>
           <StyledText text={text} variant="labelLarge" />
         </View>

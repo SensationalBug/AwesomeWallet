@@ -99,6 +99,10 @@ type ReportsContextType = {
   totalCredit: number;
   totalDebit: number;
   totalBalance: number;
+  selectedPeriod: string;
+  setSelectedPeriod: (period: string) => void;
+  globalTransactions: DateGroup;
+  setGlobalTransactions: React.Dispatch<any>;
 };
 
 type GroupTotal = {
@@ -133,6 +137,7 @@ interface GroupedTransactionsByDate {
   byDayMonth: DateGroup[]; // Nueva agrupación
   byMonthYear: DateGroup[];
   byYear: DateGroup[];
+  [key: string]: any;
 }
 
 type GroupedTransactions = {
@@ -156,22 +161,19 @@ type StyledTextInputProps = {
 };
 
 type StyledDropDownProps = {
-  data: Array<{
-    label: string;
-    value: string | number;
-    id?: Realm.BSON.ObjectId;
-  }>;
+  data: any;
   dropdownPosition?: 'auto' | 'top' | 'bottom';
   placeholder?: string;
   value?: any;
-  width?: number;
-  onChange: (item: {label: string; value: string}) => void;
+  width?: any;
+  margin?: number;
+  onChange: (item: {[x: string]: any; label: string; value: string}) => void;
 };
 
 type ChartBarProps = {
   height: number;
   text: string;
-  maxValue: number;
+  value: number;
   maxHeight: number;
 };
 
@@ -187,6 +189,11 @@ type ChartProps = {
   data: Array<{name: string; amount: number}> | DateGroup[] | any;
   maxHeight: number;
   height?: number;
+};
+
+type HeaderButtonProps = {
+  onPress?: () => void;
+  name: string;
 };
 
 export type {
@@ -209,4 +216,6 @@ export type {
   StyledTextProps,
   DateGroupsAccumulator,
   GroupedTransactionsByDate,
+  HeaderButtonProps,
+  DateGroup,
 };
