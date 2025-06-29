@@ -26,7 +26,21 @@ const Transaction = ({navigation}: NavigationProps) => {
   const onScrollStart = () => setIsExtended(false);
 
   useEffect(() => {
-    transactionSelected.length > 0 ? setIsVisible(true) : setIsVisible(false);
+    // Actualizar la visibilidad de los botones basado en si hay selecciones
+    setIsVisible(transactionSelected.length > 0);
+
+    // Filtrar transactionSelected para remover IDs que ya no existen en la lista principal de transactions
+    // Esto puede ocurrir si las transacciones fueron eliminadas
+    const currentTransactionIds = new Set(
+      transactions.map(t => t._id.toString()),
+    );
+    const validSelected = transactionSelected.filter(id =>
+      currentTransactionIds.has(id.toString()),
+    );
+
+    if (validSelected.length !== transactionSelected.length) {
+      setTransactionSelected(validSelected);
+    }
 
     const backAction = () => {
       if (transactionSelected.length > 0) {
@@ -42,7 +56,7 @@ const Transaction = ({navigation}: NavigationProps) => {
     );
 
     return () => backHandler.remove(); // Limpia el event listener al desmontar el componente
-  }, [isVisible, transactionSelected]); // Dependencia: el efecto se re-evalúa si transactionSelected cambia
+  }, [transactionSelected, transactions]); // Añadido transactions como dependencia
 
   return (
     <View style={styles.container}>
@@ -146,10 +160,22 @@ const Transaction = ({navigation}: NavigationProps) => {
         color={theme.text}
         visible={isVisible}
         isExtended={false}
-        onPress={() => {
-          deleteTransaction(transactionSelected).then(() =>
-            setTransactionSelected([]),
-          );
+        onPress={async () => {
+          // Hacer la función async
+          try {
+            await deleteTransaction(transactionSelected);
+            // En este punto, getTransactions() ya fue llamado dentro de deleteTransaction
+            // y el estado del contexto 'transactions' debería estar actualizado o en proceso.
+            // El re-render con la nueva lista de transacciones ocurrirá.
+            // El useEffect de arriba también ayudará a limpiar transactionSelected si es necesario.
+            // De todas formas, es bueno limpiar transactionSelected explícitamente aquí.
+            setTransactionSelected([]);
+          } catch (error) {
+            // Manejar el error si la eliminación fue cancelada o falló
+            console.log('Error o cancelación al eliminar:', error);
+            // No es necesario hacer nada con transactionSelected aquí si hubo un error,
+            // ya que las transacciones no fueron eliminadas.
+          }
         }}
       />
     </View>

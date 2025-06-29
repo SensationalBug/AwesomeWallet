@@ -11,7 +11,7 @@ export const TransactionContext = createContext<TransactionContextType>({
   addTransaction: () => Promise.resolve(),
   updateTransaction: () => Promise.resolve(),
   getTransactionByID: () => Promise.resolve(null),
-  deleteTransaction: async () => Promise.resolve(),
+  deleteTransaction: async (_transactionIds: BSON.ObjectId[]) => Promise.resolve(),
   getTransactions: () => {},
 });
 export const TransactionProvider: React.FC<React.PropsWithChildren<{}>> = ({
@@ -98,10 +98,10 @@ export const TransactionProvider: React.FC<React.PropsWithChildren<{}>> = ({
   };
 
   const deleteTransaction = (
-    transactionSelected: Realm.Object[],
+    transactionIds: BSON.ObjectId[],
   ): Promise<void> => {
     return new Promise((resolve, reject) => {
-      const numTransactions = transactionSelected.length;
+      const numTransactions = transactionIds.length;
       const alertMessage =
         numTransactions === 1
           ? '¿Estás seguro que deseas eliminar esta transacción?'
@@ -124,17 +124,17 @@ export const TransactionProvider: React.FC<React.PropsWithChildren<{}>> = ({
             onPress: () => {
               try {
                 realm.write(() => {
-                  transactionSelected.forEach(id => {
+                  transactionIds.forEach(transactionId => {
                     const transactionToDelete = realm.objectForPrimaryKey(
                       'Transaction',
-                      id,
+                      transactionId,
                     );
 
                     if (transactionToDelete) {
                       realm.delete(transactionToDelete);
                     } else {
                       console.warn(
-                        `Transacción con ID ${id.toString()} no encontrada para eliminar.`,
+                        `Transacción con ID ${transactionId.toString()} no encontrada para eliminar.`,
                       );
                     }
                   });
