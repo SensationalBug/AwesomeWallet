@@ -1,4 +1,4 @@
-import {Realm} from 'realm';
+import {BSON} from 'realm';
 import {themes} from '../styles/Theme';
 import {StyleProp, TextStyle, ViewStyle} from 'react-native';
 import {Category, Transaction} from '../db/schemas';
@@ -73,32 +73,38 @@ type AddCategoryProps = {
 type CategoriesContextType = {
   categories: Category[];
   addCategory: (name: string, icon: string) => void;
-  deleteCategory: (id: Realm.BSON.ObjectId) => void;
-  getCategoryById: (id: Realm.BSON.ObjectId) => void;
+  deleteCategory: (id: BSON.ObjectId) => void;
+  getCategoryById: (id: BSON.ObjectId) => void;
+};
+
+type PlainTransaction = {
+  _id: BSON.ObjectId;
+  concept: string;
+  amount: number;
+  category: BSON.ObjectId;
+  cDate: string;
+  type: 'credito' | 'debito';
+  file?: string;
 };
 
 type TransactionContextType = {
-  transactions: Transaction[];
+  transactions: PlainTransaction[];
   addTransaction: (newTransaction: any) => Promise<void>;
-  updateTransaction: (
-    id: Realm.BSON.ObjectId,
-    transaction: any,
-  ) => Promise<void>;
-  getTransactionByID: (id: Realm.Object[]) => Promise<Transaction | null>;
-  deleteTransaction: (transactionSelected: Realm.Object[]) => Promise<void>;
+  updateTransaction: (id: BSON.ObjectId, transaction: any) => Promise<void>;
+  getTransactionByID: (id: BSON.ObjectId) => Promise<PlainTransaction | null>;
+  deleteTransaction: (transactionSelected: BSON.ObjectId[]) => Promise<void>;
   getTransactions: () => void;
+  transactionSelected: any[];
+  setTransactionSelected: React.Dispatch<React.SetStateAction<any[]>>;
 };
 
 type ReportsContextType = {
-  transactionsByCategories: {};
-  transactionsByType: {};
+  // transactionsByCategories: {};
+  // transactionsByType: {};
   transactionsByDate: GroupedTransactionsByDate;
-  groupByCategories: () => void;
-  groupByType: () => void;
+  // groupByCategories: () => void;
+  // groupByType: () => void;
   groupByDate: () => void;
-  totalCredit: number;
-  totalDebit: number;
-  totalBalance: number;
   selectedPeriod: string;
   setSelectedPeriod: (period: string) => void;
   globalTransactions: DateGroup;
@@ -191,7 +197,7 @@ type ChartProps = {
   height?: number;
 };
 
-type HeaderButtonProps = {
+type HeaderFilterButtonProps = {
   onPress?: () => void;
   name: string;
 };
@@ -216,6 +222,7 @@ export type {
   StyledTextProps,
   DateGroupsAccumulator,
   GroupedTransactionsByDate,
-  HeaderButtonProps,
+  HeaderFilterButtonProps,
   DateGroup,
+  PlainTransaction,
 };

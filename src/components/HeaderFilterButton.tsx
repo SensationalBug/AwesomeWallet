@@ -1,26 +1,24 @@
 import {themes} from '../styles/Theme';
-import StyledText from './custom/StyledText';
 import StyledDropDown from './custom/StyledDropDown';
 import {ThemesContext} from '../context/ThemesContext';
+import {ReportsContext} from '../context/ReportsContext';
 import React, {useContext, useRef, useState} from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import {HeaderButtonProps, ThemeType} from '../types/Types';
+import {HeaderFilterButtonProps, ThemeType} from '../types/Types';
 import {StyleSheet, TouchableOpacity, View, Animated} from 'react-native';
-import {ReportsContext} from '../context/ReportsContext';
 
 // Aunque ahora usaremos una renderización condicional, MAX_CONTENT_HEIGHT
 // sigue siendo crucial para la animación de la altura.
 // Asegúrate de que este valor sea lo suficientemente grande para contener
 // todo el contenido de tu menú desplegable cuando esté completamente expandido.
-const MAX_CONTENT_HEIGHT = 250; // Por ejemplo, para múltiples elementos StyledText y un botón
+const MAX_CONTENT_HEIGHT = 180; // Por ejemplo, para múltiples elementos StyledText y un botón
 
-const HeaderButton: React.FC<HeaderButtonProps> = () => {
+const HeaderFilterButton: React.FC<HeaderFilterButtonProps> = () => {
   const currentThemeName = useContext(ThemesContext) as ThemeType;
   const {
     setSelectedPeriod,
     transactionsByDate,
     selectedPeriod,
-    globalTransactions,
     setGlobalTransactions,
   } = useContext(ReportsContext);
   const theme = themes[currentThemeName.currentThemeName];
@@ -69,8 +67,8 @@ const HeaderButton: React.FC<HeaderButtonProps> = () => {
   };
 
   const period = [
-    {label: 'Dia', value: 'byDayMonthYear'},
     {label: 'Mes', value: 'byMonthYear'},
+    {label: 'Dia', value: 'byDayMonthYear'},
     {label: 'Año', value: 'byYear'},
   ];
 
@@ -115,27 +113,13 @@ const HeaderButton: React.FC<HeaderButtonProps> = () => {
               onChange={elem => setGlobalTransactions(elem)}
             />
           </View>
-          <TouchableOpacity
-            onPress={() => console.log(globalTransactions)}
-            style={[
-              styles.addButton,
-              {
-                backgroundColor: theme.background,
-              },
-            ]}>
-            <StyledText
-              bold="bold"
-              variant="titleMedium"
-              text="Agregar categoría"
-            />
-          </TouchableOpacity>
         </Animated.View>
       )}
     </View>
   );
 };
 
-export default HeaderButton;
+export default HeaderFilterButton;
 
 const styles = StyleSheet.create({
   mainContainer: {

@@ -1,20 +1,25 @@
 import {themes} from '../styles/Theme';
+import React, {useContext, useEffect} from 'react';
 import {ThemesContext} from '../context/ThemesContext';
 import StyledView from '../components/custom/StyledView';
-import {NavigationProps, ThemeType} from '../types/Types';
+import StyledText from '../components/custom/StyledText';
+import {ReportsContext} from '../context/ReportsContext';
 import AnimatedButton from '../components/AnimatedButton';
 import {BackHandler, StyleSheet, View} from 'react-native';
 import StyledButton from '../components/custom/StyledButton';
-import React, {useContext, useEffect, useState} from 'react';
-import {TransactionContext} from '../context/TransactionContext';
 import {CategoriesContext} from '../context/CategoriesContext';
-import StyledText from '../components/custom/StyledText';
+import {TransactionContext} from '../context/TransactionContext';
+import {NavigationProps, ReportsContextType, ThemeType} from '../types/Types';
 
 const Transaction = ({navigation}: NavigationProps) => {
-  const {transactions, deleteTransaction, getTransactionByID} =
-    useContext(TransactionContext);
+  const {
+    deleteTransaction,
+    getTransactionByID,
+    transactionSelected,
+    setTransactionSelected,
+  } = useContext(TransactionContext);
   const {getCategoryById} = useContext(CategoriesContext);
-  const [transactionSelected, setTransactionSelected] = useState<any[]>([]);
+  const {globalTransactions} = useContext(ReportsContext) as ReportsContextType;
 
   const [isExtended, setIsExtended] = React.useState(true);
   const [isVisible, setIsVisible] = React.useState(false);
@@ -42,12 +47,12 @@ const Transaction = ({navigation}: NavigationProps) => {
     );
 
     return () => backHandler.remove(); // Limpia el event listener al desmontar el componente
-  }, [isVisible, transactionSelected]); // Dependencia: el efecto se re-evalúa si transactionSelected cambia
+  }, [isVisible, setTransactionSelected, transactionSelected]); // Dependencia: el efecto se re-evalúa si transactionSelected cambia
 
   return (
     <View style={styles.container}>
       <StyledView onScroll={onScrollStart} onScrollEnd={onScrollEnd}>
-        {!(transactions.length > 0) ? (
+        {!(globalTransactions.transactions.length > 0) ? (
           <StyledView contentContainerStyle={styles.noTransactionView}>
             <StyledText
               variant="titleLarge"
@@ -59,7 +64,7 @@ const Transaction = ({navigation}: NavigationProps) => {
             />
           </StyledView>
         ) : (
-          transactions.map((value: any, index: any) => {
+          globalTransactions.transactions.map((value: any, index: any) => {
             const {_id, concept, amount, category, cDate, type} = value;
 
             const categoryIcon = (
@@ -92,7 +97,6 @@ const Transaction = ({navigation}: NavigationProps) => {
                 amount={amount}
                 type={type}
                 date={fDate}
-                // onPress={() => console.log(category)}
                 onPress={() => {
                   // Evalua si la transaccion esta seleccionada
                   transactionSelected.some(
@@ -116,7 +120,8 @@ const Transaction = ({navigation}: NavigationProps) => {
         visible={!isVisible}
         isExtended={isExtended}
         label="Nueva transacción"
-        onPress={() => navigation.navigate('AddTransaction')}
+        // onPress={() => navigation.navigate('AddTransaction')}
+        onPress={() => console.log(globalTransactions)}
       />
       <AnimatedButton
         icon="pencil"
@@ -124,21 +129,28 @@ const Transaction = ({navigation}: NavigationProps) => {
         visible={isVisible}
         isExtended={false}
         onPress={() =>
-          getTransactionByID(transactionSelected).then(transactionToUpdate =>
-            navigation.navigate('AddTransaction', {
-              transactionId: transactionToUpdate?._id.toHexString(),
-              concept: transactionToUpdate?.concept,
-              amount: transactionToUpdate?.amount,
-              category: transactionToUpdate?.category,
-              cDate: transactionToUpdate?.cDate,
-              file: transactionToUpdate?.file,
-              type: transactionToUpdate?.type,
-              setTransactionSelected,
-            }),
-          )
+          getTransactionByID(transactionSelected[0]).then(transactionToUpdate => {
+            if (transactionToUpdate) {
+              navigation.navigate('AddTransaction', {
+                transactionId: transactionToUpdate?._id.toHexString(),
+                concept: transactionToUpdate?.concept,
+                amount: transactionToUpdate?.amount,
+                category: transactionToUpdate?.category,
+                cDate: transactionToUpdate?.cDate,
+                file: transactionToUpdate?.file,
+                type: transactionToUpdate?.type,
+              });
+            } else {
+              console.warn('No se encontró la transacción para actualizar.');
+            }
+          })
         }
-        opacity={transactionSelected.length > 1 ? 0.7 : 1}
-        disabled={transactionSelected.length > 1 ? true : false}
+        opacity={
+          transactionSelected && transactionSelected.length > 1 ? 0.7 : 1
+        }
+        disabled={
+          transactionSelected && transactionSelected.length > 1 ? true : false
+        }
       />
       <AnimatedButton
         right={100}
@@ -150,6 +162,7 @@ const Transaction = ({navigation}: NavigationProps) => {
           deleteTransaction(transactionSelected).then(() =>
             setTransactionSelected([]),
           );
+          // console.log(transactionSelected);
         }}
       />
     </View>

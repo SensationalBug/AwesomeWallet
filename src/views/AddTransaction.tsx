@@ -18,9 +18,8 @@ import {TransactionContext} from '../context/TransactionContext';
 import StyledTextInput from '../components/custom/StyledTextInput';
 
 const AddTransaction = ({navigation, route}: NavigationProps) => {
-  const {addTransaction, updateTransaction} = useContext(
-    TransactionContext,
-  ) as TransactionContextType;
+  const {addTransaction, updateTransaction, setTransactionSelected} =
+    useContext(TransactionContext) as TransactionContextType;
   const {categories, getCategoryById} = useContext(
     CategoriesContext,
   ) as CategoriesContextType;
@@ -122,7 +121,7 @@ const AddTransaction = ({navigation, route}: NavigationProps) => {
               newTransaction,
             ).then(() => {
               navigation.goBack();
-              transactionToUpdate.setTransactionSelected([]);
+              setTransactionSelected([]);
             });
           } else {
             addTransaction(newTransaction);

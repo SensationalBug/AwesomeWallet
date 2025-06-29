@@ -10,7 +10,7 @@ import Reports from './views/Reports';
 import Overview from './views/Overview';
 import Settings from './views/Settings';
 import Transaction from './views/Transaction';
-import HeaderButton from './components/HeaderButton';
+import HeaderFilterButton from './components/HeaderFilterButton';
 
 const Tab = createBottomTabNavigator();
 
@@ -49,15 +49,13 @@ const Main = () => {
     },
     headerRight:
       title === 'Inicio' || title === 'Transacciones' || title === 'Reportes'
-        ? () => (
-            <HeaderButton name="filter" onPress={() => console.log(title)} />
-          )
+        ? () => <HeaderFilterButton name="filter" />
         : undefined,
   });
 
   return (
     <Tab.Navigator
-      initialRouteName="Overview"
+      initialRouteName="Transaction"
       screenOptions={{
         tabBarActiveTintColor: themes[currentThemeName.currentThemeName].text,
         tabBarInactiveTintColor:

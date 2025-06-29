@@ -1,49 +1,30 @@
 import {realm} from '../db';
-import {BSON} from 'realm';
 import {
   ReportsContextType,
-  CategoriesContextType,
-  GroupedTransactions,
   GroupedTransactionsByDate,
   DateGroupsAccumulator,
   DateGroup,
-  // Asegúrate de importar DateGroup si no lo estás haciendo ya
-  // Y cualquier otro tipo relacionado con `globalTransactions`
 } from '../types/Types';
-import {CategoriesContext} from './CategoriesContext';
 import React, {
   createContext,
   useState,
   useEffect,
   useContext,
   useCallback,
-  useMemo,
 } from 'react';
 import {Category, Transaction} from '../db/schemas';
 import {TransactionContext} from './TransactionContext';
 
-// Define un tipo más específico para globalTransactions si es posible,
-// en lugar de `any`. Si esperas un DateGroup, defínelo así.
-// Por ejemplo:
-// interface DateGroup { /* ... definición de DateGroup ... */ }
-
 export const ReportsContext = createContext<ReportsContextType>({
-  transactionsByCategories: {},
-  transactionsByType: {},
   transactionsByDate: {
     byYear: [],
     byDayMonth: [],
     byMonthYear: [],
     byDayMonthYear: [],
   },
-  groupByCategories: () => {},
-  groupByType: () => {},
   groupByDate: () => {},
-  totalCredit: 0,
-  totalDebit: 0,
-  totalBalance: 0,
   setSelectedPeriod: () => {},
-  selectedPeriod: 'byMonthYear', // Asegúrate de que el valor inicial coincida con el useState
+  selectedPeriod: 'byMonthYear',
   globalTransactions: {
     name: '',
     sortKey: '',
@@ -52,28 +33,14 @@ export const ReportsContext = createContext<ReportsContextType>({
     totalCredit: 0,
     totalDebit: 0,
     byCategories: [],
-  }, // <-- Inicializa con null o un objeto DateGroup vacío
+  },
   setGlobalTransactions: () => {},
 });
 
 export const ReportsProvider: React.FC<React.PropsWithChildren<{}>> = ({
   children,
 }) => {
-  const {getCategoryById} = useContext(
-    CategoriesContext,
-  ) as CategoriesContextType;
   const {transactions} = useContext(TransactionContext);
-
-  const [transactionsByCategories, setTransactionsByCategories] = useState<
-    Array<{name: string; amount: number}>
-  >([]);
-
-  const [transactionsByType, setTransactionsByType] = useState<
-    Array<{name: string; amount: number}>
-  >([
-    {name: '', amount: 0},
-    {name: '', amount: 0},
-  ]);
 
   const [transactionsByDate, setTransactionsByDate] =
     useState<GroupedTransactionsByDate>({
@@ -83,8 +50,6 @@ export const ReportsProvider: React.FC<React.PropsWithChildren<{}>> = ({
       byDayMonthYear: [],
     });
 
-  // ¡IMPORTANTE! Inicializa globalTransactions con null o un valor seguro.
-  // Será actualizado en un useEffect después de que transactionsByDate esté listo.
   const [globalTransactions, setGlobalTransactions] = useState<DateGroup>({
     name: '',
     sortKey: '',
@@ -97,99 +62,10 @@ export const ReportsProvider: React.FC<React.PropsWithChildren<{}>> = ({
 
   const [selectedPeriod, setSelectedPeriod] = useState<string>('byMonthYear');
 
-  const totalCredit = useMemo(() => {
-    const creditEntry = transactionsByType.find(
-      item => item.name === 'credito',
-    );
-    return creditEntry ? creditEntry.amount : 0;
-  }, [transactionsByType]);
-
-  const totalDebit = useMemo(() => {
-    const debitEntry = transactionsByType.find(item => item.name === 'debito');
-    return debitEntry ? debitEntry.amount : 0;
-  }, [transactionsByType]);
-
-  const totalBalance = totalCredit - totalDebit;
-
-  const groupByCategories = useCallback(() => {
-    try {
-      const allTransactions = Array.from(
-        realm.objects<Transaction>('Transaction'),
-      );
-      const groupedByCategory = allTransactions.reduce(
-        (acc: GroupedTransactions, transaction) => {
-          const {category, type} = transaction;
-          if (type === 'debito') {
-            const categoryObj = getCategoryById(new BSON.ObjectId(category)) as
-              | {name: string}
-              | undefined;
-            const categoryName = categoryObj?.name;
-            if (categoryName) {
-              if (!acc[categoryName]) {
-                acc[categoryName] = {
-                  name: categoryName,
-                  totalAmount: 0,
-                };
-              }
-              acc[categoryName].totalAmount += Number(transaction.amount);
-            }
-          }
-          return acc;
-        },
-        {},
-      );
-      const categoryDataArray = Object.values(groupedByCategory);
-      const formattedData: Array<{name: string; amount: number}> =
-        categoryDataArray.map(item => ({
-          name: item.name,
-          amount: item.totalAmount,
-        }));
-      setTransactionsByCategories(formattedData);
-    } catch (error) {
-      console.log(error);
-    }
-  }, [getCategoryById]);
-
-  const groupByType = useCallback(() => {
-    try {
-      const allTransactions = Array.from(
-        realm.objects<Transaction>('Transaction'),
-      );
-      const groupedByType = allTransactions.reduce(
-        (acc: GroupedTransactions, transaction) => {
-          const typeName = transaction.type;
-          if (typeName) {
-            if (!acc[typeName]) {
-              acc[typeName] = {
-                name: typeName,
-                totalAmount: 0,
-              };
-            }
-            acc[typeName].totalAmount += Number(transaction.amount);
-          }
-          return acc;
-        },
-        {},
-      );
-      const typeDataArray = Object.values(groupedByType) as Array<{
-        name: string;
-        totalAmount: number;
-      }>;
-      const formattedData = typeDataArray.map(item => ({
-        name: item.name,
-        amount: item.totalAmount,
-      }));
-      setTransactionsByType(formattedData);
-    } catch (error) {
-      console.log('Error al agrupar transacciones por tipo:', error);
-    }
-  }, []);
-
   const groupByDate = useCallback(() => {
     try {
-      const allTransactions = Array.from(
-        realm.objects<Transaction>('Transaction'),
-      );
+      const allTransactions = Array.from(transactions);
+
       const accByDayMonthYear: DateGroupsAccumulator = {};
       const accByDayMonth: DateGroupsAccumulator = {};
       const accByMonthYear: DateGroupsAccumulator = {};
@@ -213,6 +89,14 @@ export const ReportsProvider: React.FC<React.PropsWithChildren<{}>> = ({
           return;
         }
 
+        const asTransaction =
+          typeof (transaction as unknown as Transaction).isValid === 'function'
+            ? (transaction as unknown as Transaction)
+            : (realm.objectForPrimaryKey<Transaction>(
+                'Transaction',
+                (transaction as any)._id,
+              ) as Transaction);
+
         const updateDateGroup = (
           accumulator: DateGroupsAccumulator,
           name: string,
@@ -229,7 +113,9 @@ export const ReportsProvider: React.FC<React.PropsWithChildren<{}>> = ({
               byCategories: [],
             };
           }
-          accumulator[name].transactions.push(transaction);
+          if (asTransaction) {
+            accumulator[name].transactions.push(asTransaction);
+          }
 
           if (transactionType === 'credito') {
             accumulator[name].totalCredit += transactionAmount;
@@ -325,34 +211,37 @@ export const ReportsProvider: React.FC<React.PropsWithChildren<{}>> = ({
     } catch (error) {
       console.log('Error al agrupar transacciones por fecha:', error);
     }
-  }, []); // No dependencies needed
+  }, [transactions]);
 
-  // useEffect para ejecutar las agrupaciones iniciales y luego establecer globalTransactions
   useEffect(() => {
-    // Estas funciones se ejecutan cuando el Provider se monta por primera vez
-    // Y cada vez que 'transactions' cambian.
-    groupByType();
     groupByDate();
-    groupByCategories();
-  }, [groupByCategories, groupByType, groupByDate, transactions]);
+  }, [groupByDate, transactions]);
 
-  // Nuevo useEffect para inicializar globalTransactions una vez que transactionsByDate tenga datos
   useEffect(() => {
-    setGlobalTransactions(transactionsByDate.byMonthYear[0]);
-  }, [transactionsByDate]); // Depende de transactionsByDate para que se ejecute cuando esté listo
+    const defaultEmptyDateGroup: DateGroup = {
+      name: '',
+      sortKey: '',
+      transactions: [],
+      totalAmount: 0,
+      totalCredit: 0,
+      totalDebit: 0,
+      byCategories: [],
+    };
+
+    if (transactionsByDate.byMonthYear.length > 0) {
+      // Si hay elementos, establece globalTransactions al primer elemento (el más reciente, asumiendo que ya está ordenado)
+      setGlobalTransactions(transactionsByDate.byMonthYear[0]);
+    } else {
+      // Si no hay elementos, establece globalTransactions al objeto vacío y seguro
+      setGlobalTransactions(defaultEmptyDateGroup);
+    }
+  }, [transactionsByDate]);
 
   return (
     <ReportsContext.Provider
       value={{
-        transactionsByCategories,
-        transactionsByType,
         transactionsByDate,
-        groupByCategories,
-        groupByType,
         groupByDate,
-        totalCredit,
-        totalDebit,
-        totalBalance,
         setSelectedPeriod,
         selectedPeriod,
         globalTransactions,

@@ -16,7 +16,6 @@ const StyledDropDown = ({
 }: StyledDropDownProps) => {
   const currentThemeName = useContext(ThemesContext) as ThemeType;
   const theme = themes[currentThemeName.currentThemeName];
-  console.log(data);
   return (
     <Dropdown
       data={data}

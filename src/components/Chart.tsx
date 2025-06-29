@@ -7,7 +7,7 @@ const Chart = ({data, maxHeight}: ChartProps) => {
   const getMaxDebit = () => {
     const maxDebit: any[] = [];
     data &&
-      data.byCategories.map((category: any) => {
+      data.map((category: any) => {
         const {totalDebit} = category;
         maxDebit.push(totalDebit);
       });
@@ -16,7 +16,7 @@ const Chart = ({data, maxHeight}: ChartProps) => {
   return (
     <StyledView horizontal>
       {data &&
-        data.byCategories.map((category: any, index: number) => {
+        data.map((category: any, index: number) => {
           const {name, totalDebit} = category;
           return (
             !totalDebit || (

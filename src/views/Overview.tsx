@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, {useContext} from 'react';
 import Chart from '../components/Chart';
 import {View, StyleSheet, TouchableOpacity} from 'react-native';
@@ -12,45 +11,18 @@ import {ReportsContext} from '../context/ReportsContext';
 import StyledButton from '../components/custom/StyledButton';
 import {CategoriesContext} from '../context/CategoriesContext';
 import StyledSurface from '../components/custom/StyledSurface';
-import {TransactionContext} from '../context/TransactionContext';
 import StyledDropDown from '../components/custom/StyledDropDown';
-import {
-  ReportsContextType,
-  NavigationProps,
-  ThemeType,
-  DateGroup, // ¡Asegúrate de importar DateGroup o el tipo correcto!
-} from '../types/Types';
+import {ReportsContextType, NavigationProps, ThemeType} from '../types/Types';
 import AtScript from '../utils/AtScript';
 
 const Overview = ({navigation}: NavigationProps) => {
   const currentThemeName = useContext(ThemesContext) as ThemeType;
   const theme = themes[currentThemeName.currentThemeName];
-  const {transactions} = useContext(TransactionContext);
-  const {getCategoryById, categories} = useContext(CategoriesContext);
+  const {getCategoryById} = useContext(CategoriesContext);
 
-  const {
-    transactionsByDate,
-    transactionsByCategories,
-    totalCredit,
-    totalDebit,
-    totalBalance,
-    selectedPeriod,
-    // Asegúrate de que globalTransactions sea tratado como DateGroup | null
-    globalTransactions,
-  } = useContext(ReportsContext) as ReportsContextType;
+  const {globalTransactions} = useContext(ReportsContext) as ReportsContextType;
 
   const [recent, setRecent] = React.useState<number>(3);
-
-  // Define un valor por defecto si globalTransactions es null
-  const currentGlobalTransactions: DateGroup = globalTransactions || {
-    name: '',
-    sortKey: '',
-    transactions: [],
-    totalAmount: 0,
-    totalCredit: 0,
-    totalDebit: 0,
-    byCategories: [],
-  };
 
   return (
     <View
@@ -68,8 +40,7 @@ const Overview = ({navigation}: NavigationProps) => {
             <StyledText
               bold={'bold'}
               variant="titleLarge"
-              // Usa currentGlobalTransactions aquí
-              text={`RD$${formatNumber(currentGlobalTransactions.totalCredit)}`}
+              text={`RD$${formatNumber(globalTransactions.totalCredit)}`}
             />
           </StyledSurface>
           <StyledSurface height={60}>
@@ -77,8 +48,7 @@ const Overview = ({navigation}: NavigationProps) => {
             <StyledText
               bold={'bold'}
               variant="titleLarge"
-              // Usa currentGlobalTransactions aquí
-              text={`RD$${formatNumber(currentGlobalTransactions.totalDebit)}`}
+              text={`RD$${formatNumber(globalTransactions.totalDebit)}`}
             />
           </StyledSurface>
         </View>
@@ -88,8 +58,7 @@ const Overview = ({navigation}: NavigationProps) => {
             <StyledText
               bold={'bold'}
               variant="titleLarge"
-              // Usa currentGlobalTransactions aquí
-              text={`RD$${formatNumber(currentGlobalTransactions.totalAmount)}`}
+              text={`RD$${formatNumber(globalTransactions.totalAmount)}`}
             />
           </StyledSurface>
         </View>
@@ -105,8 +74,7 @@ const Overview = ({navigation}: NavigationProps) => {
         </View>
         <AtScript />
         <TouchableOpacity
-          // Comprueba si globalTransactions no es null antes de intentar acceder a sus propiedades
-          onPress={() => console.log(globalTransactions)}
+          onPress={() => navigation.navigate('AddTransaction')}
           style={[
             styles.addTransactionButton,
             {
@@ -125,11 +93,11 @@ const Overview = ({navigation}: NavigationProps) => {
       <View style={styles.chartSection}>
         {/* Asegúrate de que globalTransactions no sea null Y tenga byCategories antes de pasarlo al Chart */}
         {globalTransactions &&
-        Array.isArray(currentGlobalTransactions.byCategories) &&
-        currentGlobalTransactions.byCategories.length > 0 ? (
+        Array.isArray(globalTransactions.byCategories) &&
+        globalTransactions.byCategories.length > 0 ? (
           <Chart
             maxHeight={110}
-            data={currentGlobalTransactions.byCategories} // Pasa solo el array byCategories al Chart
+            data={globalTransactions.byCategories} // Pasa solo el array byCategories al Chart
           />
         ) : (
           <StyledView contentContainerStyle={styles.noTransactionView}>
@@ -144,8 +112,7 @@ const Overview = ({navigation}: NavigationProps) => {
 
       {/* Recent transactions section */}
       {/* Comprueba si globalTransactions existe y si tiene transacciones */}
-      {globalTransactions &&
-      currentGlobalTransactions.transactions.length > 0 ? (
+      {globalTransactions && globalTransactions.transactions.length > 0 ? (
         <View style={styles.recentTransactions}>
           <StyledText variant="headlineMedium" text="Transacciones recientes" />
           <StyledDropDown
@@ -166,19 +133,16 @@ const Overview = ({navigation}: NavigationProps) => {
 
       {/* Recent transactions items */}
       <StyledView>
-        {/*
-          **CAMBIO CLAVE AQUÍ:**
-          Asegúrate de que currentGlobalTransactions.transactions exista Y sea un array
-          antes de intentar usar .slice() o .map().
-        */}
-        {currentGlobalTransactions && // Comprueba que el objeto existe (aunque ya lo hace `currentGlobalTransactions`)
-        Array.isArray(currentGlobalTransactions.transactions) && // ¡Asegura que es un array!
-        currentGlobalTransactions.transactions.length > 0 ? ( // Y que no está vacío
-          currentGlobalTransactions.transactions
+        {globalTransactions && // Comprueba que el objeto existe (aunque ya lo hace `globalTransactions`)
+        Array.isArray(globalTransactions.transactions) && // ¡Asegura que es un array!
+        globalTransactions.transactions.length > 0 ? ( // Y que no está vacío
+          globalTransactions.transactions
             .slice(-recent) // slice puede usarse en arrays vacíos sin problema
             .map((value: any, index: number) => {
               const {concept, amount, category, type} = value;
-              const categoryObj = getCategoryById(category);
+              const categoryObj = getCategoryById(category) as
+                | {icon?: string; name?: string}
+                | undefined;
               const categoryIcon = categoryObj?.icon;
               const categoryName = categoryObj?.name;
 
