@@ -9,7 +9,8 @@ import {BackHandler, StyleSheet, View} from 'react-native';
 import StyledButton from '../components/custom/StyledButton';
 import {CategoriesContext} from '../context/CategoriesContext';
 import {TransactionContext} from '../context/TransactionContext';
-import {NavigationProps, ReportsContextType, ThemeType} from '../types/Types';
+import {NavigationProps, ReportsContextType, ThemeType, TransactionContextType as CustomTransactionContextType} from '../types/Types';
+import Loader from '../components/custom/Loader';
 
 const Transaction = ({navigation}: NavigationProps) => {
   const {
@@ -17,7 +18,8 @@ const Transaction = ({navigation}: NavigationProps) => {
     getTransactionByID,
     transactionSelected,
     setTransactionSelected,
-  } = useContext(TransactionContext);
+    isLoading,
+  } = useContext(TransactionContext) as CustomTransactionContextType; // Cast para incluir isLoading
   const {getCategoryById} = useContext(CategoriesContext);
   const {globalTransactions} = useContext(ReportsContext) as ReportsContextType;
 
@@ -165,6 +167,7 @@ const Transaction = ({navigation}: NavigationProps) => {
           // console.log(transactionSelected);
         }}
       />
+      <Loader visible={isLoading} />
     </View>
   );
 };

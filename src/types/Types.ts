@@ -96,6 +96,7 @@ type TransactionContextType = {
   getTransactions: () => void;
   transactionSelected: any[];
   setTransactionSelected: React.Dispatch<React.SetStateAction<any[]>>;
+  isLoading: boolean;
 };
 
 type ReportsContextType = {
@@ -126,7 +127,7 @@ interface CategorySummary {
 interface DateGroup {
   name: string; // El nombre legible del grupo (ej. "26 jun. 2025", "jun. 2025", "2025")
   sortKey: string; // Una clave para la ordenación cronológica (ej. "2025-06-26", "2025-06", "2025")
-  transactions: Transaction[]; // Array de transacciones individuales en este grupo
+  transactions: PlainTransaction[]; // Array de transacciones individuales en este grupo
   totalAmount: number; // Saldo (Credito - Debito)
   totalCredit: number; // Suma de todos los créditos
   totalDebit: number; // Suma de todos los débitos

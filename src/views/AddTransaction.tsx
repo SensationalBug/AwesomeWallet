@@ -16,10 +16,15 @@ import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import StyledDropDown from '../components/custom/StyledDropDown';
 import {TransactionContext} from '../context/TransactionContext';
 import StyledTextInput from '../components/custom/StyledTextInput';
+import Loader from '../components/custom/Loader'; // Importar Loader
 
 const AddTransaction = ({navigation, route}: NavigationProps) => {
-  const {addTransaction, updateTransaction, setTransactionSelected} =
-    useContext(TransactionContext) as TransactionContextType;
+  const {
+    addTransaction,
+    updateTransaction,
+    setTransactionSelected,
+    isLoading, // Obtener isLoading del contexto
+  } = useContext(TransactionContext) as TransactionContextType;
   const {categories, getCategoryById} = useContext(
     CategoriesContext,
   ) as CategoriesContextType;
@@ -157,6 +162,7 @@ const AddTransaction = ({navigation, route}: NavigationProps) => {
           }
         />
       </TouchableOpacity>
+      <Loader visible={isLoading} />
     </View>
   );
 };

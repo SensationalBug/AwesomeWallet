@@ -15,6 +15,7 @@ export const TransactionContext = createContext<TransactionContextType>({
   getTransactions: () => {},
   transactionSelected: [],
   setTransactionSelected: () => {},
+  isLoading: false, // Valor predeterminado para isLoading
 });
 
 export const TransactionProvider: React.FC<React.PropsWithChildren<{}>> = ({
@@ -24,6 +25,7 @@ export const TransactionProvider: React.FC<React.PropsWithChildren<{}>> = ({
   const [transactionSelected, setTransactionSelected] = useState<
     BSON.ObjectId[]
   >([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const getTransactions = useCallback(() => {
     try {
@@ -93,6 +95,7 @@ export const TransactionProvider: React.FC<React.PropsWithChildren<{}>> = ({
 
   const addTransaction = (newTransaction: any): Promise<void> => {
     return new Promise((resolve, reject) => {
+      setIsLoading(true);
       const {category, amount, concept, cDate, file, type} = newTransaction;
       try {
         realm.write(() => {
@@ -113,6 +116,8 @@ export const TransactionProvider: React.FC<React.PropsWithChildren<{}>> = ({
         console.error('Error al agregar la transacción:', error);
         showToast('error', 'Error al agregar transacción');
         reject(error);
+      } finally {
+        setIsLoading(false);
       }
     });
   };
@@ -122,6 +127,7 @@ export const TransactionProvider: React.FC<React.PropsWithChildren<{}>> = ({
     transactionParams: any,
   ): Promise<void> => {
     return new Promise((resolve, reject) => {
+      setIsLoading(true);
       try {
         const transactionByID = realm.objectForPrimaryKey('Transaction', id);
         if (transactionByID) {
@@ -145,6 +151,8 @@ export const TransactionProvider: React.FC<React.PropsWithChildren<{}>> = ({
         showToast('error', 'Transacción errónea.');
         console.error(error);
         reject(error);
+      } finally {
+        setIsLoading(false);
       }
     });
   };
@@ -152,6 +160,8 @@ export const TransactionProvider: React.FC<React.PropsWithChildren<{}>> = ({
   const deleteTransaction = useCallback(
     async (transactionIdsToDelete: BSON.ObjectId[]): Promise<void> => {
       return new Promise((resolve, reject) => {
+        // No establecer isLoading(true) aquí directamente, porque el Alert es asíncrono.
+        // Se establecerá después de que el usuario confirme.
         const numTransactions = transactionIdsToDelete.length;
         const alertMessage =
           numTransactions === 1
@@ -165,11 +175,15 @@ export const TransactionProvider: React.FC<React.PropsWithChildren<{}>> = ({
             {
               text: 'Cancelar',
               style: 'cancel',
-              onPress: () => reject(new Error('Eliminación cancelada')),
+              onPress: () => {
+                // No es necesario setIsLoading(false) aquí si no se puso true antes.
+                reject(new Error('Eliminación cancelada'));
+              },
             },
             {
               text: 'Sí, eliminar',
               onPress: () => {
+                setIsLoading(true);
                 try {
                   realm.write(() => {
                     transactionIdsToDelete.forEach(id => {
@@ -196,6 +210,8 @@ export const TransactionProvider: React.FC<React.PropsWithChildren<{}>> = ({
                   console.error('Error al borrar la transacción(es):', error);
                   showToast('error', 'Error al eliminar transacción(es)');
                   reject(error);
+                } finally {
+                  setIsLoading(false);
                 }
               },
             },
@@ -234,6 +250,7 @@ export const TransactionProvider: React.FC<React.PropsWithChildren<{}>> = ({
         getTransactions,
         transactionSelected,
         setTransactionSelected,
+        isLoading,
       }}>
       {children}
     </TransactionContext.Provider>
