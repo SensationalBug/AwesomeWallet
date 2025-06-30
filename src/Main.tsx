@@ -48,14 +48,14 @@ const Main = () => {
       fontWeight: 'bold' as 'bold',
     },
     headerRight:
-      title === 'Inicio' || title === 'Transacciones' || title === 'Reportes'
+      title === 'Inicio' || title === 'Transacciones'
         ? () => <HeaderFilterButton name="filter" />
         : undefined,
   });
 
   return (
     <Tab.Navigator
-      initialRouteName="Transaction"
+      initialRouteName="Ajustes"
       screenOptions={{
         tabBarActiveTintColor: themes[currentThemeName.currentThemeName].text,
         tabBarInactiveTintColor:

@@ -14,8 +14,27 @@ import StyledSurface from '../components/custom/StyledSurface';
 import StyledDropDown from '../components/custom/StyledDropDown';
 import {ReportsContextType, NavigationProps, ThemeType} from '../types/Types';
 import AtScript from '../utils/AtScript';
+import ReactNativeBiometrics, {BiometryTypes} from 'react-native-biometrics';
 
 const Overview = ({navigation}: NavigationProps) => {
+  const rnBiometrics = new ReactNativeBiometrics();
+
+  const bio = () => {
+    rnBiometrics.isSensorAvailable().then(resultObject => {
+      const {available, biometryType} = resultObject;
+
+      if (available && biometryType === BiometryTypes.TouchID) {
+        console.log('TouchID is supported');
+      } else if (available && biometryType === BiometryTypes.FaceID) {
+        console.log('FaceID is supported');
+      } else if (available && biometryType === BiometryTypes.Biometrics) {
+        console.log('Biometrics is supported');
+      } else {
+        console.log('Biometrics not supported');
+      }
+    });
+  };
+
   const currentThemeName = useContext(ThemesContext) as ThemeType;
   const theme = themes[currentThemeName.currentThemeName];
   const {getCategoryById} = useContext(CategoriesContext);
@@ -67,14 +86,14 @@ const Overview = ({navigation}: NavigationProps) => {
       {/* This month section */}
       <View style={styles.thisMonth}>
         <View>
-          <StyledText variant="titleSmall" text="Este mes" />
+          {/* <StyledText variant="titleSmall" text="Este mes" /> */}
           {/* Considera usar globalTransactions.name para el título del mes */}
           <StyledText variant="titleLarge" text="RD$100.000.00" bold={'bold'} />
           <StyledText variant="titleSmall" text="Este mes +10%" />
         </View>
-        <AtScript />
+        {/* <AtScript /> */}
         <TouchableOpacity
-          onPress={() => navigation.navigate('AddTransaction')}
+          onPress={() => bio()}
           style={[
             styles.addTransactionButton,
             {
@@ -95,10 +114,7 @@ const Overview = ({navigation}: NavigationProps) => {
         {globalTransactions &&
         Array.isArray(globalTransactions.byCategories) &&
         globalTransactions.byCategories.length > 0 ? (
-          <Chart
-            maxHeight={110}
-            data={globalTransactions.byCategories} // Pasa solo el array byCategories al Chart
-          />
+          <Chart maxHeight={110} data={globalTransactions.byCategories} />
         ) : (
           <StyledView contentContainerStyle={styles.noTransactionView}>
             <StyledText variant="titleLarge" text="Aún no tienes débitos 😐." />
@@ -137,7 +153,7 @@ const Overview = ({navigation}: NavigationProps) => {
         Array.isArray(globalTransactions.transactions) && // ¡Asegura que es un array!
         globalTransactions.transactions.length > 0 ? ( // Y que no está vacío
           globalTransactions.transactions
-            .slice(-recent) // slice puede usarse en arrays vacíos sin problema
+            .slice(0, recent) // slice puede usarse en arrays vacíos sin problema
             .map((value: any, index: number) => {
               const {concept, amount, category, type} = value;
               const categoryObj = getCategoryById(category) as
@@ -199,7 +215,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  chartSection: {height: 130, borderWidth: 1, borderColor: 'red'},
+  chartSection: {height: 130},
   noTransactionView: {
     height: '100%',
     alignItems: 'center',

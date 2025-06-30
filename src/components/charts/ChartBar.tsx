@@ -1,13 +1,21 @@
 import React, {useContext} from 'react';
+import {themes} from '../../styles/Theme';
 import {Tooltip} from 'react-native-paper';
 import {View, StyleSheet} from 'react-native';
 import StyledText from '../custom/StyledText';
-import {ChartBarProps, ThemeType} from '../../types/Types';
 import {formatNumber} from '../../utils/formatNumber';
 import {ThemesContext} from '../../context/ThemesContext';
-import {themes} from '../../styles/Theme';
+import {ChartBarProps, ThemeType} from '../../types/Types';
 
-const ChartBar = ({height, text, value, maxHeight}: ChartBarProps) => {
+const ChartBar = ({
+  text,
+  debit,
+  credit,
+  tAmount,
+  maxHeight,
+  cHeight,
+  dHeight,
+}: ChartBarProps) => {
   const currentThemeName = useContext(ThemesContext) as ThemeType;
   const theme = themes[currentThemeName.currentThemeName];
 
@@ -16,18 +24,39 @@ const ChartBar = ({height, text, value, maxHeight}: ChartBarProps) => {
       <Tooltip
         enterTouchDelay={250}
         leaveTouchDelay={1000}
-        title={`RD$${String(formatNumber(value))}`}>
+        title={`Debitos: RD$${String(formatNumber(debit))}`}>
         <View
           style={[
             styles.content,
-            {height, backgroundColor: theme.chartBarColor, maxHeight},
+            styles.border,
+            {
+              maxHeight,
+              height: dHeight,
+              backgroundColor: debit ? theme.chartBarNegativeColor : undefined,
+            },
           ]}
         />
       </Tooltip>
       <Tooltip
         enterTouchDelay={250}
         leaveTouchDelay={1000}
-        title={`RD$${String(formatNumber(value))}`}>
+        title={`Creditos: RD$${String(formatNumber(credit))}`}>
+        <View
+          style={[
+            styles.content,
+            credit && !debit ? styles.border : null,
+            {
+              maxHeight,
+              height: cHeight,
+              backgroundColor: credit ? theme.chartBarColor : undefined,
+            },
+          ]}
+        />
+      </Tooltip>
+      <Tooltip
+        enterTouchDelay={250}
+        leaveTouchDelay={1000}
+        title={`Monto total: RD$${String(formatNumber(tAmount))}`}>
         <View style={styles.label}>
           <StyledText text={text} variant="labelLarge" />
         </View>
@@ -44,11 +73,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-end',
   },
+  border: {
+    borderTopEndRadius: 10,
+    borderTopStartRadius: 10,
+  },
   content: {
     width: 60,
     minHeight: 1,
-    borderTopEndRadius: 10,
-    borderTopStartRadius: 10,
   },
   label: {
     height: 20,

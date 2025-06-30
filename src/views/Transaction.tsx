@@ -135,8 +135,7 @@ const Transaction = ({navigation}: NavigationProps) => {
         visible={!isVisible}
         isExtended={isExtended}
         label="Nueva transacción"
-        // onPress={() => navigation.navigate('AddTransaction')}
-        onPress={() => console.log(globalTransactions)}
+        onPress={() => navigation.navigate('AddTransaction')}
       />
       <AnimatedButton
         icon="pencil"
@@ -178,17 +177,12 @@ const Transaction = ({navigation}: NavigationProps) => {
         onPress={async () => {
           try {
             await deleteTransaction(transactionSelected);
-            // La promesa se resolvió, lo que significa que la eliminación fue exitosa (no cancelada)
-            // y getTransactions() ya fue llamado en el contexto.
             setTransactionSelected([]);
           } catch (error) {
-            // Esto atrapará la new Error('Eliminación cancelada') o cualquier error de Realm.
             console.log(
               'Eliminación cancelada o fallida:',
               (error as Error).message,
             );
-            // No es necesario cambiar transactionSelected aquí si fue cancelado o falló,
-            // ya que las transacciones no se eliminaron.
           }
         }}
       />

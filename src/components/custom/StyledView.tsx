@@ -1,6 +1,6 @@
 import React, {useContext} from 'react';
 import {themes} from '../../styles/Theme';
-import {ScrollView, StyleSheet} from 'react-native';
+import {ScrollView} from 'react-native';
 import {ThemesContext} from '../../context/ThemesContext';
 import {StyledViewProps, ThemeType} from '../../types/Types';
 
@@ -22,16 +22,10 @@ const StyledView = ({
       onScrollEndDrag={onScrollEnd}
       onMomentumScrollEnd={onScrollEnd}
       contentContainerStyle={contentContainerStyle}
-      style={[styles.container, {backgroundColor: theme.background}, style]}>
+      style={[style, {backgroundColor: theme.background}]}>
       {children}
     </ScrollView>
   );
 };
 
 export default StyledView;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});

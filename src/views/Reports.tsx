@@ -1,149 +1,98 @@
 import React, {useContext} from 'react';
 import Chart from '../components/Chart';
-import {View, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, StyleSheet} from 'react-native';
+import ReportsHeader from '../components/ReportsHeader';
 import StyledView from '../components/custom/StyledView';
 import {ReportsContext} from '../context/ReportsContext';
-import {NavigationProps, ReportsContextType} from '../types/Types';
-import {CategoriesContext} from '../context/CategoriesContext';
-import StyledText from '../components/custom/StyledText';
-import {Text} from 'react-native-paper';
+import {NavigableGroupedTransactions, NavigableTransaction, ReportsContextType} from '../types/Types';
 
-const Reports = ({navigation}: NavigationProps) => {
-  const {categories} = useContext(CategoriesContext);
-  const {transactionsByDate, totalCredit} = useContext(
-    ReportsContext,
-  ) as ReportsContextType;
+const Reports = () => {
+  const {transactionsByDate} = useContext(ReportsContext) as ReportsContextType;
+
+  const prepareDataForNavigation = (
+    data: Array<{name: string; transactions: any[]}>,
+  ): NavigableGroupedTransactions[] => {
+    if (!Array.isArray(data)) {
+      return [];
+    }
+    return data.map(group => ({
+      name: group.name,
+      transactions: group.transactions.map(
+        (t): NavigableTransaction => ({
+          _id: t._id.toHexString(),
+          concept: t.concept,
+          amount: t.amount,
+          category: t.category ? t.category.toHexString() : '',
+          cDate: t.cDate,
+          type: t.type,
+          file: t.file,
+        }),
+      ),
+    }));
+  };
 
   return (
-    <View>
-      <Text>d</Text>
-    </View>
-    // <StyledView>
-    //   <TouchableOpacity onPress={() => console.log(transactionsByDate)}>
-    //     <Text>BOTON</Text>
-    //   </TouchableOpacity>
-    //   {/* Transacciones por byYear */}
-    //   <View style={styles.ChartView}>
-    //     <View style={styles.ChartViewStyledText}>
-    //       <StyledText
-    //         style={styles.chartStyledText}
-    //         variant="titleMedium"
-    //         text="Transacciones por byYear"
-    //       />
-    //       <TouchableOpacity onPress={() => {}}>
-    //         <StyledText
-    //           style={styles.chartStyledText}
-    //           variant="titleSmall"
-    //           text="Ver mas ➡️"
-    //         />
-    //       </TouchableOpacity>
-    //     </View>
-    //     <Chart
-    //       data={
-    //         Array.isArray(transactionsByDate.byYear)
-    //           ? transactionsByDate.byYear
-    //           : []
-    //       }
-    //       height={0}
-    //       maxHeight={150}
-    //       maxValue={totalCredit / (categories.length / 2)}
-    //     />
-    //   </View>
+    <StyledView contentContainerStyle={styles.container}>
+      {/* Transacciones por byMonthYear */}
+      <View style={styles.ChartView}>
+        <ReportsHeader
+          goTo="TransactionsGrouped"
+          title="Transacciones por Mes"
+          titleButton="Ver mas ➡️"
+          navigationaParams={prepareDataForNavigation(
+            transactionsByDate.byMonthYear,
+          )}
+        />
+        <Chart
+          maxHeight={150}
+          data={
+            Array.isArray(transactionsByDate.byMonthYear)
+              ? transactionsByDate.byMonthYear
+              : []
+          }
+        />
+      </View>
 
-    //   {/* Transacciones por byDayMonthYear */}
-    //   <View style={styles.ChartView}>
-    //     <View style={styles.ChartViewStyledText}>
-    //       <StyledText
-    //         style={styles.chartStyledText}
-    //         variant="titleMedium"
-    //         text="Transacciones por byDayMonthYear"
-    //       />
-    //       <TouchableOpacity onPress={() => {}}>
-    //         <StyledText
-    //           style={styles.chartStyledText}
-    //           variant="titleSmall"
-    //           text="Ver mas ➡️"
-    //         />
-    //       </TouchableOpacity>
-    //     </View>
-    //     <Chart
-    //       data={
-    //         Array.isArray(transactionsByDate.byDayMonthYear)
-    //           ? transactionsByDate.byDayMonthYear
-    //           : []
-    //       }
-    //       height={0}
-    //       maxHeight={150}
-    //       maxValue={totalCredit / (categories.length / 2)}
-    //     />
-    //   </View>
+      {/* Transacciones por byDayMonthYear */}
+      <View style={styles.ChartView}>
+        <ReportsHeader
+          goTo="TransactionsGrouped"
+          title="Transacciones por Dia"
+          titleButton="Ver mas ➡️"
+          navigationaParams={prepareDataForNavigation(
+            transactionsByDate.byDayMonthYear,
+          )}
+        />
+        <Chart
+          maxHeight={150}
+          data={
+            Array.isArray(transactionsByDate.byDayMonthYear)
+              ? transactionsByDate.byDayMonthYear
+              : []
+          }
+        />
+      </View>
 
-    //   {/* Transacciones por byMonthYear */}
-    //   <View style={styles.ChartView}>
-    //     <View style={styles.ChartViewStyledText}>
-    //       <StyledText
-    //         style={styles.chartStyledText}
-    //         variant="titleMedium"
-    //         text="Transacciones por byMonthYear"
-    //       />
-    //       <TouchableOpacity
-    //         onPress={() =>
-    //           navigation.navigate('TransactionsGrouped', {
-    //             byYear: transactionsByDate.byYear,
-    //           })
-    //         }>
-    //         <StyledText
-    //           style={styles.chartStyledText}
-    //           variant="titleSmall"
-    //           text="Ver mas ➡️"
-    //         />
-    //       </TouchableOpacity>
-    //     </View>
-    //     <Chart
-    //       data={
-    //         Array.isArray(transactionsByDate.byMonthYear)
-    //           ? transactionsByDate.byMonthYear
-    //           : []
-    //       }
-    //       height={0}
-    //       maxHeight={150}
-    //       maxValue={totalCredit / (categories.length / 2)}
-    //     />
-    //   </View>
-
-    //   {/* Transacciones por byDayMonth */}
-    //   <View style={styles.ChartView}>
-    //     <View style={styles.ChartViewStyledText}>
-    //       <StyledText
-    //         style={styles.chartStyledText}
-    //         variant="titleMedium"
-    //         text="Transacciones por byDayMonth"
-    //       />
-    //       <TouchableOpacity
-    //         onPress={() =>
-    //           navigation.navigate('TransactionsGrouped', {
-    //             byYear: transactionsByDate.byYear,
-    //           })
-    //         }>
-    //         <StyledText
-    //           style={styles.chartStyledText}
-    //           variant="titleSmall"
-    //           text="Ver mas ➡️"
-    //         />
-    //       </TouchableOpacity>
-    //     </View>
-    //     <Chart
-    //       data={
-    //         Array.isArray(transactionsByDate.byDayMonth)
-    //           ? transactionsByDate.byDayMonth
-    //           : []
-    //       }
-    //       height={0}
-    //       maxHeight={150}
-    //       maxValue={totalCredit / (categories.length / 2)}
-    //     />
-    //   </View>
-    // </StyledView>
+      {/* Transacciones por byYear */}
+      <View style={styles.ChartView}>
+        <ReportsHeader
+          goTo="TransactionsGrouped"
+          title="Transacciones por Anio"
+          titleButton="Ver mas ➡️"
+          navigationaParams={prepareDataForNavigation(
+            transactionsByDate.byYear,
+          )}
+        />
+        <Chart
+          maxHeight={150}
+          data={
+            Array.isArray(transactionsByDate.byYear)
+              ? transactionsByDate.byYear
+              : []
+          }
+        />
+      </View>
+    </StyledView>
   );
 };
 
@@ -154,15 +103,14 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   ChartView: {
-    // borderColor: 'red',
-    // borderWidth: 1,
-    // alignItems: 'center',
+    flex: 1 / 3,
+    alignItems: 'center',
   },
   ChartViewStyledText: {
+    width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    width: '100%',
   },
   chartStyledText: {
     padding: 10,

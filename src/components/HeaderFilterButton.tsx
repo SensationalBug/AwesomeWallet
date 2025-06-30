@@ -109,8 +109,14 @@ const HeaderFilterButton: React.FC<HeaderFilterButtonProps> = () => {
                 value: tx.id,
                 ...tx,
               }))}
-              value={null}
-              onChange={elem => setGlobalTransactions(elem)}
+              value={(date: {sortKey: string}) => {
+                date.sortKey;
+              }}
+              onChange={elem => {
+                console.log(transactionsByDate[selectedPeriod]);
+                console.log(elem.name);
+                setGlobalTransactions(elem);
+              }}
             />
           </View>
         </Animated.View>

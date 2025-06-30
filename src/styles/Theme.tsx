@@ -11,6 +11,7 @@ export const themes = {
     modalBackdrop: 'rgba(0, 0, 0, 0.5)',
     modalBorder: '#CCCCCC',
     chartBarColor: '#ADD8E6', // Light Blue
+    chartBarNegativeColor: '#FF6347', // Tomato - un rojo vibrante para el tema claro
   },
   dark: {
     name: 'Oscuro',
@@ -23,8 +24,8 @@ export const themes = {
     barStyle: 'light-content',
     modalBackdrop: 'rgba(0, 0, 0, 0.7)',
     modalBorder: '#444444',
-    // Nuevo color para las barras del gráfico: Un azul eléctrico que resalta
     chartBarColor: '#00BFFF', // Deep Sky Blue - es brillante y contrasta mucho
+    chartBarNegativeColor: '#DC143C', // Crimson - un rojo más oscuro para el tema oscuro
   },
   blue: {
     name: 'Azul',
@@ -38,6 +39,7 @@ export const themes = {
     modalBackdrop: 'rgba(0, 0, 0, 0.5)',
     modalBorder: '#004C99',
     chartBarColor: '#33CCFF', // Sky Blue / Capri
+    chartBarNegativeColor: '#FF4500', // OrangeRed - un rojo anaranjado para el tema azul
   },
   green: {
     name: 'Verde',
@@ -51,5 +53,6 @@ export const themes = {
     modalBackdrop: 'rgba(0, 0, 0, 0.5)',
     modalBorder: '#1E7B38',
     chartBarColor: '#7CFC00', // Lawn Green
+    chartBarNegativeColor: '#CC0000', // Un rojo más oscuro y saturado para el tema verde
   },
 };

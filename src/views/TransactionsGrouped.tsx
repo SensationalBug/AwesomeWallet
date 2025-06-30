@@ -1,100 +1,70 @@
-import {View, Text, BackHandler, TouchableOpacity} from 'react-native';
-import React, {useContext, useEffect, useState} from 'react';
-import StyledView from '../components/custom/StyledView';
-import {TransactionContext} from '../context/TransactionContext';
 import {themes} from '../styles/Theme';
+import React, {useContext} from 'react';
+import {StyleSheet, View} from 'react-native';
 import {ThemesContext} from '../context/ThemesContext';
-import {ThemeType} from '../types/Types';
-import {CategoriesContext} from '../context/CategoriesContext';
+import StyledView from '../components/custom/StyledView';
 import StyledText from '../components/custom/StyledText';
-
-import { RouteProp } from '@react-navigation/native';
-
-type TransactionsGroupedProps = {
-  route: RouteProp<Record<string, object | undefined>, string>;
-};
+import StyledButton from '../components/custom/StyledButton';
+import {CategoriesContext} from '../context/CategoriesContext';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {ThemeType, TransactionsGroupedProps} from '../types/Types';
 
 const TransactionsGrouped = ({route}: TransactionsGroupedProps) => {
-  // const {deleteTransaction} = useContext(TransactionContext);
-  // const {getCategoryById} = useContext(CategoriesContext);
-  // const [transactionSelected, setTransactionSelected] = useState<any[]>([]);
-
-  // const [isExtended, setIsExtended] = React.useState(true);
-  // const [isVisible, setIsVisible] = React.useState(false);
-
-  // const currentThemeName = useContext(ThemesContext) as ThemeType;
-  // const theme = themes[currentThemeName.currentThemeName];
-
-  // useEffect(() => {
-  //   transactionSelected.length > 0 ? setIsVisible(true) : setIsVisible(false);
-
-  //   const backAction = () => {
-  //     if (transactionSelected.length > 0) {
-  //       setTransactionSelected([]);
-  //       return true; // Consume el evento, evita que la navegación hacia atrás o la salida se ejecuten
-  //     }
-  //     return false; // Permite el comportamiento predeterminado (navegar hacia atrás o salir)
-  //   };
-
-  //   const backHandler = BackHandler.addEventListener(
-  //     'hardwareBackPress',
-  //     backAction,
-  //   );
-
-  //   return () => backHandler.remove(); // Limpia el event listener al desmontar el componente
-  // }, [isVisible, transactionSelected]); // Dependencia: el efecto se re-evalúa si transactionSelected cambia
+  const {getCategoryById} = useContext(CategoriesContext);
+  const currentThemeName = useContext(ThemesContext) as ThemeType;
+  const theme = themes[currentThemeName.currentThemeName];
+  const {params} = route;
+  const insets = useSafeAreaInsets();
 
   return (
-    <View>
-      {/* <StyledView> */}
-        <TouchableOpacity onPress={() => console.log(route)}>
-          <StyledText text="transactionsByDate" />
-        </TouchableOpacity>
-        {/* {!(transactions.length > 0) ? (
-          <StyledView contentContainerStyle={styles.noTransactionView}>
-            <StyledText
-              variant="titleLarge"
-              text="Aún no tienes transacciones 😐"
-            />
-            <StyledText
-              variant="titleMedium"
-              text='Pulsa "+ Nueva Transacción" para agregar alguna.'
-            />
-          </StyledView>
-        ) : (
-          transactions.map((value: any, index: any) => {
-            const {_id, concept, amount, category, cDate, type} = value;
-            const categoryIcon = (
-              getCategoryById(category) as unknown as {icon?: string}
-            )?.icon;
-            const categoryName = (
-              getCategoryById(category) as unknown as {name?: string}
-            )?.name;
+    <View style={{paddingBottom: insets.bottom}}>
+      <StyledView>
+        {Array.isArray(params) &&
+          params.map((transaction: any, index: number) => {
+            const {name, transactions} = transaction;
             return (
-              <StyledButton
-                backgroundColor={
-                  transactionSelected.some(
-                    elem => elem.toString() === _id.toString(),
-                  )
-                    ? theme.iconBackground
-                    : undefined
-                }
-                key={index}
-                title={concept}
-                iconName={categoryIcon}
-                subTitle={categoryName}
-                amount={amount}
-                type={type}
-                date={cDate.split('T')[0]}
-                // onPress={() => console.log(category)}
-                onPress={() => {}}
-              />
+              <View key={index} style={styles.container}>
+                <StyledText
+                  text={name}
+                  variant="headlineMedium"
+                  style={styles.styledText}
+                />
+                {transactions.map((elem: any, inx: number) => {
+                  const {category, concept, amount, type, cDate} = elem;
+                  const categoryIcon = (
+                    getCategoryById(category) as unknown as {icon?: string}
+                  )?.icon;
+                  const categoryName = (
+                    getCategoryById(category) as unknown as {name?: string}
+                  )?.name;
+                  return (
+                    <StyledButton
+                      key={inx}
+                      backgroundColor={theme.iconBackground}
+                      title={concept}
+                      iconName={categoryIcon}
+                      subTitle={categoryName}
+                      amount={amount}
+                      type={type}
+                      date={cDate.split('T')[0]}
+                    />
+                  );
+                })}
+              </View>
             );
-          })
-        )} */}
-      {/* </StyledView> */}
+          })}
+      </StyledView>
     </View>
   );
 };
 
 export default TransactionsGrouped;
+
+const styles = StyleSheet.create({
+  container: {
+    alignItems: 'center',
+  },
+  styledText: {
+    padding: 10,
+  },
+});

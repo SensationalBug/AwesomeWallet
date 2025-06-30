@@ -173,9 +173,12 @@ type StyledDropDownProps = {
 };
 
 type ChartBarProps = {
-  height: number;
+  cHeight: number;
+  dHeight: number;
   text: string;
-  value: number;
+  debit: number;
+  credit: number;
+  tAmount: number;
   maxHeight: number;
 };
 
@@ -196,6 +199,32 @@ type ChartProps = {
 type HeaderFilterButtonProps = {
   onPress?: () => void;
   name: string;
+};
+
+type ReportsHeaderProps = {
+  title: string;
+  titleButton: string;
+  goTo: string;
+  navigationaParams: any;
+};
+
+type NavigableTransaction = {
+  _id: string;
+  concept: string;
+  amount: number;
+  category: string;
+  cDate: string;
+  type: string;
+  file?: string;
+};
+
+type NavigableGroupedTransactions = {
+  name: string;
+  transactions: NavigableTransaction[];
+};
+
+type TransactionsGroupedProps = {
+  route: RouteProp<Record<string, {transactions: any}[] | undefined>, string>;
 };
 
 export type {
@@ -221,4 +250,8 @@ export type {
   HeaderFilterButtonProps,
   DateGroup,
   PlainTransaction,
+  ReportsHeaderProps,
+  NavigableTransaction,
+  NavigableGroupedTransactions,
+  TransactionsGroupedProps,
 };

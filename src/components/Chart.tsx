@@ -17,17 +17,18 @@ const Chart = ({data, maxHeight}: ChartProps) => {
     <StyledView horizontal>
       {data &&
         data.map((category: any, index: number) => {
-          const {name, totalDebit} = category;
+          const {name, totalDebit, totalCredit, totalAmount} = category;
           return (
-            !totalDebit || (
-              <ChartBar
-                key={index}
-                text={name}
-                maxHeight={maxHeight}
-                value={totalDebit}
-                height={(totalDebit / getMaxDebit()) * 100}
-              />
-            )
+            <ChartBar
+              key={index}
+              text={name}
+              maxHeight={maxHeight}
+              debit={totalDebit}
+              dHeight={(totalDebit / getMaxDebit()) * 100}
+              credit={totalCredit}
+              cHeight={(totalCredit / getMaxDebit()) * 100}
+              tAmount={totalAmount}
+            />
           );
         })}
     </StyledView>

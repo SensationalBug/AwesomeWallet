@@ -11,11 +11,34 @@ import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {themes} from '../styles/Theme';
 // import {Text} from 'react-native-paper'; // Text from react-native-paper is no longer used directly here for "Perfil"
 import {SettingsStackParamList, ThemeType} from '../types/Types';
+import ReactNativeBiometrics, {BiometryTypes} from 'react-native-biometrics';
 
 const Settings = () => {
   const currentThemeName = useContext(ThemesContext) as ThemeType;
   const [modalVisible, setModalVisible] = React.useState(false);
   const [modalContent, setModalContent] = React.useState<React.ReactNode>(null);
+
+  const rnBiometrics = new ReactNativeBiometrics({
+    allowDeviceCredentials: true,
+  });
+
+  const bio = async () => {
+    // rnBiometrics.isSensorAvailable().then(resultObject => {
+    //   const {available, biometryType} = resultObject;
+
+    //   if (available && biometryType === BiometryTypes.TouchID) {
+    //     console.log('TouchID is supported');
+    //   } else if (available && biometryType === BiometryTypes.FaceID) {
+    //     console.log('FaceID is supported');
+    //   } else if (available && biometryType === BiometryTypes.Biometrics) {
+    //     console.log('Biometrics is supported');
+    //   } else {
+    //     console.log('Biometrics not supported');
+    //   }
+    // });
+    // const {available, biometryType} = await rnBiometrics.isSensorAvailable();
+    console.log(rnBiometrics.isSensorAvailable());
+  };
 
   const navigation =
     useNavigation<NativeStackNavigationProp<SettingsStackParamList>>();
@@ -47,6 +70,7 @@ const Settings = () => {
         iconName="fingerprint"
         title="Huella"
         subTitle="Administrar las configuraciones de huella"
+        onPress={() => bio()}
       />
       <Section title="Preferencias" />
       <StyledButton
