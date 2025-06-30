@@ -11,7 +11,8 @@ export const TransactionContext = createContext<TransactionContextType>({
   addTransaction: () => Promise.resolve(),
   updateTransaction: () => Promise.resolve(),
   getTransactionByID: () => Promise.resolve(null),
-  deleteTransaction: async () => Promise.resolve(),
+  deleteTransaction: async (_transactionIds: BSON.ObjectId[]) =>
+    Promise.resolve(),
   getTransactions: () => {},
   transactionSelected: [],
   setTransactionSelected: () => {},
@@ -123,7 +124,10 @@ export const TransactionProvider: React.FC<React.PropsWithChildren<{}>> = ({
   ): Promise<void> => {
     return new Promise((resolve, reject) => {
       try {
-        const transactionByID = realm.objectForPrimaryKey('Transaction', id);
+        const transactionByID = realm.objectForPrimaryKey(
+          'Transaction',
+          new BSON.ObjectId(id),
+        );
         if (transactionByID) {
           realm.write(() => {
             for (const key in transactionParams) {

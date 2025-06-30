@@ -12,7 +12,7 @@ import React, {
   useContext,
   useCallback,
 } from 'react';
-import {Category, Transaction} from '../db/schemas';
+import {Category} from '../db/schemas';
 import {TransactionContext} from './TransactionContext';
 
 export const ReportsContext = createContext<ReportsContextType>({
@@ -89,13 +89,13 @@ export const ReportsProvider: React.FC<React.PropsWithChildren<{}>> = ({
           return;
         }
 
-        const asTransaction =
-          typeof (transaction as unknown as Transaction).isValid === 'function'
-            ? (transaction as unknown as Transaction)
-            : (realm.objectForPrimaryKey<Transaction>(
-                'Transaction',
-                (transaction as any)._id,
-              ) as Transaction);
+        // const asTransaction =
+        //   typeof (transaction as unknown as Transaction).isValid === 'function'
+        //     ? (transaction as unknown as Transaction)
+        //     : (realm.objectForPrimaryKey<Transaction>(
+        //         'Transaction',
+        //         (transaction as any)._id,
+        //       ) as Transaction);
 
         const updateDateGroup = (
           accumulator: DateGroupsAccumulator,
@@ -113,9 +113,10 @@ export const ReportsProvider: React.FC<React.PropsWithChildren<{}>> = ({
               byCategories: [],
             };
           }
-          if (asTransaction) {
-            accumulator[name].transactions.push(asTransaction);
-          }
+          // if (asTransaction) {
+          //   accumulator[name].transactions.push(asTransaction);
+          // }
+          accumulator[name].transactions.push(transaction);
 
           if (transactionType === 'credito') {
             accumulator[name].totalCredit += transactionAmount;
@@ -179,7 +180,8 @@ export const ReportsProvider: React.FC<React.PropsWithChildren<{}>> = ({
       const formattedByMonthYear = Object.values(accByMonthYear);
       const formattedByYear = Object.values(accByYear);
 
-      const sortTransactions = (a: Transaction, b: Transaction) => {
+      // const sortTransactions = (a: Transaction, b: Transaction) => {
+      const sortTransactions = (a: {cDate: string}, b: {cDate: string}) => {
         return new Date(b.cDate).getTime() - new Date(a.cDate).getTime();
       };
 

@@ -13,6 +13,7 @@ import {NavigationProps, ReportsContextType, ThemeType} from '../types/Types';
 
 const Transaction = ({navigation}: NavigationProps) => {
   const {
+    transactions,
     deleteTransaction,
     getTransactionByID,
     transactionSelected,
@@ -31,7 +32,21 @@ const Transaction = ({navigation}: NavigationProps) => {
   const onScrollStart = () => setIsExtended(false);
 
   useEffect(() => {
-    transactionSelected.length > 0 ? setIsVisible(true) : setIsVisible(false);
+    // Actualizar la visibilidad de los botones basado en si hay selecciones
+    setIsVisible(transactionSelected.length > 0);
+
+    // Filtrar transactionSelected para remover IDs que ya no existen en la lista principal de transactions
+    // Esto puede ocurrir si las transacciones fueron eliminadas
+    const currentTransactionIds = new Set(
+      transactions.map(t => t._id.toString()),
+    );
+    const validSelected = transactionSelected.filter(id =>
+      currentTransactionIds.has(id.toString()),
+    );
+
+    if (validSelected.length !== transactionSelected.length) {
+      setTransactionSelected(validSelected);
+    }
 
     const backAction = () => {
       if (transactionSelected.length > 0) {
@@ -47,7 +62,7 @@ const Transaction = ({navigation}: NavigationProps) => {
     );
 
     return () => backHandler.remove(); // Limpia el event listener al desmontar el componente
-  }, [isVisible, setTransactionSelected, transactionSelected]); // Dependencia: el efecto se re-evalúa si transactionSelected cambia
+  }, [isVisible, setTransactionSelected, transactionSelected, transactions]); // Dependencia: el efecto se re-evalúa si transactionSelected cambia
 
   return (
     <View style={styles.container}>
@@ -129,21 +144,23 @@ const Transaction = ({navigation}: NavigationProps) => {
         visible={isVisible}
         isExtended={false}
         onPress={() =>
-          getTransactionByID(transactionSelected[0]).then(transactionToUpdate => {
-            if (transactionToUpdate) {
-              navigation.navigate('AddTransaction', {
-                transactionId: transactionToUpdate?._id.toHexString(),
-                concept: transactionToUpdate?.concept,
-                amount: transactionToUpdate?.amount,
-                category: transactionToUpdate?.category,
-                cDate: transactionToUpdate?.cDate,
-                file: transactionToUpdate?.file,
-                type: transactionToUpdate?.type,
-              });
-            } else {
-              console.warn('No se encontró la transacción para actualizar.');
-            }
-          })
+          getTransactionByID(transactionSelected[0]).then(
+            transactionToUpdate => {
+              if (transactionToUpdate) {
+                navigation.navigate('AddTransaction', {
+                  transactionId: transactionToUpdate?._id.toHexString(),
+                  concept: transactionToUpdate?.concept,
+                  amount: transactionToUpdate?.amount,
+                  category: transactionToUpdate?.category.toHexString(),
+                  cDate: transactionToUpdate?.cDate,
+                  file: transactionToUpdate?.file,
+                  type: transactionToUpdate?.type,
+                });
+              } else {
+                console.warn('No se encontró la transacción para actualizar.');
+              }
+            },
+          )
         }
         opacity={
           transactionSelected && transactionSelected.length > 1 ? 0.7 : 1
@@ -158,11 +175,21 @@ const Transaction = ({navigation}: NavigationProps) => {
         color={theme.text}
         visible={isVisible}
         isExtended={false}
-        onPress={() => {
-          deleteTransaction(transactionSelected).then(() =>
-            setTransactionSelected([]),
-          );
-          // console.log(transactionSelected);
+        onPress={async () => {
+          try {
+            await deleteTransaction(transactionSelected);
+            // La promesa se resolvió, lo que significa que la eliminación fue exitosa (no cancelada)
+            // y getTransactions() ya fue llamado en el contexto.
+            setTransactionSelected([]);
+          } catch (error) {
+            // Esto atrapará la new Error('Eliminación cancelada') o cualquier error de Realm.
+            console.log(
+              'Eliminación cancelada o fallida:',
+              (error as Error).message,
+            );
+            // No es necesario cambiar transactionSelected aquí si fue cancelado o falló,
+            // ya que las transacciones no se eliminaron.
+          }
         }}
       />
     </View>

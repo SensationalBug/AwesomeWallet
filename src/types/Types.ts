@@ -1,10 +1,10 @@
 import {BSON} from 'realm';
 import {themes} from '../styles/Theme';
-import {StyleProp, TextStyle, ViewStyle} from 'react-native';
-import {Category, Transaction} from '../db/schemas';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {RouteProp} from '@react-navigation/native';
+import {Category} from '../db/schemas';
 import {TextProps} from 'react-native-paper';
+import {RouteProp} from '@react-navigation/native';
+import {StyleProp, TextStyle, ViewStyle} from 'react-native';
+import {StackNavigationProp} from '@react-navigation/stack';
 
 type NavigationProps = {
   navigation: StackNavigationProp<any, any>;
@@ -99,11 +99,7 @@ type TransactionContextType = {
 };
 
 type ReportsContextType = {
-  // transactionsByCategories: {};
-  // transactionsByType: {};
   transactionsByDate: GroupedTransactionsByDate;
-  // groupByCategories: () => void;
-  // groupByType: () => void;
   groupByDate: () => void;
   selectedPeriod: string;
   setSelectedPeriod: (period: string) => void;
@@ -126,7 +122,7 @@ interface CategorySummary {
 interface DateGroup {
   name: string; // El nombre legible del grupo (ej. "26 jun. 2025", "jun. 2025", "2025")
   sortKey: string; // Una clave para la ordenación cronológica (ej. "2025-06-26", "2025-06", "2025")
-  transactions: Transaction[]; // Array de transacciones individuales en este grupo
+  transactions: PlainTransaction[]; // Array de transacciones individuales en este grupo
   totalAmount: number; // Saldo (Credito - Debito)
   totalCredit: number; // Suma de todos los créditos
   totalDebit: number; // Suma de todos los débitos
