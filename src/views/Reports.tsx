@@ -4,7 +4,11 @@ import {View, StyleSheet} from 'react-native';
 import ReportsHeader from '../components/ReportsHeader';
 import StyledView from '../components/custom/StyledView';
 import {ReportsContext} from '../context/ReportsContext';
-import {NavigableGroupedTransactions, NavigableTransaction, ReportsContextType} from '../types/Types';
+import {
+  NavigableGroupedTransactions,
+  NavigableTransaction,
+  ReportsContextType,
+} from '../types/Types';
 
 const Reports = () => {
   const {transactionsByDate} = useContext(ReportsContext) as ReportsContextType;
@@ -32,7 +36,7 @@ const Reports = () => {
   };
 
   return (
-    <StyledView contentContainerStyle={styles.container}>
+    <StyledView>
       {/* Transacciones por byMonthYear */}
       <View style={styles.ChartView}>
         <ReportsHeader
@@ -99,11 +103,8 @@ const Reports = () => {
 export default Reports;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   ChartView: {
-    flex: 1 / 3,
+    flex: 1,
     alignItems: 'center',
   },
   ChartViewStyledText: {

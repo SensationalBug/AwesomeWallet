@@ -45,6 +45,7 @@ type SettingsButtonProps = {
   onLongPress?: () => void;
   backgroundColor?: string;
   date?: string;
+  children?: React.ReactNode;
 };
 
 type ThemeType = {
@@ -227,6 +228,16 @@ type TransactionsGroupedProps = {
   route: RouteProp<Record<string, {transactions: any}[] | undefined>, string>;
 };
 
+type RootStackParamList = {
+  Main: undefined;
+  ThemesOption: undefined;
+  AddTransaction: undefined;
+  CategoriesOption: undefined;
+  TransactionsGrouped: undefined;
+  BiometryScreen: undefined;
+  Overview: undefined;
+};
+
 export type {
   NavigationProps,
   AnimatedButtonProps,
@@ -254,4 +265,5 @@ export type {
   NavigableTransaction,
   NavigableGroupedTransactions,
   TransactionsGroupedProps,
+  RootStackParamList,
 };

@@ -13,34 +13,13 @@ import {CategoriesContext} from '../context/CategoriesContext';
 import StyledSurface from '../components/custom/StyledSurface';
 import StyledDropDown from '../components/custom/StyledDropDown';
 import {ReportsContextType, NavigationProps, ThemeType} from '../types/Types';
-import AtScript from '../utils/AtScript';
-import ReactNativeBiometrics, {BiometryTypes} from 'react-native-biometrics';
 
 const Overview = ({navigation}: NavigationProps) => {
-  const rnBiometrics = new ReactNativeBiometrics();
-
-  const bio = () => {
-    rnBiometrics.isSensorAvailable().then(resultObject => {
-      const {available, biometryType} = resultObject;
-
-      if (available && biometryType === BiometryTypes.TouchID) {
-        console.log('TouchID is supported');
-      } else if (available && biometryType === BiometryTypes.FaceID) {
-        console.log('FaceID is supported');
-      } else if (available && biometryType === BiometryTypes.Biometrics) {
-        console.log('Biometrics is supported');
-      } else {
-        console.log('Biometrics not supported');
-      }
-    });
-  };
-
   const currentThemeName = useContext(ThemesContext) as ThemeType;
   const theme = themes[currentThemeName.currentThemeName];
   const {getCategoryById} = useContext(CategoriesContext);
 
   const {globalTransactions} = useContext(ReportsContext) as ReportsContextType;
-
   const [recent, setRecent] = React.useState<number>(3);
 
   return (
@@ -86,14 +65,28 @@ const Overview = ({navigation}: NavigationProps) => {
       {/* This month section */}
       <View style={styles.thisMonth}>
         <View>
-          {/* <StyledText variant="titleSmall" text="Este mes" /> */}
-          {/* Considera usar globalTransactions.name para el título del mes */}
-          <StyledText variant="titleLarge" text="RD$100.000.00" bold={'bold'} />
-          <StyledText variant="titleSmall" text="Este mes +10%" />
+          <StyledText
+            variant="titleSmall"
+            // Con este date, obtienes el nombre del mes actual filtrado
+            text={globalTransactions.sortKey.split('T')[0]}
+          />
+          <StyledText
+            variant="titleLarge"
+            text={`RD$${formatNumber(globalTransactions.totalAmount)}`}
+            bold={'bold'}
+          />
+          <StyledText variant="titleSmall" text="Este periodo +10%" />
         </View>
-        {/* <AtScript /> */}
         <TouchableOpacity
-          onPress={() => bio()}
+          onPress={() => {
+            const date = new Date('2025-07-01')
+              .toLocaleString('es-DO', {
+                month: 'long',
+              })
+              .toLocaleUpperCase();
+            console.log(globalTransactions);
+          }}
+          // onPress={() => navigation.navigate('AddTransaction')}
           style={[
             styles.addTransactionButton,
             {

@@ -4,15 +4,33 @@ import {ChartProps} from '../types/Types';
 import StyledView from './custom/StyledView';
 
 const Chart = ({data, maxHeight}: ChartProps) => {
-  const getMaxDebit = () => {
-    const maxDebit: any[] = [];
-    data &&
-      data.map((category: any) => {
-        const {totalDebit} = category;
-        maxDebit.push(totalDebit);
+  const getMaxAbsValue = () => {
+    let maxCredit = 0;
+    let maxDebit = 0;
+
+    if (data) {
+      data.forEach((category: any) => {
+        const credit =
+          typeof category.totalCredit === 'number' ? category.totalCredit : 0;
+        const debit =
+          typeof category.totalDebit === 'number' ? category.totalDebit : 0;
+
+        if (credit > maxCredit) {
+          maxCredit = credit;
+        }
+
+        if (debit > maxDebit) {
+          maxDebit = debit;
+        }
       });
-    return Math.max(...maxDebit);
+    }
+
+    const absoluteMaxCredit = Math.abs(maxCredit);
+    const absoluteMaxDebit = Math.abs(maxDebit);
+
+    return Math.max(absoluteMaxCredit, absoluteMaxDebit);
   };
+
   return (
     <StyledView horizontal>
       {data &&
@@ -24,9 +42,9 @@ const Chart = ({data, maxHeight}: ChartProps) => {
               text={name}
               maxHeight={maxHeight}
               debit={totalDebit}
-              dHeight={(totalDebit / getMaxDebit()) * 100}
+              dHeight={(totalDebit / getMaxAbsValue()) * maxHeight}
               credit={totalCredit}
-              cHeight={(totalCredit / getMaxDebit()) * 100}
+              cHeight={(totalCredit / getMaxAbsValue()) * maxHeight}
               tAmount={totalAmount}
             />
           );

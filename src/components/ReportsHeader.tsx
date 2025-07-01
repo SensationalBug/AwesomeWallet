@@ -6,8 +6,6 @@ import {useNavigation} from '@react-navigation/native';
 import {ReportsHeaderProps, ThemeType} from '../types/Types';
 import {View, TouchableOpacity, StyleSheet} from 'react-native';
 
-
-
 const ReportsHeader = ({
   title,
   titleButton,

@@ -55,7 +55,7 @@ const Main = () => {
 
   return (
     <Tab.Navigator
-      initialRouteName="Ajustes"
+      initialRouteName="Overview"
       screenOptions={{
         tabBarActiveTintColor: themes[currentThemeName.currentThemeName].text,
         tabBarInactiveTintColor:
@@ -84,7 +84,7 @@ const Main = () => {
         }}
       />
       <Tab.Screen
-        name="Ajustes"
+        name="Settings"
         component={Settings}
         options={tabScreenOptions('Ajustes', 'cog', 'cog-outline')}
       />

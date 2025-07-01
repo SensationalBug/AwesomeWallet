@@ -1,5 +1,6 @@
 import {themes} from '../styles/Theme';
 import React, {useContext} from 'react';
+import {ThemeType} from '../types/Types';
 import {StyleSheet, View} from 'react-native';
 import {ThemesContext} from '../context/ThemesContext';
 import StyledView from '../components/custom/StyledView';
@@ -7,23 +8,22 @@ import StyledText from '../components/custom/StyledText';
 import StyledButton from '../components/custom/StyledButton';
 import {CategoriesContext} from '../context/CategoriesContext';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {ThemeType, TransactionsGroupedProps} from '../types/Types';
 
-const TransactionsGrouped = ({route}: TransactionsGroupedProps) => {
+const TransactionsGrouped = ({route}: any) => {
   const {getCategoryById} = useContext(CategoriesContext);
   const currentThemeName = useContext(ThemesContext) as ThemeType;
   const theme = themes[currentThemeName.currentThemeName];
-  const {params} = route;
+  const {params = []} = route;
   const insets = useSafeAreaInsets();
 
   return (
-    <View style={{paddingBottom: insets.bottom}}>
+    <View style={[styles.container, {paddingBottom: insets.bottom}]}>
       <StyledView>
         {Array.isArray(params) &&
           params.map((transaction: any, index: number) => {
             const {name, transactions} = transaction;
             return (
-              <View key={index} style={styles.container}>
+              <View key={index}>
                 <StyledText
                   text={name}
                   variant="headlineMedium"
@@ -62,7 +62,7 @@ export default TransactionsGrouped;
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: 'center',
+    flex: 1,
   },
   styledText: {
     padding: 10,

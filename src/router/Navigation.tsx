@@ -1,19 +1,52 @@
-import {useContext} from 'react';
-import {NavigationContainer} from '@react-navigation/native';
+import {useContext, useEffect, useState} from 'react';
 import {ThemesContext} from '../context/ThemesContext';
+import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import Main from '../Main';
-import AddTransaction from '../views/AddTransaction';
-import ThemesOption from '../components/settingsOptions/ThemesOption';
 import {themes} from '../styles/Theme';
-import CategoriesOption from '../components/settingsOptions/CategoriesOption';
-import {ThemeType} from '../types/Types';
+import AddTransaction from '../views/AddTransaction';
+import BiometryScreen from '../views/BiometryScreen';
+import {RootStackParamList, ThemeType} from '../types/Types';
 import TransactionsGrouped from '../views/TransactionsGrouped';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import ThemesOption from '../components/settingsOptions/ThemesOption';
+import CategoriesOption from '../components/settingsOptions/CategoriesOption';
 
 const Navigation = () => {
   const currentThemeName = useContext(ThemesContext) as ThemeType;
   const Stack = createNativeStackNavigator();
+  const [initialRoute, setInitialRoute] = useState<
+    keyof RootStackParamList | undefined
+  >('Main');
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const checkBiometricsAndSetInitialRoute = async () => {
+      try {
+        const success = await AsyncStorage.getItem('biometry');
+        if (success === 'true') {
+          // Si la biometría está disponible, vamos a BiometryScreen para que pida la huella
+          setInitialRoute('BiometryScreen');
+        } else {
+          // Si no está disponible, vamos directamente a Overview (asumo que Main es tu Overview)
+          setInitialRoute('Main'); // O el nombre de tu pantalla "Overview"
+        }
+      } catch (error) {
+        console.error('Error al verificar biometría:', error);
+        // En caso de error, por seguridad o fallback, también vamos a Overview
+        setInitialRoute('Main'); // O el nombre de tu pantalla "Overview"
+      } finally {
+        setIsLoading(false); // Terminamos de cargar
+      }
+    };
+
+    checkBiometricsAndSetInitialRoute();
+  }, []); // Se ejecuta solo una vez al montar el componente
+
+  if (isLoading || initialRoute === null) {
+    return null;
+  }
 
   const stackScreenOptions = (theme: ThemeType, title: string) => ({
     title,
@@ -33,7 +66,7 @@ const Navigation = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="Main"
+        initialRouteName={initialRoute}
         screenOptions={{
           headerShown: false,
         }}>
@@ -60,6 +93,11 @@ const Navigation = () => {
           name="TransactionsGrouped"
           component={TransactionsGrouped}
           options={stackScreenOptions(currentThemeName, 'Transacciones')}
+        />
+        <Stack.Screen
+          name="BiometryScreen"
+          component={BiometryScreen}
+          options={stackScreenOptions(currentThemeName, '')}
         />
       </Stack.Navigator>
     </NavigationContainer>

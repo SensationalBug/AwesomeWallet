@@ -23,6 +23,7 @@ const StyledButton = ({
   onLongPress,
   backgroundColor,
   date,
+  children,
 }: SettingsButtonProps) => {
   const currentThemeName = useContext(ThemesContext) as ThemeType;
   const theme = themes[currentThemeName.currentThemeName];
@@ -65,6 +66,7 @@ const StyledButton = ({
             ) : null}
           </View>
         ) : null}
+        {children}
       </View>
     </TouchableOpacity>
   );
