@@ -9,16 +9,17 @@ import AddTransaction from '../views/AddTransaction';
 import BiometryScreen from '../views/BiometryScreen';
 import {RootStackParamList, ThemeType} from '../types/Types';
 import TransactionsGrouped from '../views/TransactionsGrouped';
+import ThemesOption from '../views/settingsOptions/ThemesOption';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import ThemesOption from '../components/settingsOptions/ThemesOption';
-import CategoriesOption from '../components/settingsOptions/CategoriesOption';
+import CategoriesOption from '../views/settingsOptions/CategoriesOption';
+import ExportOption from '../views/settingsOptions/ExportOption';
 
 const Navigation = () => {
   const currentThemeName = useContext(ThemesContext) as ThemeType;
   const Stack = createNativeStackNavigator();
   const [initialRoute, setInitialRoute] = useState<
     keyof RootStackParamList | undefined
-  >('Main');
+  >('ExportOption');
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -30,7 +31,7 @@ const Navigation = () => {
           setInitialRoute('BiometryScreen');
         } else {
           // Si no está disponible, vamos directamente a Overview (asumo que Main es tu Overview)
-          setInitialRoute('Main'); // O el nombre de tu pantalla "Overview"
+          setInitialRoute('ExportOption'); // O el nombre de tu pantalla "Overview"
         }
       } catch (error) {
         console.error('Error al verificar biometría:', error);
@@ -98,6 +99,11 @@ const Navigation = () => {
           name="BiometryScreen"
           component={BiometryScreen}
           options={stackScreenOptions(currentThemeName, '')}
+        />
+        <Stack.Screen
+          name="ExportOption"
+          component={ExportOption}
+          options={stackScreenOptions(currentThemeName, 'Exportar Datos')}
         />
       </Stack.Navigator>
     </NavigationContainer>

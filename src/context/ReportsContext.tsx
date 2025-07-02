@@ -34,7 +34,10 @@ export const ReportsContext = createContext<ReportsContextType>({
     totalDebit: 0,
     byCategories: [],
   },
+  periodOptions: [{label: '', value: ''}],
   setGlobalTransactions: () => {},
+  selectedTransactionValue: '',
+  setSelectedTransactionValue: () => {},
 });
 
 export const ReportsProvider: React.FC<React.PropsWithChildren<{}>> = ({
@@ -60,7 +63,17 @@ export const ReportsProvider: React.FC<React.PropsWithChildren<{}>> = ({
     byCategories: [],
   });
 
+  const periodOptions = [
+    {label: 'Mes', value: 'byMonthYear'},
+    {label: 'Dia', value: 'byDayMonthYear'},
+    {label: 'Año', value: 'byYear'},
+  ];
+
   const [selectedPeriod, setSelectedPeriod] = useState<string>('byMonthYear');
+
+  const [selectedTransactionValue, setSelectedTransactionValue] = useState<
+    string | null
+  >(null);
 
   const groupByDate = useCallback(() => {
     try {
@@ -227,6 +240,16 @@ export const ReportsProvider: React.FC<React.PropsWithChildren<{}>> = ({
     }
   }, [transactionsByDate]);
 
+  useEffect(() => {
+    if (globalTransactions && globalTransactions.name) {
+      setSelectedTransactionValue(globalTransactions.name);
+    } else if (globalTransactions && globalTransactions.name) {
+      setSelectedTransactionValue(globalTransactions.name);
+    } else {
+      setSelectedTransactionValue(null);
+    }
+  }, [globalTransactions]);
+
   return (
     <ReportsContext.Provider
       value={{
@@ -236,6 +259,9 @@ export const ReportsProvider: React.FC<React.PropsWithChildren<{}>> = ({
         selectedPeriod,
         globalTransactions,
         setGlobalTransactions,
+        periodOptions,
+        selectedTransactionValue,
+        setSelectedTransactionValue,
       }}>
       {children}
     </ReportsContext.Provider>

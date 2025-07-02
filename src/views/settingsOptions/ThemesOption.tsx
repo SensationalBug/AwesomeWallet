@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import Section from '../custom/Section';
+import Section from '../../components/custom/Section';
 import {Text} from 'react-native-paper';
 import {themes} from '../../styles/Theme';
 import {ThemeType} from '../../types/Types';

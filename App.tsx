@@ -4,6 +4,7 @@ import Toast from 'react-native-toast-message';
 import {PaperProvider} from 'react-native-paper';
 import Navigation from './src/router/Navigation';
 import {toastConfig} from './src/utils/toastAlert';
+import {ExportProvider} from './src/context/ExportContext';
 import {ThemesProvider} from './src/context/ThemesContext';
 import {ReportsProvider} from './src/context/ReportsContext';
 import {BiometryProvider} from './src/context/BiometryContext';
@@ -24,12 +25,14 @@ const App = (): React.JSX.Element => {
           <TransactionProvider>
             <ReportsProvider>
               <BiometryProvider>
-                <ThemedSafeArea>
-                  <PaperProvider>
-                    <Navigation />
-                    <Toast config={toastConfig} />
-                  </PaperProvider>
-                </ThemedSafeArea>
+                <ExportProvider>
+                  <ThemedSafeArea>
+                    <PaperProvider>
+                      <Navigation />
+                      <Toast config={toastConfig} />
+                    </PaperProvider>
+                  </ThemedSafeArea>
+                </ExportProvider>
               </BiometryProvider>
             </ReportsProvider>
           </TransactionProvider>

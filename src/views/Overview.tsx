@@ -78,15 +78,7 @@ const Overview = ({navigation}: NavigationProps) => {
           <StyledText variant="titleSmall" text="Este periodo +10%" />
         </View>
         <TouchableOpacity
-          onPress={() => {
-            const date = new Date('2025-07-01')
-              .toLocaleString('es-DO', {
-                month: 'long',
-              })
-              .toLocaleUpperCase();
-            console.log(globalTransactions);
-          }}
-          // onPress={() => navigation.navigate('AddTransaction')}
+          onPress={() => navigation.navigate('AddTransaction')}
           style={[
             styles.addTransactionButton,
             {

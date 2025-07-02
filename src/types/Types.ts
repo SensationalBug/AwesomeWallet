@@ -46,6 +46,7 @@ type SettingsButtonProps = {
   backgroundColor?: string;
   date?: string;
   children?: React.ReactNode;
+  disabled?: boolean;
 };
 
 type ThemeType = {
@@ -97,6 +98,8 @@ type TransactionContextType = {
   getTransactions: () => void;
   transactionSelected: any[];
   setTransactionSelected: React.Dispatch<React.SetStateAction<any[]>>;
+  currency: '';
+  currencySetter: (value: string) => void;
 };
 
 type ReportsContextType = {
@@ -106,6 +109,11 @@ type ReportsContextType = {
   setSelectedPeriod: (period: string) => void;
   globalTransactions: DateGroup;
   setGlobalTransactions: React.Dispatch<any>;
+  periodOptions: {label: string; value: string}[];
+  selectedTransactionValue: string | null;
+  setSelectedTransactionValue: React.Dispatch<
+    React.SetStateAction<string | null>
+  >;
 };
 
 type GroupTotal = {
@@ -236,6 +244,7 @@ type RootStackParamList = {
   TransactionsGrouped: undefined;
   BiometryScreen: undefined;
   Overview: undefined;
+  ExportOption: undefined;
 };
 
 export type {

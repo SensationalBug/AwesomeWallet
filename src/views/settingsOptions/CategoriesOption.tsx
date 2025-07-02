@@ -1,6 +1,6 @@
 import {themes} from '../../styles/Theme';
-import StyledText from '../custom/StyledText';
-import StyledButton from '../custom/StyledButton';
+import StyledText from '../../components/custom/StyledText';
+import StyledButton from '../../components/custom/StyledButton';
 import React, {useContext, useState, useRef} from 'react';
 import {ThemesContext} from '../../context/ThemesContext';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -14,7 +14,7 @@ import {
   KeyboardAvoidingView,
 } from 'react-native';
 import {FAB} from 'react-native-paper';
-import AddCategory from '../../views/AddCategory';
+import AddCategory from '../AddCategory';
 import {CategoriesContext} from '../../context/CategoriesContext';
 import {CategoriesContextType, ThemeType} from '../../types/Types';
 

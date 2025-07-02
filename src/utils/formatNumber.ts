@@ -40,7 +40,6 @@ export const formatNumber = (
   // Lógica original para números menores de 100,000
   // Para valores entre 0 y 99,999.99 (sin el .toFixed(2) original para evitar doble formateo)
   return num.toLocaleString('es-DO', {
-    // 'es-DO' para formato de pesos dominicanos
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
     useGrouping: true, // Esto añade los separadores de miles

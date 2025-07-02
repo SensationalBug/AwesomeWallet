@@ -6,6 +6,7 @@ import StyledText from '../custom/StyledText';
 import {formatNumber} from '../../utils/formatNumber';
 import {ThemesContext} from '../../context/ThemesContext';
 import {ChartBarProps, ThemeType} from '../../types/Types';
+import {TransactionContext} from '../../context/TransactionContext';
 
 const ChartBar = ({
   text,
@@ -18,13 +19,14 @@ const ChartBar = ({
 }: ChartBarProps) => {
   const currentThemeName = useContext(ThemesContext) as ThemeType;
   const theme = themes[currentThemeName.currentThemeName];
+  const {currency} = useContext(TransactionContext);
 
   return (
     <View style={styles.container}>
       <Tooltip
         enterTouchDelay={250}
         leaveTouchDelay={1000}
-        title={`Debitos: RD$${String(formatNumber(debit))}`}>
+        title={`Debitos: ${currency}$${String(formatNumber(debit))}`}>
         <View
           style={[
             styles.content,
@@ -40,7 +42,7 @@ const ChartBar = ({
       <Tooltip
         enterTouchDelay={250}
         leaveTouchDelay={1000}
-        title={`Creditos: RD$${String(formatNumber(credit))}`}>
+        title={`Creditos: ${currency}$${String(formatNumber(credit))}`}>
         <View
           style={[
             styles.content,
@@ -56,7 +58,7 @@ const ChartBar = ({
       <Tooltip
         enterTouchDelay={250}
         leaveTouchDelay={1000}
-        title={`Monto total: RD$${String(formatNumber(tAmount))}`}>
+        title={`Monto total: ${currency}$${String(formatNumber(tAmount))}`}>
         <View style={styles.label}>
           <StyledText text={text} variant="labelLarge" />
         </View>

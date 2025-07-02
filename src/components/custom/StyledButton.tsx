@@ -12,6 +12,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import {ThemesContext} from '../../context/ThemesContext';
 import {SettingsButtonProps, ThemeType} from '../../types/Types';
 import {formatNumber} from '../../utils/formatNumber';
+import {TransactionContext} from '../../context/TransactionContext';
 
 const StyledButton = ({
   title,
@@ -24,12 +25,15 @@ const StyledButton = ({
   backgroundColor,
   date,
   children,
+  disabled = false,
 }: SettingsButtonProps) => {
   const currentThemeName = useContext(ThemesContext) as ThemeType;
+  const {currency} = useContext(TransactionContext);
   const theme = themes[currentThemeName.currentThemeName];
   const {width} = useWindowDimensions();
   return (
     <TouchableOpacity
+      disabled={disabled}
       style={[styles.container, {backgroundColor}]}
       onPress={onPress}
       onLongPress={onLongPress}>
@@ -59,7 +63,7 @@ const StyledButton = ({
                     : theme.transactionTypeCredit,
               }}
               variant="labelLarge">
-              RD${formatNumber(amount)}
+              {currency}${formatNumber(amount)}
             </Text>
             {date ? (
               <StyledText variant="labelLarge" text={date} label />

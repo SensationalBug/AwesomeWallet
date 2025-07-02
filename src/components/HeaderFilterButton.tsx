@@ -1,28 +1,16 @@
 import {themes} from '../styles/Theme';
-import StyledDropDown from './custom/StyledDropDown';
+import HeaderDropdown from './HeaderDropdown';
 import {ThemesContext} from '../context/ThemesContext';
-import {ReportsContext} from '../context/ReportsContext';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import React, {useContext, useRef, useState} from 'react';
 import {HeaderFilterButtonProps, ThemeType} from '../types/Types';
-import React, {useContext, useEffect, useRef, useState} from 'react';
 import {StyleSheet, TouchableOpacity, View, Animated} from 'react-native';
 
 const MAX_CONTENT_HEIGHT = 180;
 
 const HeaderFilterButton: React.FC<HeaderFilterButtonProps> = () => {
   const currentThemeName = useContext(ThemesContext) as ThemeType;
-  const {
-    setSelectedPeriod,
-    transactionsByDate,
-    selectedPeriod,
-    globalTransactions,
-    setGlobalTransactions,
-  } = useContext(ReportsContext);
   const theme = themes[currentThemeName.currentThemeName];
-
-  const [selectedTransactionValue, setSelectedTransactionValue] = useState<
-    string | null
-  >(null);
 
   const animatedProgress = useRef(new Animated.Value(0)).current;
   const [expanded, setExpanded] = useState(false);
@@ -56,22 +44,6 @@ const HeaderFilterButton: React.FC<HeaderFilterButtonProps> = () => {
     }
   };
 
-  const periodOptions = [
-    {label: 'Mes', value: 'byMonthYear'},
-    {label: 'Dia', value: 'byDayMonthYear'},
-    {label: 'Año', value: 'byYear'},
-  ];
-
-  useEffect(() => {
-    if (globalTransactions && globalTransactions.name) {
-      setSelectedTransactionValue(globalTransactions.name);
-    } else if (globalTransactions && globalTransactions.name) {
-      setSelectedTransactionValue(globalTransactions.name);
-    } else {
-      setSelectedTransactionValue(null);
-    }
-  }, [globalTransactions]);
-
   return (
     <View style={styles.mainContainer}>
       <TouchableOpacity
@@ -90,29 +62,7 @@ const HeaderFilterButton: React.FC<HeaderFilterButtonProps> = () => {
               opacity: interpolatedOpacity,
             },
           ]}>
-          <View>
-            <StyledDropDown
-              margin={0}
-              data={periodOptions}
-              value={selectedPeriod}
-              onChange={elem => {
-                setSelectedPeriod(elem.value);
-              }}
-            />
-            <StyledDropDown
-              margin={0}
-              data={transactionsByDate[selectedPeriod]?.map((tx: any) => ({
-                label: tx.name,
-                value: tx.id || tx.name,
-                ...tx,
-              }))}
-              value={selectedTransactionValue}
-              onChange={elem => {
-                setGlobalTransactions(elem);
-                setSelectedTransactionValue(elem.value);
-              }}
-            />
-          </View>
+          <HeaderDropdown />
         </Animated.View>
       )}
     </View>

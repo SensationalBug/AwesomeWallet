@@ -5,6 +5,7 @@ import {Alert} from 'react-native';
 import {Transaction} from '../db/schemas';
 import {showToast} from '../utils/toastAlert';
 import {PlainTransaction, TransactionContextType} from '../types/Types';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const TransactionContext = createContext<TransactionContextType>({
   transactions: [],
@@ -16,6 +17,8 @@ export const TransactionContext = createContext<TransactionContextType>({
   getTransactions: () => {},
   transactionSelected: [],
   setTransactionSelected: () => {},
+  currency: '',
+  currencySetter: () => {},
 });
 
 export const TransactionProvider: React.FC<React.PropsWithChildren<{}>> = ({
@@ -25,6 +28,15 @@ export const TransactionProvider: React.FC<React.PropsWithChildren<{}>> = ({
   const [transactionSelected, setTransactionSelected] = useState<
     BSON.ObjectId[]
   >([]);
+
+  const [currency, setCurrency] = useState<any>('RD');
+
+  const currencySetter = (value: string) => {
+    try {
+      setCurrency(value);
+      AsyncStorage.setItem('currency', value);
+    } catch (error) {}
+  };
 
   const getTransactions = useCallback(() => {
     try {
@@ -227,6 +239,18 @@ export const TransactionProvider: React.FC<React.PropsWithChildren<{}>> = ({
     };
   }, [getTransactions]);
 
+  useEffect(() => {
+    const getCurrency = async () => {
+      try {
+        const currentCurrency = await AsyncStorage.getItem('currency');
+        setCurrency(currentCurrency);
+      } catch (error) {
+        console.error('Error al verificar biometría:', error);
+      }
+    };
+    getCurrency();
+  }, []);
+
   return (
     <TransactionContext.Provider
       value={{
@@ -238,6 +262,8 @@ export const TransactionProvider: React.FC<React.PropsWithChildren<{}>> = ({
         getTransactions,
         transactionSelected,
         setTransactionSelected,
+        currency,
+        currencySetter,
       }}>
       {children}
     </TransactionContext.Provider>
