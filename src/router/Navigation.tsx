@@ -19,7 +19,7 @@ const Navigation = () => {
   const Stack = createNativeStackNavigator();
   const [initialRoute, setInitialRoute] = useState<
     keyof RootStackParamList | undefined
-  >('ExportOption');
+  >('Main');
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -31,7 +31,7 @@ const Navigation = () => {
           setInitialRoute('BiometryScreen');
         } else {
           // Si no está disponible, vamos directamente a Overview (asumo que Main es tu Overview)
-          setInitialRoute('ExportOption'); // O el nombre de tu pantalla "Overview"
+          setInitialRoute('Main'); // O el nombre de tu pantalla "Overview"
         }
       } catch (error) {
         console.error('Error al verificar biometría:', error);

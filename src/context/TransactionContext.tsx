@@ -60,10 +60,6 @@ export const TransactionProvider: React.FC<React.PropsWithChildren<{}>> = ({
       );
 
       setTransactions(plainJSTransactions);
-      console.log(
-        'TransactionContext: Transacciones cargadas y convertidas a objetos JS planos. Cantidad:',
-        plainJSTransactions.length,
-      );
     } catch (error) {
       console.error(
         'Error al obtener transacciones (en TransactionContext):',
@@ -228,7 +224,6 @@ export const TransactionProvider: React.FC<React.PropsWithChildren<{}>> = ({
 
     const transactionsResults = realm.objects<Transaction>('Transaction');
     const listener = () => {
-      console.log('Realm listener triggered: Transactions updated');
       getTransactions();
     };
 
@@ -243,13 +238,17 @@ export const TransactionProvider: React.FC<React.PropsWithChildren<{}>> = ({
     const getCurrency = async () => {
       try {
         const currentCurrency = await AsyncStorage.getItem('currency');
-        setCurrency(currentCurrency);
+        if (currency) {
+          setCurrency(currentCurrency);
+        } else {
+          setCurrency('RD');
+        }
       } catch (error) {
         console.error('Error al verificar biometría:', error);
       }
     };
     getCurrency();
-  }, []);
+  }, [currency]);
 
   return (
     <TransactionContext.Provider

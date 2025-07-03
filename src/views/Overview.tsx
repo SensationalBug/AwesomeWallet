@@ -13,6 +13,7 @@ import {CategoriesContext} from '../context/CategoriesContext';
 import StyledSurface from '../components/custom/StyledSurface';
 import StyledDropDown from '../components/custom/StyledDropDown';
 import {ReportsContextType, NavigationProps, ThemeType} from '../types/Types';
+import AtScript from '../utils/AtScript';
 
 const Overview = ({navigation}: NavigationProps) => {
   const currentThemeName = useContext(ThemesContext) as ThemeType;
@@ -77,6 +78,7 @@ const Overview = ({navigation}: NavigationProps) => {
           />
           <StyledText variant="titleSmall" text="Este periodo +10%" />
         </View>
+        <AtScript />
         <TouchableOpacity
           onPress={() => navigation.navigate('AddTransaction')}
           style={[

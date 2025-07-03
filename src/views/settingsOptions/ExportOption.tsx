@@ -8,13 +8,14 @@ import {ExportContext} from '../../context/ExportContext';
 import StyledView from '../../components/custom/StyledView';
 import StyledText from '../../components/custom/StyledText';
 import HeaderDropdown from '../../components/HeaderDropdown';
+import {ReportsContext} from '../../context/ReportsContext';
 
 const ExportOption = () => {
+  const {selectedTransactionValue} = useContext(ReportsContext);
   const {exportFormat, setExportFormat, exportToCSV} =
     useContext(ExportContext);
   const currentThemeName = useContext(ThemesContext) as ThemeType;
   const theme = themes[currentThemeName.currentThemeName];
-
   return (
     <StyledView style={styles.container}>
       <StyledText text="Formato a exportar" variant="headlineMedium" />
@@ -26,14 +27,16 @@ const ExportOption = () => {
           style={[
             styles.FAB,
             {
-              backgroundColor:
-                exportFormat === 'CSV'
-                  ? theme.chartBarColor
-                  : theme.iconBackground,
+              backgroundColor: theme.chartBarColor,
+              // Esto se descomenta cuando se agregue la funcion para exportar a PDF
+              // exportFormat === 'CSV'
+              //   ? theme.chartBarColor
+              //   : theme.iconBackground,
             },
           ]}
         />
         <FAB
+          disabled
           label={'PDF'}
           color={theme.text}
           onPress={() => setExportFormat('PDF')}
@@ -54,6 +57,7 @@ const ExportOption = () => {
         label="Exportar"
         color={theme.text}
         onPress={() => exportToCSV()}
+        disabled={!selectedTransactionValue ? true : false}
         style={[styles.exportButton, {backgroundColor: theme.iconBackground}]}
       />
     </StyledView>

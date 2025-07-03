@@ -22,9 +22,13 @@ const HeaderDropdown = ({width = '100%'}) => {
         value={selectedPeriod}
         onChange={elem => {
           setSelectedPeriod(elem.value);
+          if (selectedPeriod !== elem.value) {
+            setSelectedTransactionValue('');
+          }
         }}
       />
       <StyledDropDown
+        placeholder="Selecciona una fecha"
         margin={0}
         width={width}
         data={transactionsByDate[selectedPeriod]?.map((tx: any) => ({
