@@ -3,7 +3,7 @@ import Chart from '../components/Chart';
 import {View, StyleSheet, TouchableOpacity} from 'react-native';
 
 import {themes} from '../styles/Theme';
-import AtScript from '../utils/AtScript';
+// import AtScript from '../utils/AtScript';
 import {formatNumber} from '../utils/formatNumber';
 import {ThemesContext} from '../context/ThemesContext';
 import StyledText from '../components/custom/StyledText';
@@ -80,7 +80,7 @@ const Overview = ({navigation}: NavigationProps) => {
           />
           <StyledText variant="titleSmall" text="Este periodo +10%" />
         </View>
-        <AtScript />
+        {/* <AtScript /> */}
         <TouchableOpacity
           onPress={() => navigation.navigate('AddTransaction')}
           style={[
