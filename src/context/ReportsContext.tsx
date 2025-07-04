@@ -1,16 +1,16 @@
 import {realm} from '../db';
 import {
-  ReportsContextType,
-  GroupedTransactionsByDate,
-  DateGroupsAccumulator,
   DateGroup,
+  ReportsContextType,
+  DateGroupsAccumulator,
+  GroupedTransactionsByDate,
 } from '../types/Types';
 import React, {
-  createContext,
   useState,
   useEffect,
   useContext,
   useCallback,
+  createContext,
 } from 'react';
 import {Category} from '../db/schemas';
 import {TransactionContext} from './TransactionContext';
@@ -34,10 +34,10 @@ export const ReportsContext = createContext<ReportsContextType>({
     totalDebit: 0,
     byCategories: [],
   },
-  periodOptions: [{label: '', value: ''}],
-  setGlobalTransactions: () => {},
   selectedTransactionValue: '',
+  setGlobalTransactions: () => {},
   setSelectedTransactionValue: () => {},
+  periodOptions: [{label: '', value: ''}],
 });
 
 export const ReportsProvider: React.FC<React.PropsWithChildren<{}>> = ({

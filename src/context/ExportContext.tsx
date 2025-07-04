@@ -3,21 +3,16 @@ import {Platform} from 'react-native';
 import Share from 'react-native-share';
 import {showToast} from '../utils/toastAlert';
 import {ReportsContext} from './ReportsContext';
+import {formatNumber} from '../utils/formatNumber';
+import { ExportContextType } from '../types/Types';
 import {CategoriesContext} from './CategoriesContext';
 import {createContext, useContext, useState} from 'react';
-import {formatNumber} from '../utils/formatNumber';
 
 /**
  * Exporta todas las transacciones a un archivo CSV y permite compartirlas.
  * @param {string} fileName El nombre base del archivo CSV (ej. "transacciones").
  * @returns {Promise<void>} Una promesa que se resuelve cuando la exportación y el compartir han terminado.
  */
-
-type ExportContextType = {
-  exportFormat: string;
-  setExportFormat: React.Dispatch<React.SetStateAction<string>>;
-  exportToCSV: () => void;
-};
 
 export const ExportContext = createContext<ExportContextType>({
   exportFormat: '',

@@ -3,6 +3,7 @@ import Chart from '../components/Chart';
 import {View, StyleSheet, TouchableOpacity} from 'react-native';
 
 import {themes} from '../styles/Theme';
+import AtScript from '../utils/AtScript';
 import {formatNumber} from '../utils/formatNumber';
 import {ThemesContext} from '../context/ThemesContext';
 import StyledText from '../components/custom/StyledText';
@@ -12,13 +13,14 @@ import StyledButton from '../components/custom/StyledButton';
 import {CategoriesContext} from '../context/CategoriesContext';
 import StyledSurface from '../components/custom/StyledSurface';
 import StyledDropDown from '../components/custom/StyledDropDown';
+import { TransactionContext } from '../context/TransactionContext';
 import {ReportsContextType, NavigationProps, ThemeType} from '../types/Types';
-import AtScript from '../utils/AtScript';
 
 const Overview = ({navigation}: NavigationProps) => {
   const currentThemeName = useContext(ThemesContext) as ThemeType;
   const theme = themes[currentThemeName.currentThemeName];
   const {getCategoryById} = useContext(CategoriesContext);
+  const {currency} = useContext(TransactionContext);
 
   const {globalTransactions} = useContext(ReportsContext) as ReportsContextType;
   const [recent, setRecent] = React.useState<number>(3);
@@ -39,7 +41,7 @@ const Overview = ({navigation}: NavigationProps) => {
             <StyledText
               bold={'bold'}
               variant="titleLarge"
-              text={`RD$${formatNumber(globalTransactions.totalCredit)}`}
+              text={`${currency}$${formatNumber(globalTransactions.totalCredit)}`}
             />
           </StyledSurface>
           <StyledSurface height={60}>
@@ -47,7 +49,7 @@ const Overview = ({navigation}: NavigationProps) => {
             <StyledText
               bold={'bold'}
               variant="titleLarge"
-              text={`RD$${formatNumber(globalTransactions.totalDebit)}`}
+              text={`${currency}$${formatNumber(globalTransactions.totalDebit)}`}
             />
           </StyledSurface>
         </View>
@@ -57,7 +59,7 @@ const Overview = ({navigation}: NavigationProps) => {
             <StyledText
               bold={'bold'}
               variant="titleLarge"
-              text={`RD$${formatNumber(globalTransactions.totalAmount)}`}
+              text={`${currency}$${formatNumber(globalTransactions.totalAmount)}`}
             />
           </StyledSurface>
         </View>
@@ -73,7 +75,7 @@ const Overview = ({navigation}: NavigationProps) => {
           />
           <StyledText
             variant="titleLarge"
-            text={`RD$${formatNumber(globalTransactions.totalAmount)}`}
+            text={`${currency}$${formatNumber(globalTransactions.totalAmount)}`}
             bold={'bold'}
           />
           <StyledText variant="titleSmall" text="Este periodo +10%" />

@@ -1,9 +1,9 @@
 import React, {useContext} from 'react';
-import {TextInput} from 'react-native-paper';
-import {ThemesContext} from '../../context/ThemesContext';
-import {StyledTextInputProps, ThemeType} from '../../types/Types';
-import {themes} from '../../styles/Theme';
 import {StyleSheet} from 'react-native';
+import {themes} from '../../styles/Theme';
+import {TextInput} from 'react-native-paper';
+import {StyledTextInputProps} from '../../types/Types';
+import {ThemesContext, ThemeType} from '../../context/ThemesContext';
 
 const StyledTextInput: React.FC<StyledTextInputProps> = ({
   label,

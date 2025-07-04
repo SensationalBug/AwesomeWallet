@@ -80,7 +80,7 @@ const Settings = () => {
         iconName="external-link-alt"
         title="Exportar"
         subTitle="Exportar datos (csv, pdf)"
-        onPress={() => {}}
+        onPress={() => navigation.navigate('ExportOption')}
       />
       <StyledButton
         iconName="question"

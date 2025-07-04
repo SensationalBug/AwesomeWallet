@@ -8,10 +8,10 @@ import StyledText from './StyledText';
 import {Text} from 'react-native-paper';
 import React, {useContext} from 'react';
 import {themes} from '../../styles/Theme';
+import {formatNumber} from '../../utils/formatNumber';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {ThemesContext} from '../../context/ThemesContext';
 import {SettingsButtonProps, ThemeType} from '../../types/Types';
-import {formatNumber} from '../../utils/formatNumber';
 import {TransactionContext} from '../../context/TransactionContext';
 
 const StyledButton = ({

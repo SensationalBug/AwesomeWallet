@@ -10,9 +10,9 @@ import BiometryScreen from '../views/BiometryScreen';
 import {RootStackParamList, ThemeType} from '../types/Types';
 import TransactionsGrouped from '../views/TransactionsGrouped';
 import ThemesOption from '../views/settingsOptions/ThemesOption';
+import ExportOption from '../views/settingsOptions/ExportOption';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CategoriesOption from '../views/settingsOptions/CategoriesOption';
-import ExportOption from '../views/settingsOptions/ExportOption';
 
 const Navigation = () => {
   const currentThemeName = useContext(ThemesContext) as ThemeType;

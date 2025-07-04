@@ -1,14 +1,9 @@
-import React, {createContext, useEffect, useState} from 'react';
+import { BiometryContextProps } from '../types/Types';
 import ReactNativeBiometrics from 'react-native-biometrics';
+import React, {createContext, useEffect, useState} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-type BiometryContext = {
-  isBiometryActive: boolean;
-  enableBiometry: () => Promise<void>;
-  authenticate: () => Promise<void>;
-};
-
-export const BiometryContext = createContext<BiometryContext>({
+export const BiometryContext = createContext<BiometryContextProps>({
   isBiometryActive: false,
   authenticate: async () => {},
   enableBiometry: async () => {},

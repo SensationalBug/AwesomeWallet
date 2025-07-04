@@ -4,21 +4,21 @@ import {realm} from '../db';
 import {Alert} from 'react-native';
 import {Transaction} from '../db/schemas';
 import {showToast} from '../utils/toastAlert';
-import {PlainTransaction, TransactionContextType} from '../types/Types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {PlainTransaction, TransactionContextType} from '../types/Types';
 
 export const TransactionContext = createContext<TransactionContextType>({
+  currency: '',
   transactions: [],
+  transactionSelected: [],
+  currencySetter: () => {},
+  setTransactionSelected: () => {},
   addTransaction: () => Promise.resolve(),
   updateTransaction: () => Promise.resolve(),
   getTransactionByID: () => Promise.resolve(null),
   deleteTransaction: async (_transactionIds: BSON.ObjectId[]) =>
     Promise.resolve(),
   getTransactions: () => {},
-  transactionSelected: [],
-  setTransactionSelected: () => {},
-  currency: '',
-  currencySetter: () => {},
 });
 
 export const TransactionProvider: React.FC<React.PropsWithChildren<{}>> = ({
@@ -238,7 +238,7 @@ export const TransactionProvider: React.FC<React.PropsWithChildren<{}>> = ({
     const getCurrency = async () => {
       try {
         const currentCurrency = await AsyncStorage.getItem('currency');
-        if (currency) {
+        if (currentCurrency) {
           setCurrency(currentCurrency);
         } else {
           setCurrency('RD');

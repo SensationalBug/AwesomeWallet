@@ -1,7 +1,7 @@
 import React, {useContext} from 'react';
 import {StyleSheet} from 'react-native';
-import {Dropdown} from 'react-native-element-dropdown';
 import {themes} from '../../styles/Theme';
+import {Dropdown} from 'react-native-element-dropdown';
 import {ThemesContext} from '../../context/ThemesContext';
 import {StyledDropDownProps, ThemeType} from '../../types/Types';
 

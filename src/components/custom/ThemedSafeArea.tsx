@@ -1,14 +1,10 @@
 import React, {useContext} from 'react';
 import {themes} from '../../styles/Theme';
+import {ThemeSafeAreaProps} from '../../types/Types';
 import {ThemesContext} from '../../context/ThemesContext';
-import {SafeAreaView, StatusBar, ViewStyle, StyleSheet} from 'react-native';
+import {SafeAreaView, StatusBar, StyleSheet} from 'react-native';
 
-type Props = {
-  children: React.ReactNode;
-  style?: ViewStyle;
-};
-
-const ThemedSafeArea = ({children, style = {}}: Props) => {
+const ThemedSafeArea = ({children, style = {}}: ThemeSafeAreaProps) => {
   const currentThemeName = useContext(ThemesContext) as {
     currentThemeName: keyof typeof themes;
   };

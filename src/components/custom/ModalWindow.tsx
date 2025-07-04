@@ -1,24 +1,9 @@
-import React, {useContext} from 'react';
-import {
-  Modal,
-  View,
-  Text,
-  Pressable,
-  StyleSheet,
-  DimensionValue,
-} from 'react-native';
-import {themes} from '../../styles/Theme';
-import {ThemeType} from '../../types/Types';
-import {ThemesContext} from '../../context/ThemesContext';
 import StyledText from './StyledText';
-
-type ModalWindowProps = {
-  modalVisible: boolean;
-  setModalVisible: (visible: boolean) => void;
-  component?: React.ReactNode; // Component to render inside the modal
-  width?: DimensionValue; // Width can be a number or a percentage string
-  height?: DimensionValue; // Height can be a number or a percentage string
-};
+import React, {useContext} from 'react';
+import {themes} from '../../styles/Theme';
+import {ThemesContext} from '../../context/ThemesContext';
+import {ModalWindowProps, ThemeType} from '../../types/Types';
+import {Modal, View, Pressable, StyleSheet} from 'react-native';
 
 const ModalWindow: React.FC<ModalWindowProps> = ({
   modalVisible,
@@ -34,7 +19,14 @@ const ModalWindow: React.FC<ModalWindowProps> = ({
       transparent={true}
       visible={modalVisible}
       onRequestClose={() => setModalVisible(!modalVisible)}>
-      <View style={[styles.modalContainer, {backgroundColor: themes[currentThemeName.currentThemeName].modalBackdrop}]}>
+      <View
+        style={[
+          styles.modalContainer,
+          {
+            backgroundColor:
+              themes[currentThemeName.currentThemeName].modalBackdrop,
+          },
+        ]}>
         <View
           style={[
             styles.modalView,
@@ -43,7 +35,8 @@ const ModalWindow: React.FC<ModalWindowProps> = ({
                 themes[currentThemeName.currentThemeName].background,
               width,
               height,
-              borderColor: themes[currentThemeName.currentThemeName].modalBorder,
+              borderColor:
+                themes[currentThemeName.currentThemeName].modalBorder,
             },
           ]}>
           <Pressable onPress={() => setModalVisible(!modalVisible)}>

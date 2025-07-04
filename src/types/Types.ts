@@ -3,7 +3,7 @@ import {themes} from '../styles/Theme';
 import {Category} from '../db/schemas';
 import {TextProps} from 'react-native-paper';
 import {RouteProp} from '@react-navigation/native';
-import {StyleProp, TextStyle, ViewStyle} from 'react-native';
+import {DimensionValue, StyleProp, TextStyle, ViewStyle} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 
 type NavigationProps = {
@@ -33,6 +33,12 @@ type StyledViewProps = {
   horizontal?: boolean;
   style?: StyleProp<ViewStyle>;
   contentContainerStyle?: StyleProp<ViewStyle>;
+};
+
+type ExportContextType = {
+  exportFormat: string;
+  setExportFormat: React.Dispatch<React.SetStateAction<string>>;
+  exportToCSV: () => void;
 };
 
 type SettingsButtonProps = {
@@ -142,6 +148,11 @@ interface DateGroupsAccumulator {
   [key: string]: DateGroup;
 }
 
+type ThemeSafeAreaProps = {
+  children: React.ReactNode;
+  style?: ViewStyle;
+};
+
 // Interfaz para el resultado final de la función
 interface GroupedTransactionsByDate {
   byDayMonthYear: DateGroup[];
@@ -159,6 +170,7 @@ type GroupedTransactions = {
 type SettingsStackParamList = {
   ThemesOption: undefined;
   CategoriesOption: undefined;
+  ExportOption: undefined;
   // Add other screens here if needed
 };
 
@@ -247,6 +259,26 @@ type RootStackParamList = {
   ExportOption: undefined;
 };
 
+type SectionProps = {
+  title: string;
+  color?: string; // Optional prop for text color
+  paddingVertical?: number; // Optional prop for horizontal padding
+};
+
+type ModalWindowProps = {
+  modalVisible: boolean;
+  setModalVisible: (visible: boolean) => void;
+  component?: React.ReactNode; // Component to render inside the modal
+  width?: DimensionValue; // Width can be a number or a percentage string
+  height?: DimensionValue; // Height can be a number or a percentage string
+};
+
+type BiometryContextProps = {
+  isBiometryActive: boolean;
+  enableBiometry: () => Promise<void>;
+  authenticate: () => Promise<void>;
+};
+
 export type {
   NavigationProps,
   AnimatedButtonProps,
@@ -275,4 +307,9 @@ export type {
   NavigableGroupedTransactions,
   TransactionsGroupedProps,
   RootStackParamList,
+  ThemeSafeAreaProps,
+  SectionProps,
+  ModalWindowProps,
+  ExportContextType,
+  BiometryContextProps,
 };
