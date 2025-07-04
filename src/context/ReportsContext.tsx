@@ -253,13 +253,13 @@ export const ReportsProvider: React.FC<React.PropsWithChildren<{}>> = ({
   return (
     <ReportsContext.Provider
       value={{
-        transactionsByDate,
         groupByDate,
-        setSelectedPeriod,
-        selectedPeriod,
-        globalTransactions,
-        setGlobalTransactions,
         periodOptions,
+        selectedPeriod,
+        setSelectedPeriod,
+        globalTransactions,
+        transactionsByDate,
+        setGlobalTransactions,
         selectedTransactionValue,
         setSelectedTransactionValue,
       }}>

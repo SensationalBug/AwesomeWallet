@@ -8,7 +8,6 @@ import {View, StyleSheet, Linking, Alert} from 'react-native';
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
 
 import {themes} from '../styles/Theme';
-import {Transaction} from '../db/schemas';
 import {BiometryContext} from '../context/BiometryContext';
 import {SettingsStackParamList, ThemeType} from '../types/Types';
 import StyledDropDown from '../components/custom/StyledDropDown';
@@ -19,7 +18,7 @@ const Settings = () => {
   const theme = themes[currentThemeName.currentThemeName];
 
   const {isBiometryActive, enableBiometry} = useContext(BiometryContext);
-  const {currency, currencySetter} = useContext(TransactionContext);
+  const {currency, currencySetter, wipeData} = useContext(TransactionContext);
 
   const navigation =
     useNavigation<NativeStackNavigationProp<SettingsStackParamList>>();
@@ -141,10 +140,7 @@ const Settings = () => {
                       {text: 'Cancelar'},
                       {
                         text: 'Si, eliminar',
-                        onPress: () =>
-                          Realm.deleteFile({
-                            schema: [Transaction],
-                          }),
+                        onPress: () => wipeData(),
                       },
                     ],
                   ),

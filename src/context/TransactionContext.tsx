@@ -1,4 +1,3 @@
-import React, {createContext, useCallback, useEffect, useState} from 'react';
 import {BSON} from 'realm';
 import {realm} from '../db';
 import {Alert} from 'react-native';
@@ -6,19 +5,21 @@ import {Transaction} from '../db/schemas';
 import {showToast} from '../utils/toastAlert';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {PlainTransaction, TransactionContextType} from '../types/Types';
+import React, {createContext, useCallback, useEffect, useState} from 'react';
 
 export const TransactionContext = createContext<TransactionContextType>({
   currency: '',
   transactions: [],
+  wipeData: () => {},
   transactionSelected: [],
   currencySetter: () => {},
+  getTransactions: () => {},
   setTransactionSelected: () => {},
   addTransaction: () => Promise.resolve(),
   updateTransaction: () => Promise.resolve(),
   getTransactionByID: () => Promise.resolve(null),
   deleteTransaction: async (_transactionIds: BSON.ObjectId[]) =>
     Promise.resolve(),
-  getTransactions: () => {},
 });
 
 export const TransactionProvider: React.FC<React.PropsWithChildren<{}>> = ({
@@ -219,6 +220,24 @@ export const TransactionProvider: React.FC<React.PropsWithChildren<{}>> = ({
     [getTransactions],
   );
 
+  const wipeData = async () => {
+    try {
+      realm.write(() => {
+        // Obtiene TODOS los objetos del esquema 'Transaction'
+        const allTransactionObjects = realm.objects<Transaction>('Transaction');
+
+        // Elimina todos los objetos de esa colección
+        realm.delete(allTransactionObjects);
+      });
+
+      getTransactions();
+      showToast('success', 'Todas las transacciones eliminadas');
+    } catch (error) {
+      console.log(error);
+      showToast('error', 'Ocurrio un error al eliminar las transacciones');
+    }
+  };
+
   useEffect(() => {
     getTransactions();
 
@@ -253,16 +272,17 @@ export const TransactionProvider: React.FC<React.PropsWithChildren<{}>> = ({
   return (
     <TransactionContext.Provider
       value={{
+        currency,
+        wipeData,
         transactions,
+        currencySetter,
         addTransaction,
-        updateTransaction,
-        getTransactionByID,
-        deleteTransaction,
         getTransactions,
+        updateTransaction,
+        deleteTransaction,
+        getTransactionByID,
         transactionSelected,
         setTransactionSelected,
-        currency,
-        currencySetter,
       }}>
       {children}
     </TransactionContext.Provider>

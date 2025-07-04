@@ -106,6 +106,7 @@ type TransactionContextType = {
   setTransactionSelected: React.Dispatch<React.SetStateAction<any[]>>;
   currency: '';
   currencySetter: (value: string) => void;
+  wipeData: () => void;
 };
 
 type ReportsContextType = {

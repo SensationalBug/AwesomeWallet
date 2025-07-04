@@ -89,9 +89,9 @@ export const ExportProvider: React.FC<React.PropsWithChildren<{}>> = ({
   return (
     <ExportContext.Provider
       value={{
+        exportToCSV,
         exportFormat,
         setExportFormat,
-        exportToCSV,
       }}>
       {children}
     </ExportContext.Provider>
