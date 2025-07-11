@@ -43,7 +43,7 @@ const Settings = () => {
         subTitle="Administrar las configuraciones de huella"
         onPress={() => enableBiometry()}
         children={
-          <Switch style={{justifyContent:'center'}}
+          <Switch
             color={theme.chartBarColor}
             value={isBiometryActive}
             onValueChange={() => enableBiometry()}

@@ -93,14 +93,14 @@ const AddTransaction = ({navigation, route}: NavigationProps) => {
       <View style={styles.radioButtonView}>
         <StyledText variant="titleMedium" text="Tipo de transacción:" />
         <Radio
-          color={theme.transactionTypeDebit}
+          color={theme.chartBarNegativeColor}
           text="Débito"
           value="debito"
           onPress={() => updateState(setNewTransaction, 'type', 'debito')}
           status={newTransaction.type === 'debito' ? 'checked' : 'unchecked'}
         />
         <Radio
-          color={theme.transactionTypeCredit}
+          color={theme.chartBarColor}
           text="Crédito"
           value="credito"
           onPress={() => updateState(setNewTransaction, 'type', 'credito')}

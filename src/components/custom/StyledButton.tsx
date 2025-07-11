@@ -60,8 +60,8 @@ const StyledButton = ({
                 style={{
                   color:
                     type === 'debito'
-                      ? theme.transactionTypeDebit
-                      : theme.transactionTypeCredit,
+                      ? theme.chartBarNegativeColor
+                      : theme.chartBarColor,
                 }}
                 variant="labelLarge">
                 {currency}${formatNumber(amount)}
