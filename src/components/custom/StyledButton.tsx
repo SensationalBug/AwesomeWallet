@@ -31,6 +31,7 @@ const StyledButton = ({
   const {currency} = useContext(TransactionContext);
   const theme = themes[currentThemeName.currentThemeName];
   const {width} = useWindowDimensions();
+
   return (
     <TouchableOpacity
       disabled={disabled}
@@ -39,12 +40,11 @@ const StyledButton = ({
       onLongPress={onLongPress}>
       <View
         style={[styles.iconContainer, {backgroundColor: theme.iconBackground}]}>
-        <Icon name={iconName || 'help'} size={25} color={theme.text} />
+        <Icon name={iconName || 'help'} size={20} color={theme.text} />
       </View>
-      <View style={[styles.textContainer, {width: width - 100}]}>
+      <View style={[styles.textContainer]}>
         {subTitle ? (
-          // eslint-disable-next-line react-native/no-inline-styles
-          <View style={[styles.textView, {width: 'auto'}]}>
+          <View style={styles.textView}>
             <StyledText variant="titleLarge" text={title} />
             <StyledText variant="labelLarge" text={subTitle} label />
           </View>
@@ -53,24 +53,27 @@ const StyledButton = ({
             <StyledText variant="titleLarge" text={title} />
           </View>
         )}
-        {amount ? (
-          <View style={styles.amountView}>
-            <Text
-              style={{
-                color:
-                  type === 'debito'
-                    ? theme.transactionTypeDebit
-                    : theme.transactionTypeCredit,
-              }}
-              variant="labelLarge">
-              {currency}${formatNumber(amount)}
-            </Text>
-            {date ? (
-              <StyledText variant="labelLarge" text={date} label />
-            ) : null}
-          </View>
-        ) : null}
-        {children}
+        <View style={styles.sideView}>
+          {amount ? (
+            <View>
+              <Text
+                style={{
+                  color:
+                    type === 'debito'
+                      ? theme.transactionTypeDebit
+                      : theme.transactionTypeCredit,
+                }}
+                variant="labelLarge">
+                {currency}${formatNumber(amount)}
+              </Text>
+              {date ? (
+                <StyledText variant="labelLarge" text={date} label />
+              ) : null}
+            </View>
+          ) : (
+            children
+          )}
+        </View>
       </View>
     </TouchableOpacity>
   );
@@ -81,16 +84,15 @@ export default StyledButton;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
-    paddingVertical: 10,
+    padding: 10,
     flexDirection: 'row',
     alignItems: 'center',
   },
   iconContainer: {
-    width: 50,
-    height: 50,
+    width: '10%',
+    height: 40,
     borderRadius: 8,
-    marginRight: 20,
+    marginRight: 10,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -99,10 +101,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-  textView: {flexDirection: 'column', width: '55%'},
-  amountView: {
-    width: '45%',
-    alignItems: 'flex-end',
-    paddingHorizontal: 10,
+  textView: {
+    width: '60%',
+  },
+  sideView: {
+    width: '30%',
+    alignItems: 'center',
   },
 });

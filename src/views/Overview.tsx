@@ -13,7 +13,7 @@ import StyledButton from '../components/custom/StyledButton';
 import {CategoriesContext} from '../context/CategoriesContext';
 import StyledSurface from '../components/custom/StyledSurface';
 import StyledDropDown from '../components/custom/StyledDropDown';
-import { TransactionContext } from '../context/TransactionContext';
+import {TransactionContext} from '../context/TransactionContext';
 import {ReportsContextType, NavigationProps, ThemeType} from '../types/Types';
 
 const Overview = ({navigation}: NavigationProps) => {
@@ -24,7 +24,6 @@ const Overview = ({navigation}: NavigationProps) => {
 
   const {globalTransactions} = useContext(ReportsContext) as ReportsContextType;
   const [recent, setRecent] = React.useState<number>(3);
-
   return (
     <View
       style={[
@@ -41,7 +40,9 @@ const Overview = ({navigation}: NavigationProps) => {
             <StyledText
               bold={'bold'}
               variant="titleLarge"
-              text={`${currency}$${formatNumber(globalTransactions.totalCredit)}`}
+              text={`${currency}$${formatNumber(
+                globalTransactions.totalCredit,
+              )}`}
             />
           </StyledSurface>
           <StyledSurface height={60}>
@@ -49,7 +50,9 @@ const Overview = ({navigation}: NavigationProps) => {
             <StyledText
               bold={'bold'}
               variant="titleLarge"
-              text={`${currency}$${formatNumber(globalTransactions.totalDebit)}`}
+              text={`${currency}$${formatNumber(
+                globalTransactions.totalDebit,
+              )}`}
             />
           </StyledSurface>
         </View>
@@ -59,7 +62,9 @@ const Overview = ({navigation}: NavigationProps) => {
             <StyledText
               bold={'bold'}
               variant="titleLarge"
-              text={`${currency}$${formatNumber(globalTransactions.totalAmount)}`}
+              text={`${currency}$${formatNumber(
+                globalTransactions.totalAmount,
+              )}`}
             />
           </StyledSurface>
         </View>
@@ -103,7 +108,7 @@ const Overview = ({navigation}: NavigationProps) => {
         {globalTransactions &&
         Array.isArray(globalTransactions.byCategories) &&
         globalTransactions.byCategories.length > 0 ? (
-          <Chart maxHeight={110} data={globalTransactions.byCategories} />
+          <Chart maxHeight={110} data={globalTransactions.byCategories} showTamount={false}/>
         ) : (
           <StyledView contentContainerStyle={styles.noTransactionView}>
             <StyledText variant="titleLarge" text="Aún no tienes débitos 😐." />

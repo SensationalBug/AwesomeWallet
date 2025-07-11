@@ -34,7 +34,6 @@ const Main = () => {
     iconNameOutline: string,
   ) => ({
     title: title,
-    headerShown: true,
     tabBarIcon: (props: {focused: boolean; color: string}) =>
       tabBarIcon(iconName, iconNameOutline, props),
     headerTitleAlign: 'center' as const,

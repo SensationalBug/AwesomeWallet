@@ -3,7 +3,7 @@ import ChartBar from './charts/ChartBar';
 import {ChartProps} from '../types/Types';
 import StyledView from './custom/StyledView';
 
-const Chart = ({data, maxHeight}: ChartProps) => {
+const Chart = ({data, maxHeight, showTamount}: ChartProps) => {
   const getMaxAbsValue = () => {
     let maxCredit = 0;
     let maxDebit = 0;
@@ -41,6 +41,7 @@ const Chart = ({data, maxHeight}: ChartProps) => {
               key={index}
               text={name}
               maxHeight={maxHeight}
+              showTamount={showTamount}
               debit={totalDebit}
               dHeight={(totalDebit / getMaxAbsValue()) * maxHeight}
               credit={totalCredit}

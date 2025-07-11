@@ -1,11 +1,11 @@
 import {themes} from '../styles/Theme';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {ThemeType} from '../types/Types';
 import React, {useContext, useEffect} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {ThemesContext} from '../context/ThemesContext';
 import StyledView from '../components/custom/StyledView';
 import {BiometryContext} from '../context/BiometryContext';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 

@@ -43,7 +43,7 @@ const Settings = () => {
         subTitle="Administrar las configuraciones de huella"
         onPress={() => enableBiometry()}
         children={
-          <Switch
+          <Switch style={{justifyContent:'center'}}
             color={theme.chartBarColor}
             value={isBiometryActive}
             onValueChange={() => enableBiometry()}
@@ -65,7 +65,7 @@ const Settings = () => {
         children={
           <StyledDropDown
             placeholder=""
-            width={'25%'}
+            width={'100%'}
             value={currency}
             data={currencies}
             onChange={elem => {

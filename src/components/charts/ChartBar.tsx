@@ -16,6 +16,7 @@ const ChartBar = ({
   maxHeight,
   cHeight,
   dHeight,
+  showTamount = true,
 }: ChartBarProps) => {
   const currentThemeName = useContext(ThemesContext) as ThemeType;
   const theme = themes[currentThemeName.currentThemeName];
@@ -55,14 +56,20 @@ const ChartBar = ({
           ]}
         />
       </Tooltip>
-      <Tooltip
-        enterTouchDelay={250}
-        leaveTouchDelay={1000}
-        title={`Monto total: ${currency}$${String(formatNumber(tAmount))}`}>
+      {showTamount ? (
+        <Tooltip
+          enterTouchDelay={250}
+          leaveTouchDelay={1000}
+          title={`Monto total: ${currency}$${String(formatNumber(tAmount))}`}>
+          <View style={styles.label}>
+            <StyledText text={text} variant="labelLarge" />
+          </View>
+        </Tooltip>
+      ) : (
         <View style={styles.label}>
           <StyledText text={text} variant="labelLarge" />
         </View>
-      </Tooltip>
+      )}
     </View>
   );
 };

@@ -105,7 +105,7 @@ export default Reports;
 const styles = StyleSheet.create({
   ChartView: {
     flex: 1,
-    alignItems: 'center',
+    // alignItems: 'center',
   },
   ChartViewStyledText: {
     width: '100%',
