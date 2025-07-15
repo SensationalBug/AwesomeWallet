@@ -10,6 +10,7 @@ export const themes = {
     modalBorder: '#CCCCCC',
     chartBarColor: '#185dc4ff',
     chartBarNegativeColor: '#c7290dff',
+    addButtonColor: '#33e2c5ff',
   },
   dark: {
     name: 'Azul oscuro',
@@ -22,6 +23,7 @@ export const themes = {
     modalBorder: '#444444',
     chartBarColor: '#00BFFF',
     chartBarNegativeColor: '#dd1f45ff',
+    addButtonColor: '#610dc7ff',
   },
   blue: {
     name: 'Azul',
@@ -34,6 +36,7 @@ export const themes = {
     modalBorder: '#64B5F6', // Borde de modal azul
     chartBarColor: '#00BCD4', // Un azul cian para barras positivas
     chartBarNegativeColor: '#EF5350', // Rojo vibrante para lo negativo
+    addButtonColor: '#0dc770ff',
   },
   green: {
     name: 'Verde',
@@ -46,6 +49,7 @@ export const themes = {
     modalBorder: '#66BB6A', // Borde de modal verde
     chartBarColor: '#5deb4bff', // Un verde más vibrante para barras positivas
     chartBarNegativeColor: '#FF5722', // Naranja/rojo para contrastar lo negativo
+    addButtonColor: '#bbc70dff',
   },
   black: {
     name: 'Oscuro',
@@ -58,5 +62,6 @@ export const themes = {
     modalBorder: '#333333', // Borde gris oscuro para el modal
     chartBarColor: '#1e7b0dff', // Verde neón para barras positivas (contrasta bien en negro)
     chartBarNegativeColor: '#b81818ff', // Rosa/rojo brillante para lo negativo
+    addButtonColor: '#b885f6ff',
   },
 };

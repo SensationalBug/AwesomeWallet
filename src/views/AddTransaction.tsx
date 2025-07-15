@@ -57,6 +57,7 @@ const AddTransaction = ({navigation, route}: NavigationProps) => {
       <StyledTextInput
         label="Descripción"
         value={newTransaction.concept}
+        length={newTransaction.concept.length}
         onChangeText={value => updateState(setNewTransaction, 'concept', value)}
       />
       <StyledTextInput

@@ -91,7 +91,7 @@ const Overview = ({navigation}: NavigationProps) => {
           style={[
             styles.addTransactionButton,
             {
-              backgroundColor: theme.iconBackground,
+              backgroundColor: theme.addButtonColor,
             },
           ]}>
           <StyledText
@@ -108,13 +108,17 @@ const Overview = ({navigation}: NavigationProps) => {
         {globalTransactions &&
         Array.isArray(globalTransactions.byCategories) &&
         globalTransactions.byCategories.length > 0 ? (
-          <Chart maxHeight={110} data={globalTransactions.byCategories} showTamount={false}/>
+          <Chart
+            maxHeight={110}
+            data={globalTransactions.byCategories}
+            showTamount={false}
+          />
         ) : (
           <StyledView contentContainerStyle={styles.noTransactionView}>
-            <StyledText variant="titleLarge" text="Aún no tienes débitos 😐." />
+            <StyledText variant="titleLarge" text="Aún no tienes transacciones 😐." />
             <StyledText
               variant="titleMedium"
-              text="Se mostrarán aquí cuando agregues alguno."
+              text="Se mostrarán aquí cuando agregues alguna."
             />
           </StyledView>
         )}
@@ -158,24 +162,17 @@ const Overview = ({navigation}: NavigationProps) => {
 
               return (
                 <StyledButton
+                  disabled
                   key={index}
+                  type={type}
                   title={concept}
+                  amount={amount}
                   iconName={categoryIcon}
                   subTitle={categoryName}
-                  amount={amount}
-                  type={type}
                 />
               );
             })
-        ) : (
-          // Mensaje cuando no hay transacciones o globalTransactions es nulo/vacío
-          <StyledView>
-            <StyledText
-              text="No hay transacciones recientes para mostrar."
-              variant="bodyMedium"
-            />
-          </StyledView>
-        )}
+        ) : null}
       </StyledView>
     </View>
   );

@@ -37,6 +37,7 @@ const AddCategory = ({newCategory, setNewCategory}: AddCategoryProps) => {
             onChangeText={(value: string) =>
               updateState(setNewCategory, 'name', value)
             }
+            length={newCategory.name.length}
           />
           <StyledDropDown
             data={OPTIONS}

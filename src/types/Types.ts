@@ -176,12 +176,13 @@ type SettingsStackParamList = {
 };
 
 type StyledTextInputProps = {
-  label: string;
   value: any;
+  label: string;
+  length?: number;
   mode?: 'outlined' | 'flat';
   style?: StyleProp<ViewStyle>;
-  keyboardType?: 'default' | 'numeric' | 'email-address' | 'phone-pad';
   onChangeText: (text: string) => void;
+  keyboardType?: 'default' | 'numeric' | 'email-address' | 'phone-pad';
 };
 
 type StyledDropDownProps = {
@@ -202,7 +203,7 @@ type ChartBarProps = {
   credit: number;
   tAmount: number;
   maxHeight: number;
-  showTamount?:boolean;
+  showTamount?: boolean;
 };
 
 type StyledSurfaceProps = {
@@ -217,7 +218,7 @@ type ChartProps = {
   data: Array<{name: string; amount: number}> | DateGroup[] | any;
   maxHeight: number;
   height?: number;
-  showTamount?:boolean;
+  showTamount?: boolean;
 };
 
 type HeaderFilterButtonProps = {

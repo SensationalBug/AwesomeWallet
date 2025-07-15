@@ -81,7 +81,7 @@ const Reports = () => {
       <View style={styles.ChartView}>
         <ReportsHeader
           goTo="TransactionsGrouped"
-          title="Transacciones por Anio"
+          title="Transacciones por Año"
           titleButton="Ver mas ➡️"
           navigationaParams={prepareDataForNavigation(
             transactionsByDate.byYear,

@@ -20,6 +20,22 @@ export const formatNumber = (
     return '0.00'; // O '' o '-' según prefieras
   }
 
+  // --- Lógica para la notación 'B' ---
+  if (notation && Math.abs(num) >= 1000000000000) {
+    // Si el valor absoluto es 1,000,000 o más
+    // Divide por 1000000000000 y añade 'B'
+    // Usamos toFixed(1) para mantener un decimal, puedes ajustarlo si lo necesitas
+    return (num / 1000000000000).toFixed(2) + 'B';
+  }
+
+  // --- Lógica para la notación 'MM' ---
+  if (notation && Math.abs(num) >= 1000000000) {
+    // Si el valor absoluto es 1,000,000 o más
+    // Divide por 1000000000 y añade 'MM'
+    // Usamos toFixed(1) para mantener un decimal, puedes ajustarlo si lo necesitas
+    return (num / 1000000000).toFixed(2) + 'MM';
+  }
+
   // --- Lógica para la notación 'M' ---
   if (notation && Math.abs(num) >= 1000000) {
     // Si el valor absoluto es 1,000,000 o más
